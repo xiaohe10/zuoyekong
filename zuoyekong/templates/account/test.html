@@ -1,0 +1,40 @@
+<html>
+<style>
+body{
+    width:1000px;
+    margin:60px auto;
+}
+
+</style>
+<body>
+<form method='get' action='/account/register/getValidCode'>
+<h2>发送注册验证码</h2>
+<div >手机号</div><input type="text" name='phone'></input><br/>
+<input type="submit" value="发送验证码"></input>
+</form>
+
+<form method='post' action='/account/register/registerDo'>
+<h2>注册</h2>
+<div >手机号</div><input type="text" name='phone'></input><br/>
+<div >密码</div><input type="password" name='password'></input><br/>
+<div >学校</div><input type="text" name='school'></input><br/>
+<div >类型</div><input type="text" name='type'></input><br/>
+<div >验证码</div><input type="text" name='registerValidCode'></input><br/>
+<input type="submit" value="注册"></input>
+</form>
+
+<form method='post' action='/account/login/loginDo'>
+<h2>登录</h2>
+<div >手机号</div><input type="text" name='phone'></input><br/>
+<div >密码</div><input type="password" name='password'></input><br/>
+<input type="submit" value="登录"></input>
+</form>
+
+<form method='get' action='/account/login/loginDo'>
+<h2>发送找回密码验证码</h2>
+<div >手机号</div><input type="text" name='phone'></input><br/>
+<div >密码</div><input type="password" name='password'></input><br/>
+<input type="submit" value="登录"></input>
+</form>
+</body>
+</html>

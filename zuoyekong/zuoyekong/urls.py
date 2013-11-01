@@ -6,10 +6,12 @@ from mobileapp.account.views import *
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^account/test',account_test),
+
     url(r'^account/login/loginDo',login_do),
     url(r'^account/register/registerDo',register_do),
     url(r'^account/logout',logout),
-    url(r'^account/sendRegisteValidCode',send_register_valid_code),
+    url(r'^account/register/getValidCode',send_register_valid_code),
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),
     # url(r'^zuoyekong/', include('zuoyekong.foo.urls')),
