@@ -170,5 +170,12 @@ EMAIL_HOST_USER='xiaoh16@gmail.com'
 EMAIL_HOST_PASSWORD='xiaohe709140'
 EMAIL_USE_TLS = True
 
-SITE_URL='www.thucloud.com:8080'
+SITE_URL='app.zuoyekong.com'
 SITE_NAME='zuoyekong'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
