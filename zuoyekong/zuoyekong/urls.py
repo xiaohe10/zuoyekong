@@ -2,13 +2,15 @@ from django.conf.urls import patterns, url
 
 from mobileapp.account.views import *
 from mobileapp.question.views import *
+from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^account/test',account_test),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
 
+    url(r'^account/test',account_test),
     url(r'^account/login/loginDo',login_do),
     url(r'^account/register/registerDo',register_do),
     url(r'^account/register/getValidCode',send_register_valid_code),
@@ -17,8 +19,14 @@ urlpatterns = patterns('',
     url(r'^account/modifyPass',modify_pass),
     url(r'^account/logout',logout),
     url(r'^account/profile/modifyProfile',modify_profile),
+    url(r'^account/profile/getProfile',get_profile),
 
-    url(r'^question/createQuestion',create_question)
+    url(r'^question/test',question_test),
+    url(r'^question/createQuestion',create_question),
+    url(r'^question/showQuestion',show_question),
+    url(r'^question/updateQuestion',update_question),
+    url(r'^question/deleteQuestion',delete_question),
+
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),
     # url(r'^zuoyekong/', include('zuoyekong.foo.urls')),

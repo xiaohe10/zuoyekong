@@ -15,8 +15,6 @@ class User(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
 
-    phone.primary_key = True
-
     def safe_get(self,phone):
         try:
             user = User.objects.get(phone = phone)
@@ -72,11 +70,67 @@ class Session(models.Model):
             return {"session_ID":session_ID,"session_key":session_key}
         except Exception:
             return False
+
 class Question(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     subject = models.CharField(max_length=20)
-    author = models.ForeignKey('User')
+    grade = models.CharField(max_length=20)
+    author = models.BigIntegerField() # user id
+
+    def get_question_list_by_user(self,user_id):
+        question_list = Question.objects.filter(author = user_id)
+        final_question_list = []
+        for question in question_list:
+            final_question = {}
+            final_question['ID'] = question.id
+            final_question['grade'] = question.grade
+            final_question['title'] = question.title
+            final_question['subject'] = question.subject
+            final_question['description'] = question.description
+            image_list = QuestionImages.objects.filter(questionId = question.id)
+            final_image_list=[]
+            for image in image_list:
+                final_image_list.append(image.image)
+            final_question['questionImages'] = final_image_list
+            final_question_list.append(final_question)
+        return final_question_list
+
+    def get_question_detail_by_id(self,question_id):
+        try:
+            question = Question.objects.get(id = question_id)
+            question_detail = {}
+            question_detail['ID'] = question.id
+            question_detail['grade'] = question.grade
+            question_detail['title'] = question.title
+            question_detail['subject'] = question.subject
+            question_detail['description'] = question.description
+            question_detail['author'] = question.author
+            image_list = QuestionImages.objects.filter(questionId = question.id)
+            final_image_list=[]
+            for image in image_list:
+                final_image_list.append(image.image)
+            question_detail['questionImages'] = final_image_list
+        except Exception:
+            return None
+        
+
 class QuestionImages(models.Model):
-    questionId = models.ForeignKey(Question)
+    questionId = models.BigIntegerField() # question id
     image = models.FileField(upload_to='questionPictures/%Y/%m/%d')
+
+class Application(models.Model):
+    qustionId = models.BigIntegerField() # question id
+    applicant = models.BigIntegerField() # applicant user id
+    state = models.CharField(max_length=20) #unread/read/cancel/
+    created_time = models.DateTimeField(auto_now_add=True)
+
+class Dialog(models.Model):
+    studentId = models.BigIntegerField() #student user id
+    tearcherId = models.BigIntegerField() # teacher user id
+    questionId = models.BigIntegerField() # question id
+    state = models.CharField(max_length=20) #waiting/refused/inDialog/finished
+    dialogSession = models.CharField(max_length=100)
+    created_time = models.DateTimeField(auto_now_add=True)
+    all_time = models.BigIntegerField() # all talk time in secondes
+    charging_time  = models.BigIntegerField() # duration that charge

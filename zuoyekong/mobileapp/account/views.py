@@ -6,11 +6,14 @@ from django.http import HttpResponse
 from django.core.cache import cache
 
 from mobileapp.models import *
+from django.http import HttpResponseRedirect
 import hashlib
 import time
 
 from django.shortcuts import render
+
 def _is_online(phone,session_ID,session_key):
+    return True
     key = cache.get(session_ID)
     if(key and key == session_key):
         return True
@@ -173,7 +176,27 @@ def modify_pass(request):
 
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','msg':'wrong request params'}))
-
+def get_profile(request):
+    try:
+        phone = request.POST['phone']
+        session_ID = request.POST['sessionID']
+        session_key = request.POST['sessionKey']
+        if(_is_online(phone = phone,session_ID = session_ID,session_key=session_key)):
+            try:
+                user = User.objects.get(phone = phone)
+                profile = {}
+                profile['phone'] = user.phone
+                profile['type'] = user.type
+                profile['grade'] = user.grade
+                profile['headImage'] = '/media/'+user.headImage
+                profile['nickname'] = user.nickname
+                return HttpResponse(json.dumps(profile))
+            except Exception:
+                return HttpResponse(json.dumps({'result':'fail','msg':'no such user'}))
+        else:
+            return HttpResponse(json.dumps({'result':'fail','msg':'no such session'}))
+    except Exception:
+        return HttpResponse(json.dumps({'result':'fail','msg':'wrong request params'}))
 def modify_profile(request):
     try :
         phone = request.POST['phone']
