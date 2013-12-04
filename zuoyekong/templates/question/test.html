@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+body{
+    width:1000px;
+    margin:60px auto;
+}
+
+</style>
+</head>
+<body>
+
+{% if question_list %}
+    {% for question in question_list %}
+ID:{{ question.ID }}<br/>
+grade:{{ question.grade}}<br/>
+title:{{ question.title }}<br/>
+subject:{{ question.subject }}<br/>
+description:{{ question.description }}<br/>
+questionImages:{% for image in question.questionImages %}
+    <img src="/media/{{ image }}"/><br/>
+    {% endfor %}
+    {% endfor %}
+{%  endif %}
+
+<form method="post" action='/question/publishQuestion' enctype="multipart/form-data" >
+<h2>提交问题</h2>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+<div >标题</div><input type="text" name='title'/><br/>
+<div >描述</div><input type="text" name='description'/><br/>
+<div >学科</div><input type="text" name='subject'/><br/>
+<div >年级</div><input type="text" name='grade'/><br/>
+<div >图片数量</div><input type="text" name='pictureNumber'/><br/>
+<div >图片一</div><input type="file" name='questionImage1'/><br/>
+<div >图片二</div><input type="file" name='questionImage2'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
+<form method="post" action='/question/listQuestion' enctype="multipart/form-data" >
+<h2>用户 题目列表</h2>
+<div >被查看用户的 phone</div><input type="text" name='phone'/><br/>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
+<form method="post" action='/question/deleteQuestion' enctype="multipart/form-data" >
+<h2>用户 题目列表</h2>
+<div >删除题目的id</div><input type="text" name='questionID'/><br/>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
+
+</body>
+</html>

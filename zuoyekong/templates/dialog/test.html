@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+body{
+    width:1000px;
+    margin:60px auto;
+}
+
+</style>
+</head>
+<body>
+
+
+<form method="post" action='/dialog/call' enctype="multipart/form-data" >
+<h2>请求会话</h2>
+    <div >session id</div><input type="text" name='sessionID'/><br/>
+    <div >session key</div><input type="text" name='sessionKey'/><br/>
+    <div >问题id</div><input type="text" name='questionID'/><br/>
+    <div >应征id</div><input type="text" name='applicationID'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
+
+</body>
+</html>
