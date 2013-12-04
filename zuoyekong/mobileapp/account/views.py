@@ -12,14 +12,13 @@ import time
 
 from django.shortcuts import render
 
-def _is_online(phone,session_ID,session_key):
-    return True
+def is_online(session_ID,session_key):
     key = cache.get(session_ID)
     if(key and key == session_key):
         return True
     else:
         try:
-            session = Session.objects.get(phone=phone, session_ID=session_ID,session_key=session_key)
+            session = Session.objects.get(session_ID=session_ID,session_key=session_key)
             cache.set(session_ID,session_key,600)
             return True
         except Exception:
@@ -30,7 +29,7 @@ def account_test(request):
         phone = request.GET['phone']
         session_key = request.GET['sessionKey']
         session_ID = request.GET['sessionID']
-        if(_is_online(phone = phone,session_ID=session_ID,session_key = session_key)):
+        if(is_online(session_ID=session_ID,session_key = session_key)):
             user = User()
             user = user.safe_get(phone = phone)
         else:
@@ -181,14 +180,17 @@ def get_profile(request):
         phone = request.POST['phone']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
-        if(_is_online(phone = phone,session_ID = session_ID,session_key=session_key)):
+        if(is_online(session_ID = session_ID,session_key=session_key)):
             try:
                 user = User.objects.get(phone = phone)
                 profile = {}
                 profile['phone'] = user.phone
                 profile['type'] = user.type
                 profile['grade'] = user.grade
-                profile['headImage'] = '/media/'+user.headImage
+                if user.headImage:
+                    profile['headImage'] = 'media/'+user.headImage.__str__()
+                else:
+                    profile['headImage'] = ''
                 profile['nickname'] = user.nickname
                 return HttpResponse(json.dumps(profile))
             except Exception:
@@ -199,28 +201,28 @@ def get_profile(request):
         return HttpResponse(json.dumps({'result':'fail','msg':'wrong request params'}))
 def modify_profile(request):
     try :
-        phone = request.POST['phone']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
-        if(_is_online(phone = phone,session_ID = session_ID,session_key=session_key)):
-            try:
-                user = User.objects.get(phone = phone)
-                if request.POST.has_key('school'):
-                    user.school = request.POST['school']
-                if request.POST.has_key('grade'):
-                    user.grade = request.POST['grade']
-                if request.POST.has_key('nickname'):
-                    user.nickname = request.POST['nickname']
-                if request.FILES.has_key('headImage'):
-                    print "###########headimage##################"
-                    print request.FILES['headImage']
-                    user.headImage = request.FILES['headImage']
-                user.save()
-                return HttpResponse(json.dumps({'result':'success'}))
-            except Exception:
-                return HttpResponse(json.dumps({'result':'fail','msg':'no such user'}))
-        else:
-            return HttpResponse(json.dumps({'result':'fail','msg':'no such session'}))
+
+        session = Session()
+        phone = session.get_user_phone(session_ID,session_key)
+        if not phone:
+            return HttpResponse(json.dumps({'result':'fail','msg':'invalid session'}))
+        try:
+            user = User.objects.get(phone = phone)
+            if request.POST.has_key('school'):
+                user.school = request.POST['school']
+            if request.POST.has_key('grade'):
+                user.grade = request.POST['grade']
+            if request.POST.has_key('nickname'):
+                user.nickname = request.POST['nickname']
+            if request.FILES.has_key('headImage'):
+                user.headImage = request.FILES['headImage']
+            user.save()
+            return HttpResponse(json.dumps({'result':'success'}))
+        except Exception:
+            return HttpResponse(json.dumps({'result':'fail','msg':'no such user'}))
+
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','msg':'wrong request params'}))
 

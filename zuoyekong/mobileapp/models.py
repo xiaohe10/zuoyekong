@@ -71,12 +71,20 @@ class Session(models.Model):
         except Exception:
             return False
 
+    def get_user_phone(self,session_ID,session_key):
+        try:
+            session = Session.objects.get(session_ID=session_ID,session_key=session_key)
+            return session.phone
+        except Exception:
+            return  None
 class Question(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     subject = models.CharField(max_length=20)
     grade = models.CharField(max_length=20)
     author = models.BigIntegerField() # user id
+    status = models.CharField(max_length=20)
+    thumbnails = models.CharField(max_length=100)
 
     def get_question_list_by_user(self,user_id):
         question_list = Question.objects.filter(author = user_id)
@@ -88,10 +96,12 @@ class Question(models.Model):
             final_question['title'] = question.title
             final_question['subject'] = question.subject
             final_question['description'] = question.description
+            final_question['status'] = question.status
+            final_question['thumbnails'] = question.thumbnails
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
             for image in image_list:
-                final_image_list.append(image.image)
+                final_image_list.append("media/"+image.image.__str__())
             final_question['questionImages'] = final_image_list
             final_question_list.append(final_question)
         return final_question_list
@@ -106,6 +116,7 @@ class Question(models.Model):
             question_detail['subject'] = question.subject
             question_detail['description'] = question.description
             question_detail['author'] = question.author
+            question_detail['status'] = question.status
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
             for image in image_list:
@@ -122,8 +133,20 @@ class QuestionImages(models.Model):
 class Application(models.Model):
     qustionId = models.BigIntegerField() # question id
     applicant = models.BigIntegerField() # applicant user id
-    state = models.CharField(max_length=20) #unread/read/cancel/
     created_time = models.DateTimeField(auto_now_add=True)
+
+    def list_applications_by_question(self,question_id):
+        try:
+            query_list = Application.objects.filter(questionId = question_id)
+            application_list = []
+            for a in query_list:
+                application={}
+                application['applicant']=a.applicant
+                application['created_time']=a.created_time
+                application['question_id']=a.qustionId
+                application_list.append(application)
+        except Exception:
+            return None
 
 class Dialog(models.Model):
     studentId = models.BigIntegerField() #student user id
@@ -134,3 +157,6 @@ class Dialog(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     all_time = models.BigIntegerField() # all talk time in secondes
     charging_time  = models.BigIntegerField() # duration that charge
+
+    def generate_dialog_session(self):
+        return uuid.uuid4().hex

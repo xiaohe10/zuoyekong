@@ -67,10 +67,17 @@ headImage:<img src="/media/{{ user.headImage }}"/><br/>
 <input type="submit" value="提交"/>
 </form>
 
+<form method="post" action='/account/profile/getProfile' enctype="multipart/form-data" >
+<h2>修改个人信息</h2>
+<div >被访问者的 phone</div><input type="text" name='phone'/><br/>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
 
 <form method="post" action='/account/profile/modifyProfile' enctype="multipart/form-data" >
 <h2>修改个人信息</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
 <div >session id</div><input type="text" name='sessionID'/><br/>
 <div >session key</div><input type="text" name='sessionKey'/><br/>
 <div >学校</div><input type="text" name='school'/><br/>

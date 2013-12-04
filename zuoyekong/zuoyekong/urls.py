@@ -2,6 +2,8 @@ from django.conf.urls import patterns, url
 
 from mobileapp.account.views import *
 from mobileapp.question.views import *
+from mobileapp.application.views import *
+from mobileapp.dialog.views import *
 from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -22,10 +24,25 @@ urlpatterns = patterns('',
     url(r'^account/profile/getProfile',get_profile),
 
     url(r'^question/test',question_test),
-    url(r'^question/createQuestion',create_question),
-    url(r'^question/showQuestion',show_question),
+    url(r'^question/publishQuestion',create_question),
+    url(r'^question/listQuestion',list_user_question),
+    url(r'^question/getQuestion',show_question),
     url(r'^question/updateQuestion',update_question),
     url(r'^question/deleteQuestion',delete_question),
+
+    url(r'application/test', application_test),
+    url(r'application/apply',create_application),
+    url(r'application/cancel',cancel_application),
+    url(r'application/listApplications',list_applications),
+
+    url(r'dialog/test',dialog_test),
+    url(r'dialog/call',create_dialog),
+    url(r'dialog/cancel',cancel_call),
+    url(r'dialog/reject',reject_call),
+    url(r'dialog/answer',answer_call),
+    url(r'dialog/stopDialog',stop_dialog),
+    url(r'dialog/verify_dialog_session',verify_dialog_session),
+
 
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),
