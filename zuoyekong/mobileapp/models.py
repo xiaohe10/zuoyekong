@@ -6,46 +6,46 @@ import uuid
 
 
 class User(models.Model):
-    phone = models.BigIntegerField()
-    password = models.CharField(max_length=100)
-    nickname = models.CharField(max_length=100)
+    userName = models.CharField(max_length=30)
+    password = models.CharField(max_length=30)
+    nickname = models.CharField(max_length=20)
     type = models.CharField(max_length=10)
-    school = models.CharField(max_length=200)
-    grade = models.CharField(max_length=20)
+    school = models.CharField(max_length=20)
+    grade = models.CharField(max_length=5)
     created_time = models.DateTimeField(auto_now_add=True)
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
 
-    def safe_get(self,phone):
+    def safe_get(self,userName):
         try:
-            user = User.objects.get(phone = phone)
+            user = User.objects.get(userName = userName)
             return user
         except Exception:
             return None
 
 
 class ValildCode(models.Model):
-    phone = models.BigIntegerField()
-    codeType = models.CharField(max_length=20)
-    code = models.CharField(max_length=10)
+    userName = models.CharField(max_length=30)
+    codeType = models.CharField(max_length=10)
+    code = models.CharField(max_length=6)
 
-    def is_code_valid(self,phone,codeType,code):
+    def is_code_valid(self,userName,codeType,code):
         try:
-            validcode = ValildCode.objects.get(phone = phone, codeType=codeType,code=code)
+            validcode = ValildCode.objects.get(userName = userName, codeType=codeType,code=code)
             validcode.delete()
             return True
         except Exception:
             return False
 
-    def generate_valid_code(self,phone,codeType):
+    def generate_valid_code(self,userName,codeType):
         #todo add createtime then we can limit the gap bewteen two request for valid code
         try:
             try:
-                 same_validcodes = ValildCode.objects.filter(phone = phone, codeType=codeType)
+                 same_validcodes = ValildCode.objects.filter(userName = userName, codeType=codeType)
                  for validcode in same_validcodes:
                     validcode.delete()
             except Exception:
                 print Exception
-            self.phone = phone
+            self.userName = userName
             self.codeType = codeType
             self.code = '123456'
             self.save()
@@ -53,41 +53,48 @@ class ValildCode(models.Model):
         except Exception:
             return False
 class Session(models.Model):
-    phone = models.BigIntegerField()
+    userName = models.BigIntegerField()
     session_ID = models.CharField(max_length=100)
     session_key = models.CharField(max_length=100)
     created_time = models.DateTimeField(auto_now_add=True)
 
 
-    def generate_session_token(self,phone):
+    def generate_session_token(self,userName):
         try:
             session_ID = uuid.uuid1().hex
             session_key = uuid.uuid4().hex
             self.session_ID = session_ID
-            self.phone = phone
+            self.userName = userName
             self.session_key = session_key
             self.save()
             return {"session_ID":session_ID,"session_key":session_key}
         except Exception:
             return False
 
-    def get_user_phone(self,session_ID,session_key):
+    def get_userName(self,session_ID,session_key):
         try:
             session = Session.objects.get(session_ID=session_ID,session_key=session_key)
-            return session.phone
+            return session.userName
         except Exception:
             return  None
 class Question(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=40)
     description = models.TextField()
-    subject = models.CharField(max_length=20)
-    grade = models.CharField(max_length=20)
-    author = models.BigIntegerField() # user id
-    status = models.CharField(max_length=20)
+    subject = models.CharField(max_length=5)
+    grade = models.CharField(max_length=5)
+    authorID = models.BigIntegerField() # user id
+    authorRealName = models.CharField(max_length=30)
+    state = models.CharField(max_length=10)
     thumbnails = models.CharField(max_length=100)
+    updateTime = models.DateTimeField(auto_now=True)
 
-    def get_question_list_by_user(self,user_id):
-        question_list = Question.objects.filter(author = user_id)
+    def get_question_list(self,user_id,updateTime=None,questionstatus=None,offset = 1,limit=20):
+        question_list = Question.objects.filter(authorID = user_id)
+        if updateTime:
+            question_list = question_list.filter(updateTime >= updateTime)
+        if questionstatus:
+            question_list = question_list.filter(questionstatus = questionstatus)
+        question_list = question_list[offset:offset+limit]
         final_question_list = []
         for question in question_list:
             final_question = {}
@@ -96,14 +103,10 @@ class Question(models.Model):
             final_question['title'] = question.title
             final_question['subject'] = question.subject
             final_question['description'] = question.description
-            final_question['status'] = question.status
+            final_question['state'] = question.state
             final_question['thumbnails'] = question.thumbnails
-            image_list = QuestionImages.objects.filter(questionId = question.id)
-            final_image_list=[]
-            for image in image_list:
-                final_image_list.append("media/"+image.image.__str__())
-            final_question['questionImages'] = final_image_list
-            final_question_list.append(final_question)
+            final_question['authorID'] = question.authorID
+            final_question['authorRealName'] = question.authorRealName
         return final_question_list
 
     def get_question_detail_by_id(self,question_id):
@@ -115,8 +118,10 @@ class Question(models.Model):
             question_detail['title'] = question.title
             question_detail['subject'] = question.subject
             question_detail['description'] = question.description
-            question_detail['author'] = question.author
-            question_detail['status'] = question.status
+            question_detail['authorID'] = question.authorID
+            question_detail['authorRealName'] = question.authorRealName
+            question_detail['state'] = question.state
+            question_detail['thumbnails'] = question.thumbnails
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
             for image in image_list:

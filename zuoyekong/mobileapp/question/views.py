@@ -96,7 +96,7 @@ def create_question(request):
                         except Exception:
                             print Exception
 
-        return HttpResponse(json.dumps({'result': 'success'}))
+        return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'wrong request params'}))
 
