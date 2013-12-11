@@ -23,7 +23,7 @@ class User(models.Model):
             return None
 
 
-class ValildCode(models.Model):
+class ValidCode(models.Model):
     userName = models.CharField(max_length=30)
     codeType = models.CharField(max_length=10)
     code = models.CharField(max_length=6)
@@ -53,7 +53,7 @@ class ValildCode(models.Model):
         except Exception:
             return False
 class Session(models.Model):
-    userName = models.BigIntegerField()
+    userName = models.CharField(max_length=30)
     session_ID = models.CharField(max_length=100)
     session_key = models.CharField(max_length=100)
     created_time = models.DateTimeField(auto_now_add=True)

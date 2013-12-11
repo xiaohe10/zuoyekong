@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, url
-
 from mobileapp.account.views import *
 from mobileapp.question.views import *
 from mobileapp.application.views import *
