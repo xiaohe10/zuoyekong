@@ -7,14 +7,15 @@ import uuid
 
 class User(models.Model):
     userName = models.CharField(max_length=30)
-    password = models.CharField(max_length=30)
-    nickname = models.CharField(max_length=20)
-    type = models.CharField(max_length=10)
+    password = models.CharField(max_length=100)
+    realname = models.CharField(max_length=20)
+    userType = models.CharField(max_length=10)
     school = models.CharField(max_length=20)
     grade = models.CharField(max_length=5)
+    description = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
-
+    identify = models.CharField(max_length=10)
     def safe_get(self,userName):
         try:
             user = User.objects.get(userName = userName)
@@ -30,7 +31,7 @@ class ValidCode(models.Model):
 
     def is_code_valid(self,userName,codeType,code):
         try:
-            validcode = ValildCode.objects.get(userName = userName, codeType=codeType,code=code)
+            validcode = ValidCode.objects.get(userName = userName, codeType=codeType,code=code)
             validcode.delete()
             return True
         except Exception:
@@ -40,7 +41,7 @@ class ValidCode(models.Model):
         #todo add createtime then we can limit the gap bewteen two request for valid code
         try:
             try:
-                 same_validcodes = ValildCode.objects.filter(userName = userName, codeType=codeType)
+                 same_validcodes = ValidCode.objects.filter(userName = userName, codeType=codeType)
                  for validcode in same_validcodes:
                     validcode.delete()
             except Exception:
@@ -87,7 +88,7 @@ class Question(models.Model):
     state = models.CharField(max_length=10)
     thumbnails = models.CharField(max_length=100)
     updateTime = models.DateTimeField(auto_now=True)
-
+     
     def get_question_list(self,user_id,updateTime=None,questionstatus=None,offset = 1,limit=20):
         question_list = Question.objects.filter(authorID = user_id)
         if updateTime:

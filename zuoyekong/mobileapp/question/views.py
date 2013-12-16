@@ -16,7 +16,7 @@ import mobileapp.account.views
 def verify_access_2_question(sessionID,questionid):
     try:
         session = Session.objects.get(session_ID = sessionID)
-        userID = User.objects.get(phone=session.phone).id
+        userID = User.objects.get(userName=session.userName).id
         Question.objects.get(author = userID,id=questionid)
         return True
     except Exception:
@@ -27,12 +27,12 @@ def verify_access_2_question(sessionID,questionid):
 def question_test(request):
     question_list = None
     try:
-        phone = request.GET['phone']
+        userName = request.GET['userName']
         session_key = request.GET['sessionKey']
         session_ID = request.GET['sessionID']
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             question = Question()
-            user = User.objects.get(phone=phone)
+            user = User.objects.get(userName=userName)
             question_list = question.get_question_list_by_user(user.id)
         else:
             question_list = None
@@ -46,15 +46,19 @@ def create_question(request):
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         session = Session()
-        phone = session.get_user_phone(session_ID,session_key)
-        if not phone:
-            json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'no such session'})
+        userName = session.get_userName(session_ID,session_key)
+        if not userName:
+            return HttpRepsonse(json.dumps({'result': 'fail', 'errorType': 203, 'msg': 'no such session'}))
         try:
-            user = User.objects.get(phone = phone)
+            print '##########'
+            user = User.objects.get(userName = userName)
+            print user
+            print '#####'
         except Exception:
-            json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'no such user'})
+            return HttpReponse(json.dumps({'result': 'fail', 'errorType': 102, 'msg': 'no such user'}))
         question = Question()
-        question.author = user.id
+        question.authorID = user.id
+        question.authorRealName=user.realname
         if request.POST.has_key('title'):
             question.title = request.POST['title']
         if request.POST.has_key('description'):
@@ -98,19 +102,19 @@ def create_question(request):
 
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
     except Exception:
-        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'wrong request params'}))
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
 
 
 def list_user_question(request):
     try:
-        phone = request.POST['phone']
+        userName = request.POST['userName']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         print session_key
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             question = Question()
-            user = User.objects.get(phone=phone)
+            user = User.objects.get(userName=userName)
             question_list = question.get_question_list_by_user(user.id)
             return HttpResponse(json.dumps({'result': 'success', 'questionList':question_list}))
         else:
@@ -143,9 +147,14 @@ def drop_question_picture(request):
 
 def delete_question(request):
     try:
+        print request
         session_ID = request.POST['sessionID']
+        print session_ID
         session_key = request.POST['sessionKey']
+        print session_key
         question_ID = request.POST['questionID']
+        print question_ID
+
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             if verify_access_2_question(session_ID,question_ID):
                 try:

@@ -10,7 +10,8 @@ from zuoyekong import settings
 
 urlpatterns = patterns('',
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
-
+    
+    url(r'^uploadFile',upload_file),
     url(r'^account/test',account_test),
     url(r'^account/login/loginDo',login_do),
     url(r'^account/register/registerDo',register_do),

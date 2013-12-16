@@ -7,23 +7,16 @@ body{
 
 </style>
 <body>
-{% if user %}
-phone:{{ user.phone }}<br/>
-school:{{ user.school }}<br/>
-grade:{{ user.grade }}<br/>
-nickname:{{ user.nickname }}<br/>
-type:{{ user.type }}<br/>
-headImage:<img src="/media/{{ user.headImage }}"/><br/>
-{%  endif %}
-<form method='get' action='/account/register/getValidCode'>
+
+<form method='post' action='/account/register/getValidCode'>
 <h2>发送注册验证码</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
+<div >手机号</div><input type="text" name='userName'/><br/>
 <input type="submit" value="发送验证码"/>
 </form>
 
 <form method='post' action='/account/register/registerDo'>
 <h2>注册</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
+<div >手机号</div><input type="text" name='userName'/><br/>
 <div >密码</div><input type="password" name='password'/><br/>
 <div >学校</div><input type="text" name='school'/><br/>
 <div >类型</div><input type="text" name='type'/><br/>
@@ -33,19 +26,19 @@ headImage:<img src="/media/{{ user.headImage }}"/><br/>
 
 <form method='post' action='/account/login/loginDo'>
 <h2>登录</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
+<div >手机号</div><input type="text" name='userName'/><br/>
 <div >密码</div><input type="password" name='password'/><br/>
 <input type="submit" value="登录"/>
 </form>
 
-<form method='get' action='/account/findPass/getValidCode'>
+<form method='post' action='/account/findPass/getValidCode'>
 <h2>发送找回密码验证码</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
+<div >手机号</div><input type="text" name='userName'/><br/>
 <input type="submit" value="发送"/>
 </form>
 <form method="post" action='/account/findPass/resetPass'>
 <h2>重置手机密码</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
+<div >手机号</div><input type="text" name='userName'/><br/>
 <div >密码</div><input type="password" name='password'/><br/>
 <div >验证码</div><input type="text" name='findPassValidCode'/><br/>
 <input type="submit" value="重置"/>
@@ -53,23 +46,22 @@ headImage:<img src="/media/{{ user.headImage }}"/><br/>
 
 <form method="post" action='/account/modifyPass'>
 <h2>修改手机密码</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
+<div >手机号</div><input type="text" name='userName'/><br/>
 <div >旧密码</div><input type="password" name='oldPass'/><br/>
 <div >新密码</div><input type="password" name='newPass'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
-<form method="get" action='/account/logout'>
+<form method="post" action='/account/logout'>
 <h2>登出</h2>
-<div >手机号</div><input type="text" name='phone'/><br/>
 <div >session id</div><input type="text" name='sessionID'/><br/>
 <div >session key</div><input type="text" name='sessionKey'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
 <form method="post" action='/account/profile/getProfile' enctype="multipart/form-data" >
-<h2>修改个人信息</h2>
-<div >被访问者的 phone</div><input type="text" name='phone'/><br/>
+<h2>查看个人信息(可以查看其他人的)</h2>
+<div >被访问者的 userName</div><input type="text" name='userName'/><br/>
 <div >session id</div><input type="text" name='sessionID'/><br/>
 <div >session key</div><input type="text" name='sessionKey'/><br/>
 <input type="submit" value="提交"/>
@@ -82,8 +74,9 @@ headImage:<img src="/media/{{ user.headImage }}"/><br/>
 <div >session key</div><input type="text" name='sessionKey'/><br/>
 <div >学校</div><input type="text" name='school'/><br/>
 <div >年级</div><input type="text" name='grade'/><br/>
-<div >昵称</div><input type="text" name='nickname'/><br/>
+<div >姓名</div><input type="text" name='realname'/><br/>
 <div >头像</div><input type="file" name='headImage'/><br/>
+<div >描述</div><input type="text" name='description'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
