@@ -23,6 +23,7 @@ def is_online(session_ID,session_key):
             return True
         except Exception:
             return False
+
 def account_test(request):
    return render(request,'account/test.html',locals())
     
@@ -34,7 +35,7 @@ def send_register_valid_code(request):
             return HttpResponse(json.dumps({'result':'fail','errorType':101,'msg':'already registered'}))
         except Exception:
             validcode = ValidCode()
-            validcode.generate_valid_code(userName=userName,codeType='REGISTER')
+            validcode.generate_valid_code(userName=userName,codeType=1)
             return HttpResponse(json.dumps({'result':'success'}))
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
@@ -43,6 +44,10 @@ def login_do(request):
     try:
         userName = request.POST['userName']
         password = request.POST['password']
+        if request.POST.has_key('pushToken'):
+            push_token = request.POST['pushToken']
+        if request.POST.has_key('pushPass'):
+            push_pass = request.POST['pushPass']
         m = hashlib.md5()
         m.update(password)
         psw = m.hexdigest()
@@ -51,8 +56,13 @@ def login_do(request):
             if(user.password != psw):
                 return HttpResponse(json.dumps({'result':'fail','errorType':105,'msg':'wrong password'}))
             else:
+                sessions = Session.objects.filter(userID=user.id)
+                for s in sessions:
+                    cache.delete(s.session_ID)
+                    s.delete()
+                    #todo push alert to client
                 session = Session()
-                token = session.generate_session_token(userName)
+                token = session.generate_session_token(user.id)
                 if (token):
                     cache.set(token['session_ID'],token['session_key'],600)
                     return HttpResponse(json.dumps({'result':'success','sessionID':token['session_ID'],'sessionKey':token['session_key']}))
@@ -73,17 +83,12 @@ def register_do(request):
         code = request.POST['registerValidCode']
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
-    try:
-        type = request.POST['type']
-    except Exception:
-        type=''
-    try:
-        school = request.POST['school']
-    except Exception:
-        school = ''
+    type = request.POST['type']
+    school = request.POST['school']
+    grade = request.POST['grade']
     validcode = ValidCode()
     print code
-    if(validcode.is_code_valid(userName = userName,codeType='REGISTER',code=code)):
+    if(validcode.is_code_valid(userName = userName,codeType=1,code=code)):
         try:
             user = User.objects.get(userName=userName)
             return HttpResponse(json.dumps({'result':'fail','errorType':101,'msg':'userName has registered'}))
@@ -91,6 +96,9 @@ def register_do(request):
             newUser = User()
             newUser.userName = userName
             newUser.password = psw
+            newUser.userType = type
+            newUser.school = school
+            newUser.grade = grade
             newUser.save()
             return HttpResponse(json.dumps({'result':'success'}))
     else:
@@ -98,12 +106,12 @@ def register_do(request):
 
 def logout(request):
     try:
-        userName = request.POST['userName']
+        userID = request.POST['userID']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         try:
             cache.delete(session_ID)
-            session = Session.objects.get(userName=userName,session_ID=session_ID,session_key=session_key)
+            session = Session.objects.get(userID=userID,session_ID=session_ID,session_key=session_key)
             session.delete()
             return HttpResponse(json.dumps({'result':'success'}))
         except Exception:
@@ -117,7 +125,7 @@ def send_find_pass_valid_code(request):
         try:
             User.objects.get(userName = userName)
             validcode = ValidCode()
-            validcode.generate_valid_code(userName,'FINDPASS')
+            validcode.generate_valid_code(userName,2)
             return HttpResponse(json.dumps({'result':'success'}))
         except Exception:
             return HttpResponse(json.dumps({'result':'fail','errorType':104,'msg':'no such user'}))
@@ -130,7 +138,7 @@ def reset_pass(request):
         newPass = request.POST['password']
         code = request.POST['findPassValidCode']
         validcode = ValidCode()
-        if(validcode.is_code_valid(userName = userName,codeType='FINDPASS',code=code)):
+        if(validcode.is_code_valid(userName = userName,codeType=2,code=code)):
             user = User.objects.get(userName = userName)
             m = hashlib.md5()
             m.update(newPass)
@@ -166,18 +174,21 @@ def modify_pass(request):
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
 def get_profile(request):
     try:
-        userName = request.POST['userName']
+        userID = request.POST['userID']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         if(is_online(session_ID = session_ID,session_key=session_key)):
             try:
-                user = User.objects.get(userName = userName)
+                user = User.objects.get(id = userID)
                 profile = {}
+                profile['userID'] = user.id
                 profile['userName'] = user.userName
                 profile['userType'] = user.userType
                 profile['school']= user.school
                 profile['description']= user.description
                 profile['grade'] = user.grade
+                profile['realname'] = user.realname
+                profile['identify'] = user.identify
                 print user.userName
                 if user.headImage:
                     profile['headImage'] = 'media/'+user.headImage.__str__()
@@ -197,12 +208,11 @@ def modify_profile(request):
         session_key = request.POST['sessionKey']
         print session_ID
         session = Session()
-        userName = session.get_userName(session_ID,session_key)
-        print userName
-        if not userName:
+        userID = session.get_userID(session_ID,session_key)
+        if not userID:
             return HttpResponse(json.dumps({'result':'fail','errorType':203,'msg':'invalid session'}))
         try:
-            user = User.objects.get(userName = userName)
+            user = User.objects.get(id = userID)
             if request.POST.has_key('school'):
                 user.school = request.POST['school']
             if request.POST.has_key('grade'):

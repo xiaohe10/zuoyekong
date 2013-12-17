@@ -12,18 +12,6 @@ body{
 </head>
 <body>
 
-{% if question_list %}
-    {% for question in question_list %}
-ID:{{ question.ID }}<br/>
-grade:{{ question.grade}}<br/>
-title:{{ question.title }}<br/>
-subject:{{ question.subject }}<br/>
-description:{{ question.description }}<br/>
-questionImages:{% for image in question.questionImages %}
-    <img src="/media/{{ image }}"/><br/>
-    {% endfor %}
-    {% endfor %}
-{%  endif %}
 
 <form method="post" action='/question/publishQuestion' enctype="multipart/form-data" >
 <h2>提交问题</h2>
@@ -33,6 +21,23 @@ questionImages:{% for image in question.questionImages %}
 <div >描述</div><input type="text" name='description'/><br/>
 <div >学科</div><input type="text" name='subject'/><br/>
 <div >年级</div><input type="text" name='grade'/><br/>
+<div >语音</div><input type="text" name='voice'/><br/>
+<div >图片数量</div><input type="text" name='pictureNumber'/><br/>
+<div >图片一</div><input type="file" name='questionImage1'/><br/>
+<div >图片二</div><input type="file" name='questionImage2'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
+<form method="post" action='/question/updateQuestion' enctype="multipart/form-data" >
+<h2>修改问题</h2>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+<div >题目id</div><input type="text" name='questionID'/><br/>
+<div >标题</div><input type="text" name='title'/><br/>
+<div >描述</div><input type="text" name='description'/><br/>
+<div >学科</div><input type="text" name='subject'/><br/>
+<div >年级</div><input type="text" name='grade'/><br/>
+<div >语音</div><input type="text" name='voice'/><br/>
 <div >图片数量</div><input type="text" name='pictureNumber'/><br/>
 <div >图片一</div><input type="file" name='questionImage1'/><br/>
 <div >图片二</div><input type="file" name='questionImage2'/><br/>
@@ -40,21 +45,52 @@ questionImages:{% for image in question.questionImages %}
 </form>
 
 <form method="post" action='/question/listQuestion' enctype="multipart/form-data" >
-<h2>用户 题目列表</h2>
-<div >被查看用户的 phone</div><input type="text" name='phone'/><br/>
+<h2>获取用户问题列表</h2>
+<div >被查看用户的 id</div><input type="text" name='userID'/><br/>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+    <div >updateTime</div><input type="text" name='updateTime'/><br/>
+ <div >questionState</div><input type="text" name='questionState'/><br/>
+    <div >limit</div><input type="text" name='limit'/><br/>
+    <div >offset</div><input type="text" name='offset'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
+<form method="post" action='/question/getQuestion' enctype="multipart/form-data" >
+<h2>获取用户问题详细信息</h2>
+<div >问题id</div><input type="text" name='questionID'/><br/>
 <div >session id</div><input type="text" name='sessionID'/><br/>
 <div >session key</div><input type="text" name='sessionKey'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
 <form method="post" action='/question/deleteQuestion' enctype="multipart/form-data" >
-<h2>用户 题目列表</h2>
+<h2>删除题目</h2>
 <div >删除题目的id</div><input type="text" name='questionID'/><br/>
 <div >session id</div><input type="text" name='sessionID'/><br/>
 <div >session key</div><input type="text" name='sessionKey'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
+<form method="post" action='/question/deleteQuestion' enctype="multipart/form-data" >
+<h2>获取推荐老师列表</h2>
+<div>question id</div><input type="text" name='questionID'/><br/>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+<div >limit</div><input type="text" name='limit'/><br/>
+<div >offset</div><input type="text" name='offset'/><br/>
+<input type="submit" value="提交"/>
+</form>
 
+<form method="post" action='/question/deleteQuestion' enctype="multipart/form-data" >
+<h2>给老师推送</h2>
+<div>question id</div><input type="text" name='questionID'/><br/>
+<div >session id</div><input type="text" name='sessionID'/><br/>
+<div >session key</div><input type="text" name='sessionKey'/><br/>
+<div >老师数量</div><input type="text" name='teacherNumber'/><br/>
+<div >老师1</div><input type="text" name='teacher1'/><br/>
+<div >老师2</div><input type="text" name='teacher2'/><br/>
+<input type="submit" value="提交"/>
+</form>
 </body>
 </html>

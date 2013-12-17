@@ -1,17 +1,71 @@
+# This Python file uses the following encoding: utf-8
 from django.db import models
 from random import Random
 import uuid
 
+GRADE_CHOICES=(
+    (1,'一年级'),
+    (2,'二年级'),
+    (3,'三年级'),
+    (4,'四年级'),
+    (5,'五年级'),
+    (6,'六年级'),
+    (7,'初一'),
+    (8,'初二'),
+    (9,'初三'),
+    (10,'高一'),
+    (11,'高二'),
+    (12,'高三'),
+    (13,'大一'),
+    (14,'大二'),
+    (15,'大三'),
+    (16,'大四'),
+    (16,'研究生'),
+    (16,'老师'),
+)
+USER_CHOICES=(
+    (1,'学生'),
+    (2,'老师'),
+    (3,'管理员'),
+)
 
+VALIDCODE_CHOICES=(
+    (1,'注册验证码'),
+    (2,'修改密码验证码'),
+)
+DIALOG_STATE_CHOICES=(
+    #waiting/refused/inDialog/finished
+    (1,'WAITING'),
+    (2,'REFUSED'),
+    (3,'INDIALOG'),
+    (4,'FINISHED'),
+)
+SUBJECT_CHOICES=(
+    (1,'语文'),
+    (2,'数学'),
+    (3,'英语'),
+    (4,'物理'),
+    (5,'化学'),
+    (6,'生物'),
+    (7,'政治'),
+    (8,'历史'),
+    (9,'地理'),
+    (10,'音乐'),
+    (11,'美术'),
+)
 
-
+QUESTION_STATE_CHOICES=(
+    (1,'尚未解决'),
+    (2,'正在解答'),
+    (3,'已经解决'),
+)
 class User(models.Model):
     userName = models.CharField(max_length=30)
     password = models.CharField(max_length=100)
     realname = models.CharField(max_length=20)
-    userType = models.CharField(max_length=10)
+    userType = models.IntegerField(max_length=2,choices=USER_CHOICES)
     school = models.CharField(max_length=20)
-    grade = models.CharField(max_length=5)
+    grade = models.IntegerField(max_length=5,choices=GRADE_CHOICES)
     description = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
@@ -26,8 +80,9 @@ class User(models.Model):
 
 class ValidCode(models.Model):
     userName = models.CharField(max_length=30)
-    codeType = models.CharField(max_length=10)
+    codeType = models.IntegerField(max_length=2)
     code = models.CharField(max_length=6)
+    createTime = models.DateTimeField(auto_now_add=True)
 
     def is_code_valid(self,userName,codeType,code):
         try:
@@ -54,41 +109,45 @@ class ValidCode(models.Model):
         except Exception:
             return False
 class Session(models.Model):
-    userName = models.CharField(max_length=30)
+    userID = models.BigIntegerField(20)
     session_ID = models.CharField(max_length=100)
     session_key = models.CharField(max_length=100)
     created_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
 
 
-    def generate_session_token(self,userName):
+    def generate_session_token(self,userID):
         try:
             session_ID = uuid.uuid1().hex
             session_key = uuid.uuid4().hex
             self.session_ID = session_ID
-            self.userName = userName
+            self.userID = userID
             self.session_key = session_key
             self.save()
             return {"session_ID":session_ID,"session_key":session_key}
         except Exception:
             return False
 
-    def get_userName(self,session_ID,session_key):
+    def get_userID(self,session_ID,session_key):
         try:
             session = Session.objects.get(session_ID=session_ID,session_key=session_key)
-            return session.userName
+            return session.userID
         except Exception:
             return  None
 class Question(models.Model):
     title = models.CharField(max_length=40)
     description = models.TextField()
-    subject = models.CharField(max_length=5)
-    grade = models.CharField(max_length=5)
-    authorID = models.BigIntegerField() # user id
+    subject = models.IntegerField(max_length=2,choices=SUBJECT_CHOICES)
+    grade = models.IntegerField(max_length=2,choices=GRADE_CHOICES)
+    authorID = models.BigIntegerField(20)
     authorRealName = models.CharField(max_length=30)
-    state = models.CharField(max_length=10)
+    state = models.IntegerField(max_length=2,choices=QUESTION_STATE_CHOICES)
     thumbnails = models.CharField(max_length=100)
+    voice = models.FileField(upload_to='questionVoice/%Y/%m/%d')
     updateTime = models.DateTimeField(auto_now=True)
-     
+    applicationNumber = models.IntegerField(default=0)
+    unread_applicationNumber = models.IntegerField(default=0)
+
     def get_question_list(self,user_id,updateTime=None,questionstatus=None,offset = 1,limit=20):
         question_list = Question.objects.filter(authorID = user_id)
         if updateTime:
@@ -108,8 +167,19 @@ class Question(models.Model):
             final_question['thumbnails'] = question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
+            final_question['unreadApplicationNumber'] = question.unread_applicationNumber
         return final_question_list
-
+    def update_application_number(self,questionID):
+        try:
+            q = Question.objects.get(ID = questionID)
+            q.unread_applicationNumber = 0
+            q.save()
+            applications = Application.objects.filter(qustionId = questionID)
+            for a in applications:
+                a.applicationState = 1
+                a.save()
+        except Exception:
+            print 'no such question'
     def get_question_detail_by_id(self,question_id):
         try:
             question = Question.objects.get(id = question_id)
@@ -123,6 +193,8 @@ class Question(models.Model):
             question_detail['authorRealName'] = question.authorRealName
             question_detail['state'] = question.state
             question_detail['thumbnails'] = question.thumbnails
+            question_detail['applicationNumber'] = question.applicationNumber
+            question_detail['voice'] = question.voice
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
             for image in image_list:
@@ -133,13 +205,14 @@ class Question(models.Model):
         
 
 class QuestionImages(models.Model):
-    questionId = models.BigIntegerField() # question id
+    questionId = models.ForeignKey(Question)
     image = models.FileField(upload_to='questionPictures/%Y/%m/%d')
 
 class Application(models.Model):
-    qustionId = models.BigIntegerField() # question id
-    applicant = models.BigIntegerField() # applicant user id
+    qustionId = models.BigIntegerField(20)
+    applicant =  models.BigIntegerField(20)
     created_time = models.DateTimeField(auto_now_add=True)
+    applicationState = models.IntegerField(max_length=2,default=0)
 
     def list_applications_by_question(self,question_id):
         try:
@@ -155,10 +228,10 @@ class Application(models.Model):
             return None
 
 class Dialog(models.Model):
-    studentId = models.BigIntegerField() #student user id
-    tearcherId = models.BigIntegerField() # teacher user id
-    questionId = models.BigIntegerField() # question id
-    state = models.CharField(max_length=20) #waiting/refused/inDialog/finished
+    studentId =  models.BigIntegerField(20)
+    tearcherId = models.BigIntegerField(20)
+    questionId =models.BigIntegerField(20)
+    state = models.IntegerField(max_length=2,choices=DIALOG_STATE_CHOICES)
     dialogSession = models.CharField(max_length=100)
     created_time = models.DateTimeField(auto_now_add=True)
     all_time = models.BigIntegerField() # all talk time in secondes
@@ -166,3 +239,8 @@ class Dialog(models.Model):
 
     def generate_dialog_session(self):
         return uuid.uuid4().hex
+
+class Follow(models.Model):
+    followerId = models.BigIntegerField(20)
+    followeeID = models.BigIntegerField(20)
+    createdTime = models.DateTimeField(auto_now_add=True)

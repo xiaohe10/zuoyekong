@@ -20,6 +20,7 @@ body{
 <div >密码</div><input type="password" name='password'/><br/>
 <div >学校</div><input type="text" name='school'/><br/>
 <div >类型</div><input type="text" name='type'/><br/>
+<div >年级</div><input type="text" name='grade'/><br/>
 <div >验证码</div><input type="text" name='registerValidCode'/><br/>
 <input type="submit" value="注册"/>
 </form>
@@ -61,7 +62,7 @@ body{
 
 <form method="post" action='/account/profile/getProfile' enctype="multipart/form-data" >
 <h2>查看个人信息(可以查看其他人的)</h2>
-<div >被访问者的 userName</div><input type="text" name='userName'/><br/>
+<div >被访问者的 userID</div><input type="text" name='userID'/><br/>
 <div >session id</div><input type="text" name='sessionID'/><br/>
 <div >session key</div><input type="text" name='sessionKey'/><br/>
 <input type="submit" value="提交"/>
