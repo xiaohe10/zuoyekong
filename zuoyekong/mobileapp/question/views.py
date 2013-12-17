@@ -85,7 +85,7 @@ def create_question(request):
                         except Exception:
                             print Exception
 
-        return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
+        return HttpResponse(json.dumps({'result': 'success','errorType': 203,'questionID':question.id}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
@@ -96,16 +96,22 @@ def list_user_question(request):
         userID = request.POST['userID']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
-        print session_key
+        if request.POST.has_key('updateTime'):
+            updateTime = None if (request.POST['updateTime'] == '') else request.POST['updateTime']
+        if request.POST.has_key('questionState'):
+            questionState = None if (request.POST['questionState'] == '') else request.POST['questionState']
+        if request.POST.has_key('limit'):
+            limit = 20 if (request.POST['limit'] == '') else request.POST['limit']
+        if request.POST.has_key('offset'):
+            offset = 0 if (request.POST['offset'] == '') else request.POST['offset']
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             question = Question()
-            user = User.objects.get(id=userID)
-            question_list = question.get_question_list_by_user(user.id)
+            question_list = question.get_question_list(user_id = userID,update_time=updateTime,state = questionState,limit=limit,offset=offset)
             return HttpResponse(json.dumps({'result': 'success', 'questionList':question_list}))
         else:
-            return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such session'}))
+            return HttpResponse(json.dumps({'result': 'fail','errorType': 203, 'msg': 'no such session'}))
     except Exception:
-        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'wrong request params'}))
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
 def show_question(request):
     try:
@@ -114,14 +120,14 @@ def show_question(request):
         question_ID = request.POST['questionID']
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             question = Question()
-            question_detail = question.get_question_detail_by_id(question_ID=question_ID)
+            question_detail = question.get_question_detail_by_id(question_id=question_ID)
             if(verify_access_2_question(session_ID,question_ID)):
                 question.update_application_number(question_ID)
             return HttpResponse(json.dumps({'result': 'success', 'questiondetail':question_detail}))
         else:
-            return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such session'}))
+            return HttpResponse(json.dumps({'result': 'fail','errorType': 203, 'msg': 'no such session'}))
     except Exception:
-        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'wrong request params'}))
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
 def update_question(request):
     try:
@@ -136,7 +142,10 @@ def update_question(request):
             user = User.objects.get(id = userID)
         except Exception:
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 102, 'msg': 'no such user'}))
-        question = Question.objects.get(id = questionID)
+        try:
+            question = Question.objects.get(id = questionID)
+        except:
+            return HttpResponse(json.dumps({'result': 'fail', 'errorType': 301, 'msg': 'question doesnt exist or has been deleted'}))
         question.authorID = user.id
         question.authorRealName=user.realname
         if request.POST.has_key('title'):
@@ -149,7 +158,7 @@ def update_question(request):
             question.grade = request.POST['grade']
         if request.FILES.has_key('voice'):
             question.voice = request.FILES['voice']
-        question.status = 'unsolved'
+        question.status = 1
         question.save()
         applications = Application.objects.filter(questionId = question.id)
         for a in applications:
@@ -203,15 +212,10 @@ def delete_question(request):
 
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             if verify_access_2_question(session_ID,question_ID):
-                try:
-                    q = Question.objects.get(id=question_ID)
-                    q.delete()
-                    return HttpResponse(json.dumps({'result':'success','questionID':question_ID}))
-                except Exception:
-                    return HttpResponse(json.dumps({'result': 'fail', 'msg': 'question doesnt exist'}))
+                return HttpResponse(json.dumps({'result':'success','questionID':question_ID}))
             else:
-                return HttpResponse(json.dumps({'result': 'fail', 'msg': 'cannot access to this question or question not exist'}))
+                return HttpResponse(json.dumps({'result': 'fail','errorType': 202, 'msg': 'cannot operate on this question or question doesnt exist'}))
         else:
-            return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such session'}))
+            return HttpResponse(json.dumps({'result': 'fail', 'errorType': 203,'msg': 'no such session'}))
     except Exception:
-        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'wrong request params'}))
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))

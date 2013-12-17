@@ -106,12 +106,11 @@ def register_do(request):
 
 def logout(request):
     try:
-        userID = request.POST['userID']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         try:
+            session = Session.objects.get(session_ID=session_ID,session_key=session_key)
             cache.delete(session_ID)
-            session = Session.objects.get(userID=userID,session_ID=session_ID,session_key=session_key)
             session.delete()
             return HttpResponse(json.dumps({'result':'success'}))
         except Exception:
@@ -189,12 +188,11 @@ def get_profile(request):
                 profile['grade'] = user.grade
                 profile['realname'] = user.realname
                 profile['identify'] = user.identify
-                print user.userName
+                #print user.userName
                 if user.headImage:
-                    profile['headImage'] = 'media/'+user.headImage.__str__()
+                    profile['headImage'] = '/media/'+user.headImage.__str__()
                 else:
                     profile['headImage'] = ''
-                profile['realname'] = user.realname
                 return HttpResponse(json.dumps(profile))
             except Exception:
                 return HttpResponse(json.dumps({'result':'fail','errorType':102,'msg':'no such user'}))
@@ -206,7 +204,6 @@ def modify_profile(request):
     try :
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
-        print session_ID
         session = Session()
         userID = session.get_userID(session_ID,session_key)
         if not userID:
@@ -218,7 +215,7 @@ def modify_profile(request):
             if request.POST.has_key('grade'):
                 user.grade = request.POST['grade']
             if request.POST.has_key('realname'):
-                user.nickname = request.POST['realname']
+                user.realname = request.POST['realname']
             if request.POST.has_key('description'):
                 user.description = request.POST['description']
             if request.FILES.has_key('headImage'):

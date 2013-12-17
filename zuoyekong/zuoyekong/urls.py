@@ -3,6 +3,7 @@ from mobileapp.account.views import *
 from mobileapp.question.views import *
 from mobileapp.application.views import *
 from mobileapp.dialog.views import *
+from mobileapp.follow.views import *
 from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -43,6 +44,8 @@ urlpatterns = patterns('',
     url(r'dialog/stopDialog',stop_dialog),
     url(r'dialog/verify_dialog_session',verify_dialog_session),
 
+    url(r'recommend/getRecommendTeachers',get_recommended_teacher),
+    url(r'recommend/push2Teachers',push_to_teachers),
 
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),

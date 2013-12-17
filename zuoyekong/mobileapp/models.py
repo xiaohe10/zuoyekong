@@ -2,6 +2,7 @@
 from django.db import models
 from random import Random
 import uuid
+import datetime
 
 GRADE_CHOICES=(
     (1,'一年级'),
@@ -58,6 +59,10 @@ QUESTION_STATE_CHOICES=(
     (1,'尚未解决'),
     (2,'正在解答'),
     (3,'已经解决'),
+)
+APPLICATION_CHOICES=(
+    (1,'未读'),
+    (2,'已读')
 )
 class User(models.Model):
     userName = models.CharField(max_length=30)
@@ -148,15 +153,23 @@ class Question(models.Model):
     applicationNumber = models.IntegerField(default=0)
     unread_applicationNumber = models.IntegerField(default=0)
 
-    def get_question_list(self,user_id,updateTime=None,questionstatus=None,offset = 1,limit=20):
+    def get_question_list(self,user_id,update_time=None,state=None,offset = 0,limit=20):
         question_list = Question.objects.filter(authorID = user_id)
-        if updateTime:
-            question_list = question_list.filter(updateTime >= updateTime)
-        if questionstatus:
-            question_list = question_list.filter(questionstatus = questionstatus)
-        question_list = question_list[offset:offset+limit]
+        if update_time:
+            t = datetime.datetime.strptime(update_time,'%Y-%m-%d %H:%M:%S')
+            question_list = question_list.filter(updateTime__gte = t)
+        if state:
+            question_list = question_list.filter(state = state)
+        try:
+            questionList = question_list[int(offset):int(offset)+int(limit)]
+        except:
+            try:
+                questionList = question_list[int(offset):]
+            except:
+                questionList = []
+
         final_question_list = []
-        for question in question_list:
+        for question in questionList:
             final_question = {}
             final_question['ID'] = question.id
             final_question['grade'] = question.grade
@@ -164,14 +177,16 @@ class Question(models.Model):
             final_question['subject'] = question.subject
             final_question['description'] = question.description
             final_question['state'] = question.state
-            final_question['thumbnails'] = question.thumbnails
+            final_question['thumbnails'] = '/media/'+question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
             final_question['unreadApplicationNumber'] = question.unread_applicationNumber
+            final_question['updateTime'] = question.updateTime.__str__()
+            final_question_list.append(final_question)
         return final_question_list
     def update_application_number(self,questionID):
         try:
-            q = Question.objects.get(ID = questionID)
+            q = Question.objects.get(id = questionID)
             q.unread_applicationNumber = 0
             q.save()
             applications = Application.objects.filter(qustionId = questionID)
@@ -192,27 +207,38 @@ class Question(models.Model):
             question_detail['authorID'] = question.authorID
             question_detail['authorRealName'] = question.authorRealName
             question_detail['state'] = question.state
-            question_detail['thumbnails'] = question.thumbnails
+            question_detail['thumbnails'] = '/media/'+question.thumbnails
             question_detail['applicationNumber'] = question.applicationNumber
-            question_detail['voice'] = question.voice
+            question_detail['updateTime'] = question.updateTime.__str__()
+            question_detail['voice'] = '/media/'+question.voice.__str__()
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
             for image in image_list:
-                final_image_list.append(image.image)
+                final_image_list.append('/media/'+image.image.__str__())
             question_detail['questionImages'] = final_image_list
+            applications = Application.objects.filter(questionId = question_id)
+            application_list = []
+            for a in applications:
+                application = {}
+                application['applicantID'] = a.applicant
+                application['createdTime'] = a.created_time
+                application['state'] = a.applicationState
+                application_list.append(application)
+            question_detail['applications'] = application_list
+            return  question_detail
         except Exception:
             return None
         
 
 class QuestionImages(models.Model):
-    questionId = models.ForeignKey(Question)
+    questionId = models.BigIntegerField(20)
     image = models.FileField(upload_to='questionPictures/%Y/%m/%d')
 
 class Application(models.Model):
-    qustionId = models.BigIntegerField(20)
+    questionId = models.BigIntegerField(20)
     applicant =  models.BigIntegerField(20)
     created_time = models.DateTimeField(auto_now_add=True)
-    applicationState = models.IntegerField(max_length=2,default=0)
+    applicationState = models.IntegerField(max_length=2,default=0,choices= APPLICATION_CHOICES)
 
     def list_applications_by_question(self,question_id):
         try:
@@ -222,7 +248,7 @@ class Application(models.Model):
                 application={}
                 application['applicant']=a.applicant
                 application['created_time']=a.created_time
-                application['question_id']=a.qustionId
+                application['question_id']=a.questionId
                 application_list.append(application)
         except Exception:
             return None
