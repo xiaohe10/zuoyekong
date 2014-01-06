@@ -21,7 +21,7 @@ def create_application(request):
         s = Session()
         phone  = s.get_user_phone(session_ID=session_ID,session_key=session_key)
         if not phone:
-            return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such session'}))
+            return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such session','errorType':203}))
         try:
             user = User.objects.get(phone=phone)
         except Exception:
@@ -31,7 +31,7 @@ def create_application(request):
         application.state = 'unread'
         application.qustionId = question_id
         application.save()
-        return HttpResponse(json.dumps({'result': 'success'}))
+        return HttpResponse(json.dumps({'result': 'success','applicationID':application.id}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 500, 'msg': 'wrong request params'}))
 

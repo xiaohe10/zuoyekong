@@ -4,6 +4,7 @@ from mobileapp.question.views import *
 from mobileapp.application.views import *
 from mobileapp.dialog.views import *
 from mobileapp.follow.views import *
+from mobileapp.recommend.views import *
 from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -13,7 +14,10 @@ urlpatterns = patterns('',
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
     
     url(r'^uploadFile',upload_file),
+
+
     url(r'^account/test',account_test),
+    url(r'^account/userNameExist',userName_exist),
     url(r'^account/login/loginDo',login_do),
     url(r'^account/register/registerDo',register_do),
     url(r'^account/register/getValidCode',send_register_valid_code),
@@ -30,22 +34,24 @@ urlpatterns = patterns('',
     url(r'^question/getQuestion',show_question),
     url(r'^question/updateQuestion',update_question),
     url(r'^question/deleteQuestion',delete_question),
+    url(r'^question/searchQuestions',search_question),
+    url(r'^recommend/getRecommendTeachers',get_recommended_teacher),
+    url(r'^dialog/getRecentTeachers',get_recent_teacher),
+    url(r'^follow/getFollowedTeachers',get_followed_teacher),
 
-    url(r'application/test', application_test),
-    url(r'application/apply',create_application),
-    url(r'application/cancel',cancel_application),
-    url(r'application/listApplications',list_applications),
+    url(r'^application/test', application_test),
+    url(r'^application/apply',create_application),
+    url(r'^application/cancel',cancel_application),
+    url(r'^application/listApplications',list_applications),
 
-    url(r'dialog/test',dialog_test),
-    url(r'dialog/call',create_dialog),
-    url(r'dialog/cancel',cancel_call),
-    url(r'dialog/reject',reject_call),
-    url(r'dialog/answer',answer_call),
-    url(r'dialog/stopDialog',stop_dialog),
-    url(r'dialog/verify_dialog_session',verify_dialog_session),
+    url(r'^dialog/test',dialog_test),
+    url(r'^dialog/call',create_dialog),
+    url(r'^dialog/cancel',cancel_call),
+    url(r'^dialog/reject',reject_call),
+    url(r'^dialog/answer',answer_call),
+    url(r'^dialog/stopDialog',stop_dialog),
+    url(r'^dialog/verify_dialog_session',verify_dialog_session),
 
-    url(r'recommend/getRecommendTeachers',get_recommended_teacher),
-    url(r'recommend/push2Teachers',push_to_teachers),
 
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),

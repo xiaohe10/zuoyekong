@@ -84,8 +84,28 @@ def create_question(request):
                             question.save()
                         except Exception:
                             print Exception
-
-        return HttpResponse(json.dumps({'result': 'success','errorType': 203,'questionID':question.id}))
+        teachers = []
+        if request.POST.has_key('teacherNumber'):
+            n = int(request.POST['teacherNumber'])
+            count = 0
+            while(n > 0):
+                n = n - 1
+                count += 1
+                if request.POST.has_key('teacher'+count.__str__()):
+                    t = {}
+                    try:
+                        teacherID = request.POST['teacher'+count.__str__()]
+                        teacher = User.objects.filter(id = teacherID).get(userType = 2)
+                        #todo push to teacher
+                        t['result'] = 'success'
+                        t['teacherID'] = teacherID
+                    except:
+                        t['result'] = 'fail'
+                        t['errorType'] = 107
+                        t['teacherID'] = teacherID
+                        t['msg'] =  'no such teacher'
+                    teachers.append(t)
+        return HttpResponse(json.dumps({'result': 'success','questionID':question.id,'teachers':teachers}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
@@ -96,6 +116,10 @@ def list_user_question(request):
         userID = request.POST['userID']
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
+        updateTime = None
+        questionState = None
+        limit = 20
+        offset = 0
         if request.POST.has_key('updateTime'):
             updateTime = None if (request.POST['updateTime'] == '') else request.POST['updateTime']
         if request.POST.has_key('questionState'):
@@ -194,28 +218,102 @@ def update_question(request):
                             question.save()
                         except Exception:
                             print Exception
-
-        return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
+        teachers = []
+        if request.POST.has_key('teacherNumber'):
+            n = int(request.POST['teacherNumber'])
+            count = 0
+            while(n > 0):
+                n = n - 1
+                count += 1
+                if request.POST.has_key('teacher'+count.__str__()):
+                    t = {}
+                    try:
+                        teacherID = request.POST['teacher'+count.__str__()]
+                        teacher = User.objects.filter(id = teacherID).get(userType = 2)
+                        #todo push to teacher
+                        t['result'] = 'success'
+                        t['teacherID'] = teacherID
+                    except:
+                        t['result'] = 'fail'
+                        t['errorType'] = 107
+                        t['teacherID'] = teacherID
+                        t['msg'] =  'no such teacher'
+                    teachers.append(t)
+        return HttpResponse(json.dumps({'result': 'success','questionID':question.id,teachers:teachers}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
 
 def delete_question(request):
     try:
-        print request
         session_ID = request.POST['sessionID']
-        print session_ID
         session_key = request.POST['sessionKey']
-        print session_key
         question_ID = request.POST['questionID']
-        print question_ID
 
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             if verify_access_2_question(session_ID,question_ID):
+                q = Question.objects.get(id = question_ID)
+                q.delete()
                 return HttpResponse(json.dumps({'result':'success','questionID':question_ID}))
             else:
                 return HttpResponse(json.dumps({'result': 'fail','errorType': 202, 'msg': 'cannot operate on this question or question doesnt exist'}))
         else:
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 203,'msg': 'no such session'}))
     except Exception:
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+
+def search_question(request):
+    try:
+        session_ID = request.POST['sessionID']
+        session_key = request.POST['sessionKey']
+        limit = 5
+        offset = 0
+        if request.POST.has_key('limit'):
+            limit  = request.POST['limit']
+            if not limit:
+                limit = 5
+        else:
+            limit = 5
+        if request.POST.has_key('offset'):
+            offset  = request.POST['offset']
+            if not offset:
+                offset = 0
+        else:
+            offset = 0
+        all_questions = Question.objects.filter(state=1)
+        questions = []
+        if request.POST.has_key('subject'):
+            subjects = request.POST['subject']
+            subject_list = subjects.split('|')
+            for s in subject_list:
+                questions.extend(all_questions.filter(subject = s))
+        if request.POST.has_key('grade'):
+            grades = request.POST['grade']
+            grade_list = subjects.split('|')
+            for g in grade_list:
+                questions.extend(all_questions.filter(grade = g))
+        try:
+                questions = questions[int(offset):int(offset)+int(limit)]
+        except:
+            try:
+                questions = questions[int(offset):]
+            except:
+                questions = []
+        question_list = []
+        for question in questions:
+            final_question = {}
+            final_question['ID'] = question.id
+            final_question['grade'] = question.grade
+            final_question['title'] = question.title
+            final_question['subject'] = question.subject
+            final_question['description'] = question.description
+            final_question['state'] = question.state
+            final_question['thumbnails'] = '/media/'+question.thumbnails
+            final_question['authorID'] = question.authorID
+            final_question['authorRealName'] = question.authorRealName
+            final_question['unreadApplicationNumber'] = question.unread_applicationNumber
+            final_question['updateTime'] = question.updateTime.__str__()
+            question_list.append(final_question)
+        return HttpResponse(json.dumps({'result': 'success', 'questionList': question_list}))
+    except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))

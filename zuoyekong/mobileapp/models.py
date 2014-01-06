@@ -154,7 +154,7 @@ class Question(models.Model):
     unread_applicationNumber = models.IntegerField(default=0)
 
     def get_question_list(self,user_id,update_time=None,state=None,offset = 0,limit=20):
-        question_list = Question.objects.filter(authorID = user_id)
+        question_list = Question.objects.filter(authorID = user_id).order_by('-updateTime')
         if update_time:
             t = datetime.datetime.strptime(update_time,'%Y-%m-%d %H:%M:%S')
             question_list = question_list.filter(updateTime__gte = t)

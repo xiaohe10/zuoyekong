@@ -8,6 +8,12 @@ body{
 </style>
 <body>
 
+<form method='post' action='/account/userNameExist'>
+<h2>用户名是否存在</h2>
+<div >手机号</div><input type="text" name='userName'/><br/>
+<input type="submit" value="发送"/>
+</form>
+
 <form method='post' action='/account/register/getValidCode'>
 <h2>发送注册验证码</h2>
 <div >手机号</div><input type="text" name='userName'/><br/>
@@ -81,5 +87,12 @@ body{
 <input type="submit" value="提交"/>
 </form>
 
+
+<form method="post" action='/uploadFile' enctype="multipart/form-data" >
+<h2>上传</h2>
+<div >文件</div><input type="text" name='file'/><br/>
+    <div >文件</div><input type="file" name='file'/><br/>
+<input type="submit" value="提交"/>
+</form>
 </body>
 </html>

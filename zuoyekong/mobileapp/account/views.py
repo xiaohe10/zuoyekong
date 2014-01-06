@@ -9,7 +9,8 @@ from mobileapp.models import *
 from django.http import HttpResponseRedirect
 import hashlib
 import time
-
+from zuoyekong.settings import MEDIA_ROOT
+import os
 from django.shortcuts import render
 
 def is_online(session_ID,session_key):
@@ -26,7 +27,7 @@ def is_online(session_ID,session_key):
 
 def account_test(request):
    return render(request,'account/test.html',locals())
-    
+
 def send_register_valid_code(request):
     try:
         userName = request.POST['userName']
@@ -65,12 +66,23 @@ def login_do(request):
                 token = session.generate_session_token(user.id)
                 if (token):
                     cache.set(token['session_ID'],token['session_key'],600)
-                    return HttpResponse(json.dumps({'result':'success','sessionID':token['session_ID'],'sessionKey':token['session_key']}))
+                    return HttpResponse(json.dumps({'result':'success','userID':user.id,'sessionID':token['session_ID'],'sessionKey':token['session_key']}))
                 else:
                     return HttpResponse(json.dumps({'result':'fail','errorType':501,'msg':'cannot generate token'}))
         except Exception:
             return HttpResponse(json.dumps({'result':'fail','errorType':104,'msg':'no such user'}))
     except Exception:
+        return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
+
+def userName_exist(request):
+    try:
+        userName = request.POST['userName']
+        try:
+            user = User.objects.get(userName = userName)
+            return HttpResponse(json.dumps({'result':'success','userExist':'yes'}))
+        except:
+            return HttpResponse(json.dumps({'result':'success','userExist':'no'}))
+    except:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
 
 def register_do(request):
@@ -158,7 +170,10 @@ def modify_pass(request):
         m = hashlib.md5()
         m.update(oldPass)
         psw = m.hexdigest()
-        user = User.objects.get(userName=userName)
+        try:
+            user = User.objects.get(userName=userName)
+        except:
+            return HttpResponse(json.dumps({'result':'fail','errorType':103,'msg':'no such user'}))
         if(psw == user.password):
             m = hashlib.md5()
             m.update(newPass)
@@ -189,13 +204,13 @@ def get_profile(request):
                 profile['realname'] = user.realname
                 profile['identify'] = user.identify
                 #print user.userName
-                if user.headImage:
-                    profile['headImage'] = '/media/'+user.headImage.__str__()
+                if user.headurl:
+                    profile['headurl'] = '/media/'+user.headurl.__str__()
                 else:
-                    profile['headImage'] = ''
+                    profile['headurl'] = ''
                 return HttpResponse(json.dumps(profile))
             except Exception:
-                return HttpResponse(json.dumps({'result':'fail','errorType':102,'msg':'no such user'}))
+                return HttpResponse(json.dumps({'result':'fail','errorType':104,'msg':'no such user'}))
         else:
             return HttpResponse(json.dumps({'result':'fail','errorType':203,'msg':'no such session'}))
     except Exception:
@@ -205,6 +220,8 @@ def modify_profile(request):
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         session = Session()
+        print session_ID
+        print session_key
         userID = session.get_userID(session_ID,session_key)
         if not userID:
             return HttpResponse(json.dumps({'result':'fail','errorType':203,'msg':'invalid session'}))
@@ -218,22 +235,32 @@ def modify_profile(request):
                 user.realname = request.POST['realname']
             if request.POST.has_key('description'):
                 user.description = request.POST['description']
-            if request.FILES.has_key('headImage'):
-                user.headImage = request.FILES['headImage']
+            if request.FILES.has_key('headurl'):
+                user.headurl = request.FILES['headurl']
             user.save()
             return HttpResponse(json.dumps({'result':'success'}))
         except Exception:
-            return HttpResponse(json.dumps({'result':'fail','errorType':102,'msg':'no such user'}))
+            return HttpResponse(json.dumps({'result':'fail','errorType':104,'msg':'no such user'+userID}))
 
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
 def upload_file(request):
     try:
-        f = request.FILES['file']
-        print f
-        print '####'
-        f1 = request.FILES['file2']
-        print f1
+        #print request
+        file = os.path.join(MEDIA_ROOT,'test/test2.png')
+        print request
+        if request.POST.has_key('file'):
+            binary_file = request.POST['file']
+            print binary_file
+            f = open(file,'wb')
+            f.write(binary_file)
+            f.close()
+        if request.FILES.has_key('file'):
+            f = request.FILES['file']
+            destination = open(file, 'wb+')
+            for chunk in f.chunks():
+                destination.write(chunk)
+            destination.close()
         return HttpResponse('upload success')
     except:
         return HttpResponse('upload fail')
