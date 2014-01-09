@@ -7,11 +7,13 @@ from django.http import HttpResponse
 from mobileapp.models import *
 from django.core.cache import cache
 from django.shortcuts import render
+from zuoyekong.settings import SITE_URL
 import Image
 import os
 from zuoyekong.settings import MEDIA_ROOT
 from django.db.models.fields.files import FileField
 import mobileapp.account.views
+from django.http import HttpResponseRedirect
 
 def verify_access_2_question(sessionID,questionid):
     try:
@@ -21,7 +23,17 @@ def verify_access_2_question(sessionID,questionid):
     except Exception:
         return False
 
-
+def verify_access_2_add_picture(sessionID,questionid):
+    try:
+        session = Session.objects.get(session_ID = sessionID)
+        Question.objects.get(session.userID,id=questionid)
+        return True
+    except:
+        try:
+            Dialog.objects.get(questionID = questionid,teacherId = session.userID,state = 3)
+            return  True
+        except:
+            return False
 
 def question_test(request):
     return render(request, 'question/test.html', locals())
@@ -145,9 +157,10 @@ def show_question(request):
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             question = Question()
             question_detail = question.get_question_detail_by_id(question_id=question_ID)
+            question_detail = dict(question_detail,**{'result':'success'})
             if(verify_access_2_question(session_ID,question_ID)):
                 question.update_application_number(question_ID)
-            return HttpResponse(json.dumps({'result': 'success', 'questiondetail':question_detail}))
+            return HttpResponse(json.dumps(question_detail))
         else:
             return HttpResponse(json.dumps({'result': 'fail','errorType': 203, 'msg': 'no such session'}))
     except Exception:
@@ -261,6 +274,35 @@ def delete_question(request):
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 203,'msg': 'no such session'}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+def add_image(request):
+     try:
+        session_ID = request.POST['sessionID']
+        session_key = request.POST['sessionKey']
+        question_ID = request.POST['questionID']
+
+        if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
+            if verify_access_2_add_picture(session_ID,question_ID):
+                image = QuestionImages(questionId = question_ID)
+                try:
+                    image.image = request.FILES['image']
+                except:
+                    return HttpResponse(json.dumps({'result': 'fail','errorType': 202, 'msg': 'store file error'}))
+                imageCount = image.objects.filter(questionId = question_ID).count() - 1
+                return HttpResponse(json.dumps({'result':'success','imageID':imageCount}))
+            else:
+                return HttpResponse(json.dumps({'result': 'fail','errorType': 202, 'msg': 'cannot operate on this question or question doesnt exist'}))
+        else:
+            return HttpResponse(json.dumps({'result': 'fail', 'errorType': 203,'msg': 'no such session'}))
+     except Exception:
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+def get_image(request,questionID,imageID):
+    try:
+        url = QuestionImages.filter(questionId = questionID)[imageID]
+        return HttpResponseRedirect('http://'+SITE_URL +'/media/' +url)
+    except:
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'no such image'}))
+
+
 
 def search_question(request):
     try:

@@ -14,16 +14,21 @@ import os
 from django.shortcuts import render
 
 def is_online(session_ID,session_key):
-    key = cache.get(session_ID)
-    if(key and key == session_key):
-        return True
-    else:
-        try:
-            session = Session.objects.get(session_ID=session_ID,session_key=session_key)
-            cache.set(session_ID,session_key,600)
+    try:
+        key = cache.get(session_ID)
+        if(key and key == session_key):
             return True
-        except Exception:
-            return False
+    except:
+        print 'cache error'
+    try:
+        session = Session.objects.get(session_ID=session_ID,session_key=session_key)
+        try:
+            cache.set(session_ID,session_key,600)
+        except:
+            print 'cache error'
+        return True
+    except Exception:
+        return False
 
 def account_test(request):
    return render(request,'account/test.html',locals())
@@ -59,13 +64,19 @@ def login_do(request):
             else:
                 sessions = Session.objects.filter(userID=user.id)
                 for s in sessions:
-                    cache.delete(s.session_ID)
+                    try:
+                        cache.delete(s.session_ID)
+                    except:
+                        print 'cache error'
                     s.delete()
                     #todo push alert to client
                 session = Session()
                 token = session.generate_session_token(user.id)
                 if (token):
-                    cache.set(token['session_ID'],token['session_key'],600)
+                    try:
+                        cache.set(token['session_ID'],token['session_key'],600)
+                    except:
+                        print 'cache error'
                     return HttpResponse(json.dumps({'result':'success','userID':user.id,'sessionID':token['session_ID'],'sessionKey':token['session_key']}))
                 else:
                     return HttpResponse(json.dumps({'result':'fail','errorType':501,'msg':'cannot generate token'}))

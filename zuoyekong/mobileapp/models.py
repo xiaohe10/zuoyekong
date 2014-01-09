@@ -64,6 +64,11 @@ APPLICATION_CHOICES=(
     (1,'未读'),
     (2,'已读')
 )
+ACTIVE_CHOICES = (
+    (1,'在线'),
+    (1,'忙碌'),#忙碌表示未活动或者正在讲题
+    (1,'离线')
+)
 class User(models.Model):
     userName = models.CharField(max_length=30)
     password = models.CharField(max_length=100)
@@ -75,12 +80,15 @@ class User(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
     identify = models.CharField(max_length=10)
+    evaluation = models.IntegerField(max_length=3)
+    activeState = models.IntegerField(max_length=3)
     def safe_get(self,userName):
         try:
             user = User.objects.get(userName = userName)
             return user
         except Exception:
             return None
+
 
 
 class ValidCode(models.Model):
@@ -221,6 +229,12 @@ class Question(models.Model):
             for a in applications:
                 application = {}
                 application['applicantID'] = a.applicant
+                applicant = User.objects.get(id = a.applicant)
+                application['applicantName'] = applicant.realname
+                application['evaluation'] = applicant.evaluation
+                application['applicantHeadImage'] = applicant.headImage
+                application['school'] = applicant.school
+                application['activeState'] = applicant.activeState
                 application['createdTime'] = a.created_time
                 application['state'] = a.applicationState
                 application_list.append(application)

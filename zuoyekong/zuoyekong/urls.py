@@ -35,6 +35,8 @@ urlpatterns = patterns('',
     url(r'^question/updateQuestion',update_question),
     url(r'^question/deleteQuestion',delete_question),
     url(r'^question/searchQuestions',search_question),
+    url(r'^question/getImage/(\d+)/(\d+)',get_image),
+
     url(r'^recommend/getRecommendTeachers',get_recommended_teacher),
     url(r'^dialog/getRecentTeachers',get_recent_teacher),
     url(r'^follow/getFollowedTeachers',get_followed_teacher),
