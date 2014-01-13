@@ -38,14 +38,13 @@ def create_dialog(request):
             d.delete()
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such application','errorType':304}))
-    #try:
-    dialog = Dialog(studentId = userID,teacherId = application.applicant,questionId = question.id,state=1,all_time=0,charging_time=0)
-
-    dialog.generate_dialog_session()
-    dialog.save()
     try:
+        dialog = Dialog(studentId = userID,teacherId = application.applicant,questionId = question.id,state=1,all_time=0,charging_time=0)
+
+        dialog.generate_dialog_session()
+        dialog.save()
         try:
-            push_call_request_2_teacher(application.applicant)
+            push_call_request_2_teacher(application.applicant,question,dialog,userID)
         except:
             return HttpResponse(json.dumps({'result': 'fail', 'msg': 'push call to teacher fail','errorType':403}))
         return HttpResponse(json.dumps({'result':'success','dialogID':dialog.id,'dialogSession':dialog.dialogSession}))
@@ -111,23 +110,26 @@ def stop_dialog(request):
     return True
 
 
-def push_call_request_2_teacher(teacherID):
-    root = ROOT_PATH.replace('/','\\')
+def push_call_request_2_teacher(teacherID,question,dialog,userID):
+    root = ROOT_PATH
     wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
     session = Session.objects.get(userID = teacherID)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
     token = token.replace('>','')
-    deviceToken = binascii.unhexlify(token)
+    deviceToken = binascii.unhexlify('0ddbcbe238b92ee5e0ba7e522f84a4098fc0e4e2e8844df118d0d2d53125fdd2')
     # create message
     message = APNSNotification()
     message.token(deviceToken)
-    message.alert(u'an alert')
-    message.badge(5)
+    questioninfo = APNSProperty("questioninfo",[question.id,question.title,question.description,question.authorRealName,'media'+question.thumbnails])
+    dialoginfo = APNSProperty("dialoginfo",[dialog.id,dialog.dialogSession])    
+    message.alert(u'a dialog request')
+    message.badge(1)
     message.sound()
+    print message.__str__()
     # add message to tuple and send it to APNS server
-    wrapper.append(message)
-    wrapper.connect()
+    #wrapper.append(message)
+    #wrapper.connect()
     wrapper.notify()
 
 def push_call_response_2_student():
