@@ -50,11 +50,10 @@ urlpatterns = patterns('',
     url(r'^dialog/call',create_dialog),
     url(r'^dialog/accept',accept_dialog),
     url(r'^dialog/putCloopenAccount',put_cloopen_account),
+    url(r'^dialog/validate',validate),
+    url(r'^dialog/commit',commit),
     url(r'^dialog/cancel',cancel_call),
     url(r'^dialog/reject',reject_call),
-    url(r'^dialog/answer',answer_call),
-    url(r'^dialog/stopDialog',stop_dialog),
-    url(r'^dialog/verify_dialog_session',verify_dialog_session),
 
 
     # Examples:

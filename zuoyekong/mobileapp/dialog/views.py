@@ -13,6 +13,7 @@ from mobileapp.question.views import verify_access_2_question
 from mobileapp.APNSWrapper import *
 import binascii
 import os.path
+from pyDes import *
 
 def dialog_test(request):
     return render(request, 'dialog/test.html')
@@ -68,7 +69,14 @@ def accept_dialog(request):
         dialog = Dialog.objects.get(id = dialogID,teacherId = session.userID,dialogSession = dialogKey,state = 1)
         try:
             cloopen_accounts = CloopenAccount.objects.filter(state = 0)[0:2]
-            return {'result':'success','cloopenAccount':cloopen_accounts[0].cloudAccount,'cloopenSecret':cloopen_accounts[0].cloudSecret,'voIPAccount':cloopen_accounts[0].voIPAccount,'voIPSecret':cloopen_accounts[0].voIPSecret}
+            for c in cloopen_accounts:
+                #c.state = 0
+                c.save()
+            try:
+                push_call_response_2_student(dialog,cloopen_accounts[1])
+                return HttpResponse(json.dumps({'result':'success','cloopenAccount':cloopen_accounts[0].cloudAccount,'cloopenSecret':cloopen_accounts[0].cloudSecret,'voIPAccount':cloopen_accounts[0].voIPAccount,'voIPSecret':cloopen_accounts[0].voIPSecret}))
+            except:
+                return HttpResponse(json.dumps({'result': 'fail', 'msg': 'push acceptance to student fail','errorType':404}))
         except:
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 306, 'msg': 'no cloopen accont'}))
     except:
@@ -76,6 +84,10 @@ def accept_dialog(request):
 
 def cancel_call(request):
     return True
+
+def reject_call(request):
+    return True
+
 def put_cloopen_account(request):
     try:
         cloudAcount = request.POST['cloudAcount']
@@ -98,42 +110,78 @@ def put_cloopen_account(request):
         return HttpResponse('cloopen account save fail')
 
 
-def verify_dialog_session(request):
-    return True
+def validate(request):
+    try:
+        print request
+        dialogID = request.POST['dialogId']
+        dialogKey = request.POST['dialogKey']
+        try:
+            d = Dialog.objects.get(id = dialogID,dialogSession = dialogKey)
+            return HttpResponse('yes')
+        except:
+            return HttpResponse('no')
+    except:
+        return HttpResponse('wrong')
 
-def reject_call(request):
-    return True
-
-def answer_call(request):
-    return True
-def stop_dialog(request):
-    return True
+def commit(request):
+    try:
+        dialogID = request.POST['dialogId']
+        dialogKey = request.POST['dialogKey']
+        startTime = request.POST['startTime']
+        endTime = request.POST['endTime']
+        allTime = request.POST['allTime']
+        feeTime = request.POST['feeTime']
+        signature = request.POST['signature']
+    except:
+        return HttpResponse('wrong')
+    k = des("DESCRYPT", CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
+    print k.decrypt(signature,padmode=PAD_PKCS5)
+    return HttpResponse('yes')
 
 
 def push_call_request_2_teacher(teacherID,question,dialog,userID):
-    root = ROOT_PATH
+    root = ROOT_PATH.replace('/','\\')
     wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
     session = Session.objects.get(userID = teacherID)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
     token = token.replace('>','')
-    deviceToken = binascii.unhexlify('0ddbcbe238b92ee5e0ba7e522f84a4098fc0e4e2e8844df118d0d2d53125fdd2')
+    deviceToken = binascii.unhexlify(token)
     # create message
     message = APNSNotification()
     message.token(deviceToken)
-    questioninfo = APNSProperty("questioninfo",[question.id,question.title,question.description,question.authorRealName,'media'+question.thumbnails])
-    dialoginfo = APNSProperty("dialoginfo",[dialog.id,dialog.dialogSession])    
     message.alert(u'a dialog request')
+    message.setProperty("questioninfo",[question.id,question.title,question.description,question.authorRealName,'media'+question.thumbnails])
+    message.setProperty("dialoginfo",[dialog.id,dialog.dialogSession])
     message.badge(1)
     message.sound()
     print message.__str__()
     # add message to tuple and send it to APNS server
-    #wrapper.append(message)
+    wrapper.append(message)
     #wrapper.connect()
-    wrapper.notify()
+    #wrapper.notify()
 
-def push_call_response_2_student():
-    return True
+def push_call_response_2_student(dialog,cloopen_account):
+    root = ROOT_PATH.replace('/','\\')
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+    session = Session.objects.get(userID = dialog.studentId)
+    token = session.push_token.replace(' ','')
+    token = token.replace('<','')
+    token = token.replace('>','')
+    deviceToken = binascii.unhexlify(token)
+    # create message
+    message = APNSNotification()
+    message.token(deviceToken)
+    message.alert(u'a dialog response')
+    message.setProperty("dialoginfo",[dialog.id,dialog.dialogSession])
+    message.setProperty("cloopenAccount",[cloopen_account.cloudAccount,cloopen_account.cloudSecret,cloopen_account.voIPAccount,cloopen_account.voIPSecret])
+    message.badge(1)
+    message.sound()
+    print message.__str__()
+    # add message to tuple and send it to APNS server
+    wrapper.append(message)
+    #wrapper.connect()
+    #wrapper.notify()
 
 def get_recent_teacher(request):
     try:
@@ -181,3 +229,4 @@ def get_recent_teacher(request):
             return HttpResponse(json.dumps({'result': 'fail','errorType':203, 'msg': 'no such session'}))
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+
