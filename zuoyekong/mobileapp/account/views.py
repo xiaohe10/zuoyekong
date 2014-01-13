@@ -41,8 +41,10 @@ def send_register_valid_code(request):
             return HttpResponse(json.dumps({'result':'fail','errorType':101,'msg':'already registered'}))
         except Exception:
             validcode = ValidCode()
-            validcode.generate_valid_code(userName=userName,codeType=1)
-            return HttpResponse(json.dumps({'result':'success'}))
+            if validcode.generate_valid_code(userName=userName,codeType=1):
+                return HttpResponse(json.dumps({'result':'success'}))
+            else:
+                return HttpResponse(json.dumps({'result':'fail','errorType':501,'msg':'mysql error'}))
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
 
@@ -50,10 +52,9 @@ def login_do(request):
     try:
         userName = request.POST['userName']
         password = request.POST['password']
-        if request.POST.has_key('pushToken'):
-            push_token = request.POST['pushToken']
-        if request.POST.has_key('pushPass'):
-            push_pass = request.POST['pushPass']
+        push_token = ''
+        if request.POST.has_key('token'):
+            push_token = request.POST['token']
         m = hashlib.md5()
         m.update(password)
         psw = m.hexdigest()
@@ -71,13 +72,13 @@ def login_do(request):
                     s.delete()
                     #todo push alert to client
                 session = Session()
-                token = session.generate_session_token(user.id)
+                token = session.generate_session_token(user.id,push_token = push_token)
                 if (token):
                     try:
                         cache.set(token['session_ID'],token['session_key'],600)
                     except:
                         print 'cache error'
-                    return HttpResponse(json.dumps({'result':'success','userID':user.id,'sessionID':token['session_ID'],'sessionKey':token['session_key']}))
+                    return HttpResponse(json.dumps({'result':'success','userID':user.id,'sessionID':token['session_ID'],'sessionKey':token['session_key'],'type':user.userType}))
                 else:
                     return HttpResponse(json.dumps({'result':'fail','errorType':501,'msg':'cannot generate token'}))
         except Exception:
@@ -122,6 +123,7 @@ def register_do(request):
             newUser.userType = type
             newUser.school = school
             newUser.grade = grade
+            newUser.evaluation = 0
             newUser.save()
             return HttpResponse(json.dumps({'result':'success'}))
     else:
@@ -214,12 +216,15 @@ def get_profile(request):
                 profile['grade'] = user.grade
                 profile['realname'] = user.realname
                 profile['identify'] = user.identify
-                #print user.userName
-                if user.headurl:
-                    profile['headurl'] = '/media/'+user.headurl.__str__()
-                else:
-                    profile['headurl'] = ''
-                return HttpResponse(json.dumps(profile))
+                if user.headImage:
+                    profile['headurl'] = 'media/'+user.headImage.__str__()
+                comments = [{'evaluatorID':1,'evaluatorName':'匿名学生','content':'给32个赞','mark':4,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
+                            {'evaluatorID':2,'evaluatorName':'匿名学生','content':'给32个赞','mark':5,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
+                            {'evaluatorID':3,'evaluatorName':'匿名学生','content':'给32个赞','mark':4,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
+                            {'evaluatorID':4,'evaluatorName':'匿名学生','content':'给32个赞','mark':5,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
+                            {'evaluatorID':4,'evaluatorName':'匿名学生','content':'给32个赞','mark':5,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'}]
+                profile['comments'] = comments
+                return HttpResponse(json.dumps({'profile':profile,'result':'success'}))
             except Exception:
                 return HttpResponse(json.dumps({'result':'fail','errorType':104,'msg':'no such user'}))
         else:

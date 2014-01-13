@@ -28,6 +28,7 @@ body{
 <div >老师数量</div><input type="text" name='teacherNumber'/><br/>
 <div >老师1</div><input type="text" name='teacher1'/><br/>
 <div >老师2</div><input type="text" name='teacher2'/><br/>
+<div >题目状态</div><input type="text" name='state'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
@@ -47,16 +48,21 @@ body{
 <div >老师数量</div><input type="text" name='teacherNumber'/><br/>
 <div >老师1</div><input type="text" name='teacher1'/><br/>
 <div >老师2</div><input type="text" name='teacher2'/><br/>
+ <div >题目状态</div><input type="text" name='state'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
 <form method="post" action='/question/listQuestion' enctype="multipart/form-data" >
 <h2>获取用户的问题列表</h2>
-<p>注：如果是自己查看，就会消除未读信息</p>
-<div >被查看用户的 id</div><input type="text" name='userID'/><br/>
-<div >session id</div><input type="text" name='sessionID'/><br/>
-<div >session key</div><input type="text" name='sessionKey'/><br/>
-
+    <p>注：如果是自己查看，就会消除未读信息</p>
+    <div >被查看用户的 id</div><input type="text" name='userID'/><br/>
+    <div >session id</div><input type="text" name='sessionID'/><br/>
+    <div >session key</div><input type="text" name='sessionKey'/><br/>
+    <div >updateTime</div><input type="text" name='updateTime'/><br/>
+    <div >questionState</div><input type="text" name='questionState'/><br/>
+    <div >subject</div><input type="text" name='subject'/><br/>
+    <div >limit</div><input type="text" name='limit'/><br/>
+    <div >offset</div><input type="text" name='offset'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
@@ -113,4 +119,9 @@ body{
 <div >limit</div><input type="text" name='limit'/><br/>
 <div >offset</div><input type="text" name='offset'/><br/>
 <input type="submit" value="提交"/>
+</form>
+
+<form method="post" action='/question/searchQuestions' enctype="multipart/form-data" >
+<h2>查询图片</h2>
+/question/getImage/questionID/imageID
 </form>

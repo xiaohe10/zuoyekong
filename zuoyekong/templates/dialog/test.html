@@ -17,11 +17,27 @@ body{
 <h2>请求会话</h2>
     <div >session id</div><input type="text" name='sessionID'/><br/>
     <div >session key</div><input type="text" name='sessionKey'/><br/>
-    <div >问题id</div><input type="text" name='questionID'/><br/>
     <div >应征id</div><input type="text" name='applicationID'/><br/>
 <input type="submit" value="提交"/>
 </form>
 
+<form method="post" action='/dialog/accept' enctype="multipart/form-data" >
+<h2>同意会话</h2>
+    <div >session id</div><input type="text" name='sessionID'/><br/>
+    <div >session key</div><input type="text" name='sessionKey'/><br/>
+    <div >dialogID</div><input type="text" name='dialogID'/><br/>
+    <div >dialogKey</div><input type="text" name='dialogKey'/><br/>
+<input type="submit" value="提交"/>
+</form>
 
+<form method="post" action='/dialog/putCloopenAccount' enctype="multipart/form-data" >
+<h2>输入云通讯账号</h2>
+    <div >cloudAcount</div><input type="text" name='cloudAcount'/><br/>
+    <div >cloudSecret</div><input type="text" name='cloudSecret'/><br/>
+    <div >voIPAccount</div><input type="text" name='voIPAccount'/><br/>
+    <div >voIPSecret</div><input type="text" name='voIPSecret'/><br/>
+<input type="submit" value="提交"/>
+
+</form>
 </body>
 </html>

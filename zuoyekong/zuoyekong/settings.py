@@ -22,7 +22,7 @@ DATABASES = {
         # The following settings are not used with sqlite3:
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': '166.111.81.223',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '3306',                      # Set to empty string for default.
     }
 }
@@ -170,7 +170,7 @@ EMAIL_HOST_USER='xiaoh16@gmail.com'
 EMAIL_HOST_PASSWORD='xiaohe709140'
 EMAIL_USE_TLS = True
 
-SITE_URL='app.zuoyekong.com'
+SITE_URL='192.168.0.102:8000'
 SITE_NAME='zuoyekong'
 
 CACHES = {

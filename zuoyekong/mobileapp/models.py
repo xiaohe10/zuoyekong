@@ -56,6 +56,7 @@ SUBJECT_CHOICES=(
 )
 
 QUESTION_STATE_CHOICES=(
+    (0,'草稿'),
     (1,'尚未解决'),
     (2,'正在解答'),
     (3,'已经解决'),
@@ -66,8 +67,12 @@ APPLICATION_CHOICES=(
 )
 ACTIVE_CHOICES = (
     (1,'在线'),
-    (1,'忙碌'),#忙碌表示未活动或者正在讲题
-    (1,'离线')
+    (2,'忙碌'),#忙碌表示未活动或者正在讲题
+    (3,'离线')
+)
+CLOOPEN_ACCOUNT_STATE = (
+    (0,'空闲'),
+    (1,'正在使用')
 )
 class User(models.Model):
     userName = models.CharField(max_length=30)
@@ -79,9 +84,9 @@ class User(models.Model):
     description = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
-    identify = models.CharField(max_length=10)
-    evaluation = models.IntegerField(max_length=3)
-    activeState = models.IntegerField(max_length=3)
+    identify = models.CharField(max_length=10,blank = True,)
+    evaluation = models.IntegerField(max_length=3,default=0)
+    activeState = models.IntegerField(max_length=3,default=3,choices=ACTIVE_CHOICES)
     def safe_get(self,userName):
         try:
             user = User.objects.get(userName = userName)
@@ -125,17 +130,19 @@ class Session(models.Model):
     userID = models.BigIntegerField(20)
     session_ID = models.CharField(max_length=100)
     session_key = models.CharField(max_length=100)
+    push_token = models.CharField(max_length=100)
     created_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
 
 
-    def generate_session_token(self,userID):
+    def generate_session_token(self,userID,push_token):
         try:
             session_ID = uuid.uuid1().hex
             session_key = uuid.uuid4().hex
             self.session_ID = session_ID
             self.userID = userID
             self.session_key = session_key
+            self.push_token = push_token
             self.save()
             return {"session_ID":session_ID,"session_key":session_key}
         except Exception:
@@ -147,6 +154,14 @@ class Session(models.Model):
             return session.userID
         except Exception:
             return  None
+def verify_access_2_draft(session_ID,userID):
+    try:
+        session = Session.objects.get(session_ID = session_ID)
+        if int(userID.encode('utf-8')) == session.userID:
+            return  True
+        return False
+    except:
+        return False
 class Question(models.Model):
     title = models.CharField(max_length=40)
     description = models.TextField()
@@ -161,13 +176,18 @@ class Question(models.Model):
     applicationNumber = models.IntegerField(default=0)
     unread_applicationNumber = models.IntegerField(default=0)
 
-    def get_question_list(self,user_id,update_time=None,state=None,offset = 0,limit=20):
-        question_list = Question.objects.filter(authorID = user_id).order_by('-updateTime')
+    def get_question_list(self,sessionId,user_id,update_time=None,state=None,subject = None,offset = 0,limit=20):
+        if verify_access_2_draft(sessionId,user_id):
+            question_list = Question.objects.filter(authorID = user_id).order_by('-updateTime')
+        else:
+            question_list = Question.objects.filter(authorID = user_id).exclude(state = 0).order_by('-updateTime')
         if update_time:
             t = datetime.datetime.strptime(update_time,'%Y-%m-%d %H:%M:%S')
             question_list = question_list.filter(updateTime__gte = t)
         if state:
             question_list = question_list.filter(state = state)
+        if subject:
+            question_list = question_list.filter(subject = subject)
         try:
             questionList = question_list[int(offset):int(offset)+int(limit)]
         except:
@@ -185,7 +205,7 @@ class Question(models.Model):
             final_question['subject'] = question.subject
             final_question['description'] = question.description
             final_question['state'] = question.state
-            final_question['thumbnails'] = '/media/'+question.thumbnails
+            final_question['thumbnails'] = 'media'+question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
             final_question['unreadApplicationNumber'] = question.unread_applicationNumber
@@ -197,7 +217,7 @@ class Question(models.Model):
             q = Question.objects.get(id = questionID)
             q.unread_applicationNumber = 0
             q.save()
-            applications = Application.objects.filter(qustionId = questionID)
+            applications = Application.objects.filter(questionId = questionID)
             for a in applications:
                 a.applicationState = 1
                 a.save()
@@ -215,27 +235,30 @@ class Question(models.Model):
             question_detail['authorID'] = question.authorID
             question_detail['authorRealName'] = question.authorRealName
             question_detail['state'] = question.state
-            question_detail['thumbnails'] = '/media/'+question.thumbnails
+            question_detail['thumbnails'] = 'media'+question.thumbnails
             question_detail['applicationNumber'] = question.applicationNumber
             question_detail['updateTime'] = question.updateTime.__str__()
-            question_detail['voice'] = '/media/'+question.voice.__str__()
+            if question.voice != '':
+                question_detail['voice'] = 'media/'+question.voice.__str__()
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
             for image in image_list:
-                final_image_list.append('/media/'+image.image.__str__())
+                final_image_list.append('media/'+image.image.__str__())
             question_detail['questionImages'] = final_image_list
             applications = Application.objects.filter(questionId = question_id)
             application_list = []
             for a in applications:
                 application = {}
+                application['applicationID'] = a.id
                 application['applicantID'] = a.applicant
                 applicant = User.objects.get(id = a.applicant)
                 application['applicantName'] = applicant.realname
                 application['evaluation'] = applicant.evaluation
-                application['applicantHeadImage'] = applicant.headImage
+                if applicant.headImage != None:
+                    application['applicantHeadImage'] = 'media/'+applicant.headImage.__str__()
                 application['school'] = applicant.school
                 application['activeState'] = applicant.activeState
-                application['createdTime'] = a.created_time
+                application['createdTime'] = a.created_time.__str__()
                 application['state'] = a.applicationState
                 application_list.append(application)
             question_detail['applications'] = application_list
@@ -260,16 +283,27 @@ class Application(models.Model):
             application_list = []
             for a in query_list:
                 application={}
+                application['applicationID'] = a.id
                 application['applicant']=a.applicant
-                application['created_time']=a.created_time
+                application['created_time']=a.created_time.__str__()
                 application['question_id']=a.questionId
+                try:
+                    user = User.objects.get(id=a.applicant)
+                    application['applicantName'] = user.realname
+                    application['applicantHeadUrl'] = "media/"+user.headImage.__str__()
+                    application['evaluation'] = user.evaluation
+                    application['school'] = user.school
+                    application['grade'] = user.grade
+                except:
+                    print "no such user"
                 application_list.append(application)
-        except Exception:
+            return application_list
+        except:
             return None
 
 class Dialog(models.Model):
     studentId =  models.BigIntegerField(20)
-    tearcherId = models.BigIntegerField(20)
+    teacherId = models.BigIntegerField(20)
     questionId =models.BigIntegerField(20)
     state = models.IntegerField(max_length=2,choices=DIALOG_STATE_CHOICES)
     dialogSession = models.CharField(max_length=100)
@@ -278,9 +312,20 @@ class Dialog(models.Model):
     charging_time  = models.BigIntegerField() # duration that charge
 
     def generate_dialog_session(self):
-        return uuid.uuid4().hex
+        self.dialogSession = uuid.uuid4().int
+class  CloopenAccount(models.Model):
+    cloudAccount = models.CharField(max_length=64)
+    cloudSecret = models.CharField(max_length=64)
+    voIPAccount = models.CharField(max_length=64)
+    voIPSecret = models.CharField(max_length=64)
+    state = models.IntegerField(choices=CLOOPEN_ACCOUNT_STATE)
 
 class Follow(models.Model):
     followerId = models.BigIntegerField(20)
     followeeID = models.BigIntegerField(20)
     createdTime = models.DateTimeField(auto_now_add=True)
+'''
+class Comment(models.Model):
+    evaluatorID = models.BigIntegerField(20)
+    evaluateeID = models.BigIntegerField(20)
+'''

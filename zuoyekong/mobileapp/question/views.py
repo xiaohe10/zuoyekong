@@ -14,6 +14,8 @@ from zuoyekong.settings import MEDIA_ROOT
 from django.db.models.fields.files import FileField
 import mobileapp.account.views
 from django.http import HttpResponseRedirect
+from django.db.models import Q
+
 
 def verify_access_2_question(sessionID,questionid):
     try:
@@ -64,7 +66,11 @@ def create_question(request):
             question.grade = request.POST['grade']
         if request.FILES.has_key('voice'):
             question.voice = request.FILES['voice']
+        else:
+            question.voice = ''
         question.state = 1
+        if request.POST.has_key('state'):
+            question.state = request.POST['state']
         question.save()
         if request.POST.has_key('pictureNumber'):
             n = int(request.POST['pictureNumber'])
@@ -78,7 +84,6 @@ def create_question(request):
                     questionImage.image = request.FILES['questionImage'+count.__str__()]
                     questionImage.save()
                     if(count == 1):
-                        file = request.FILES['questionImage'+count.__str__()]
                         ext = os.path.splitext(os.path.basename(questionImage.image.path))[1]
                         try:
                             originfile =  os.path.join(MEDIA_ROOT,questionImage.image.path)
@@ -90,7 +95,9 @@ def create_question(request):
                             if not os.path.exists(thumb_dirname):
                                 os.makedirs(thumb_dirname)
                             image.save(thumb_path)
-                            origin_relative_path = thumb_path.replace(MEDIA_ROOT+'/','')
+                            thumb_path = thumb_path.encode('utf-8')
+                            thumb_path = thumb_path.replace('\\','/')
+                            origin_relative_path = thumb_path.replace(MEDIA_ROOT,'')
                             relative_path = origin_relative_path.replace('questionPictures','questionThumbnails')
                             question.thumbnails = relative_path
                             question.save()
@@ -132,6 +139,7 @@ def list_user_question(request):
         questionState = None
         limit = 20
         offset = 0
+        subject = None
         if request.POST.has_key('updateTime'):
             updateTime = None if (request.POST['updateTime'] == '') else request.POST['updateTime']
         if request.POST.has_key('questionState'):
@@ -140,9 +148,11 @@ def list_user_question(request):
             limit = 20 if (request.POST['limit'] == '') else request.POST['limit']
         if request.POST.has_key('offset'):
             offset = 0 if (request.POST['offset'] == '') else request.POST['offset']
+        if request.POST.has_key('subject'):
+            subject = None if (request.POST['subject'] == '') else request.POST['subject']
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             question = Question()
-            question_list = question.get_question_list(user_id = userID,update_time=updateTime,state = questionState,limit=limit,offset=offset)
+            question_list = question.get_question_list(sessionId = session_ID,user_id = userID,update_time=updateTime,state = questionState,subject = subject,limit=limit,offset=offset)
             return HttpResponse(json.dumps({'result': 'success', 'questionList':question_list}))
         else:
             return HttpResponse(json.dumps({'result': 'fail','errorType': 203, 'msg': 'no such session'}))
@@ -157,10 +167,9 @@ def show_question(request):
         if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
             question = Question()
             question_detail = question.get_question_detail_by_id(question_id=question_ID)
-            question_detail = dict(question_detail,**{'result':'success'})
             if(verify_access_2_question(session_ID,question_ID)):
                 question.update_application_number(question_ID)
-            return HttpResponse(json.dumps(question_detail))
+            return HttpResponse(json.dumps({"questiondetail":question_detail,"result":"success"}))
         else:
             return HttpResponse(json.dumps({'result': 'fail','errorType': 203, 'msg': 'no such session'}))
     except Exception:
@@ -195,13 +204,20 @@ def update_question(request):
             question.grade = request.POST['grade']
         if request.FILES.has_key('voice'):
             question.voice = request.FILES['voice']
+        else:
+            question.voice = ''
         question.status = 1
+        if request.POST.has_key('state'):
+            question.state = request.POST['state']
         question.save()
         applications = Application.objects.filter(questionId = question.id)
         for a in applications:
             a.delete()
             #todo: push to teacher
         if request.POST.has_key('pictureNumber'):
+            images = QuestionImages.objects.filter(questionId = question.id)
+            for image in images:
+                image.delete()
             n = int(request.POST['pictureNumber'])
             count = 0
             while(n > 0):
@@ -213,7 +229,6 @@ def update_question(request):
                     questionImage.image = request.FILES['questionImage'+count.__str__()]
                     questionImage.save()
                     if(count == 1):
-                        file = request.FILES['questionImage'+count.__str__()]
                         ext = os.path.splitext(os.path.basename(questionImage.image.path))[1]
                         try:
                             originfile =  os.path.join(MEDIA_ROOT,questionImage.image.path)
@@ -225,13 +240,16 @@ def update_question(request):
                             if not os.path.exists(thumb_dirname):
                                 os.makedirs(thumb_dirname)
                             image.save(thumb_path)
-                            origin_relative_path = thumb_path.replace(MEDIA_ROOT+'/','')
+                            thumb_path = thumb_path.encode('utf-8')
+                            thumb_path = thumb_path.replace('\\','/')
+                            origin_relative_path = thumb_path.replace(MEDIA_ROOT,'')
                             relative_path = origin_relative_path.replace('questionPictures','questionThumbnails')
                             question.thumbnails = relative_path
                             question.save()
                         except Exception:
                             print Exception
         teachers = []
+
         if request.POST.has_key('teacherNumber'):
             n = int(request.POST['teacherNumber'])
             count = 0
@@ -252,7 +270,8 @@ def update_question(request):
                         t['teacherID'] = teacherID
                         t['msg'] =  'no such teacher'
                     teachers.append(t)
-        return HttpResponse(json.dumps({'result': 'success','questionID':question.id,teachers:teachers}))
+        result = {'result': 'success','questionID':question.id, 'teachers': teachers}
+        return HttpResponse(json.dumps(result))
     except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
@@ -297,7 +316,10 @@ def add_image(request):
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 def get_image(request,questionID,imageID):
     try:
-        url = QuestionImages.filter(questionId = questionID)[imageID]
+        questionID = int(questionID.encode('utf-8'))
+        imageID = int(imageID.encode('utf-8'))
+        url = QuestionImages.objects.filter(questionId = questionID)[imageID]
+        url = url.image.__str__()
         return HttpResponseRedirect('http://'+SITE_URL +'/media/' +url)
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'no such image'}))
@@ -327,18 +349,28 @@ def search_question(request):
         if request.POST.has_key('subject'):
             subjects = request.POST['subject']
             subject_list = subjects.split('|')
+            query = None
             for s in subject_list:
-                questions.extend(all_questions.filter(subject = s))
+                if query:
+                    query  = query|Q(subject = s)
+                else:
+                    query = Q(subject = s)
+            all_questions = all_questions.filter(query)
         if request.POST.has_key('grade'):
             grades = request.POST['grade']
-            grade_list = subjects.split('|')
+            grade_list = grades.split('|')
+            query = None
             for g in grade_list:
-                questions.extend(all_questions.filter(grade = g))
+                if query:
+                    query  = query|Q(grade = g)
+                else:
+                    query = Q(grade = g)
+            all_questions = all_questions.filter(query)
         try:
-                questions = questions[int(offset):int(offset)+int(limit)]
+                questions = all_questions[int(offset):int(offset)+int(limit)]
         except:
             try:
-                questions = questions[int(offset):]
+                questions = all_questions[int(offset):]
             except:
                 questions = []
         question_list = []
@@ -350,10 +382,11 @@ def search_question(request):
             final_question['subject'] = question.subject
             final_question['description'] = question.description
             final_question['state'] = question.state
-            final_question['thumbnails'] = '/media/'+question.thumbnails
+            final_question['thumbnails'] = 'media'+question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
             final_question['unreadApplicationNumber'] = question.unread_applicationNumber
+            final_question['applicationNumber'] = question.applicationNumber
             final_question['updateTime'] = question.updateTime.__str__()
             question_list.append(final_question)
         return HttpResponse(json.dumps({'result': 'success', 'questionList': question_list}))
