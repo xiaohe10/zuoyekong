@@ -175,7 +175,55 @@ class Question(models.Model):
     updateTime = models.DateTimeField(auto_now=True)
     applicationNumber = models.IntegerField(default=0)
     unread_applicationNumber = models.IntegerField(default=0)
-
+    def get_history_detail(self,questionID):
+        try:
+            q = Question.objects.get(id = questionID,state = 3)
+            question = {}
+            question['ID'] = q.id
+            question['title'] = q.title
+            question['description'] = q.description
+            question['grade'] = q.grade
+            question['subject'] = q.subject
+            question['thumbnails']= 'media' + q.thumbnails
+            question['updateTime'] = q.updateTime.__str__()
+            dialog = Dialog.objects.get(questionId = q.id,state = 4)
+            dialogDetail = {}
+            dialogDetail['dialogID'] = dialog.id
+            dialogDetail['teacherID'] = dialog.teacherId
+            teacher = User.objects.get(id = dialog.teacherId)
+            dialogDetail['teacherName'] = teacher.realname
+            dialogDetail['teacherHeadImage'] = teacher.headImage
+            dialogDetail['createdTime'] = dialog.created_time
+            question['dialogDetail'] = dialogDetail
+            return question
+        except:
+            return {}
+    def  get_history_list(self,userID,subject = None):
+        try:
+            history_questions = Question.objects.filter(authorID = userID,state = 3)
+            if subject:
+                history_questions = history_questions.filter(subject = subject)
+            historyQuestions = []
+            for q in history_questions:
+                question = {}
+                question['ID'] = q.id
+                question['title'] = q.title
+                question['description'] = q.description
+                question['grade'] = q.grade
+                question['subject'] = q.subject
+                question['thumbnails']= 'media' + q.thumbnails
+                question['updateTime'] = q.updateTime.__str__()
+                dialog = Dialog.objects.get(questionId = q.id,state = 4)
+                dialogDetail = {}
+                dialogDetail['dialogID'] = dialog.id
+                dialogDetail['teacherID'] = dialog.teacherId
+                dialogDetail['teacherName'] = User.objects.get(id = dialog.teacherId).realname
+                dialogDetail['createdTime'] = dialog.created_time
+                question['dialogDetail'] = dialogDetail
+                historyQuestions.append(question)
+            return historyQuestions
+        except:
+            return []
     def get_question_list(self,sessionId,user_id,update_time=None,state=None,subject = None,offset = 0,limit=20):
         if verify_access_2_draft(sessionId,user_id):
             question_list = Question.objects.filter(authorID = user_id).order_by('-updateTime')

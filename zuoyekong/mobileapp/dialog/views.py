@@ -14,6 +14,7 @@ from mobileapp.APNSWrapper import *
 import binascii
 import os.path
 from pyDes import *
+import base64
 
 def dialog_test(request):
     return render(request, 'dialog/test.html')
@@ -132,15 +133,23 @@ def commit(request):
         allTime = request.POST['allTime']
         feeTime = request.POST['feeTime']
         signature = request.POST['signature']
+        signature = signature.encode('utf-8')
+        signature = base64.decodestring(signature)
+
+        dialog = Dialog.objects.get(id = dialogID,dialogSession=dialogKey) #todo
+        k = des("414a8023", CBC, "zykzst13", pad=None, padmode=PAD_PKCS5)
+        decrypted_key = k.decrypt(signature,padmode=PAD_PKCS5)
+        if decrypted_key == feeTime:
+            dialog.all_time= allTime
+            dialog.charging_time = feeTime
+            dialog.save()
+        return HttpResponse('yes')
     except:
         return HttpResponse('wrong')
-    k = des("DESCRYPT", CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
-    print k.decrypt(signature,padmode=PAD_PKCS5)
-    return HttpResponse('yes')
 
 
 def push_call_request_2_teacher(teacherID,question,dialog,userID):
-    root = ROOT_PATH.replace('/','\\')
+    root = ROOT_PATH
     wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
     session = Session.objects.get(userID = teacherID)
     token = session.push_token.replace(' ','')
@@ -151,18 +160,18 @@ def push_call_request_2_teacher(teacherID,question,dialog,userID):
     message = APNSNotification()
     message.token(deviceToken)
     message.alert(u'a dialog request')
-    message.setProperty("questioninfo",[question.id,question.title,question.description,question.authorRealName,'media'+question.thumbnails])
-    message.setProperty("dialoginfo",[dialog.id,dialog.dialogSession])
+    message.setProperty("pushType",10)
+    message.setProperty("info",[dialog.id,dialog.dialogSession,question.id,question.title,question.description,question.authorRealName,'media'+question.thumbnails])
     message.badge(1)
     message.sound()
-    print message.__str__()
+
     # add message to tuple and send it to APNS server
     wrapper.append(message)
-    #wrapper.connect()
-    #wrapper.notify()
+    wrapper.connect()
+    wrapper.notify()
 
 def push_call_response_2_student(dialog,cloopen_account):
-    root = ROOT_PATH.replace('/','\\')
+    root = ROOT_PATH
     wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
     session = Session.objects.get(userID = dialog.studentId)
     token = session.push_token.replace(' ','')
@@ -173,11 +182,12 @@ def push_call_response_2_student(dialog,cloopen_account):
     message = APNSNotification()
     message.token(deviceToken)
     message.alert(u'a dialog response')
-    message.setProperty("dialoginfo",[dialog.id,dialog.dialogSession])
-    message.setProperty("cloopenAccount",[cloopen_account.cloudAccount,cloopen_account.cloudSecret,cloopen_account.voIPAccount,cloopen_account.voIPSecret])
+    message.setProperty("pushType",20)
+    message.setProperty("info",[dialog.id,dialog.dialogSession,cloopen_account.cloudAccount,cloopen_account.cloudSecret,cloopen_account.voIPAccount,cloopen_account.voIPSecret])
     message.badge(1)
     message.sound()
     print message.__str__()
+
     # add message to tuple and send it to APNS server
     wrapper.append(message)
     #wrapper.connect()

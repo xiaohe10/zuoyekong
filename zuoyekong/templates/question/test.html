@@ -125,3 +125,20 @@ body{
 <h2>查询图片</h2>
 /question/getImage/questionID/imageID
 </form>
+
+<form method="post" action = "/question/historyQuestionDetail" >
+    <h2>查看历史题目</h2>
+    <div >session id</div><input type="text" name='sessionID'/><br/>
+    <div >session key</div><input type="text" name='sessionKey'/><br/>
+    <div >学科</div><input type="text" name='subject'/><br/>
+    <input type="submit" value="提交"/>
+</form>
+
+
+<form method="post" action = "/question/historyQuestionDetail" >
+    <h2>查看历史题目详情</h2>
+    <div >session id</div><input type="text" name='sessionID'/><br/>
+    <div >session key</div><input type="text" name='sessionKey'/><br/>
+    <div >问题ID</div><input type="text" name='questionID'/><br/>
+    <input type="submit" value="提交"/>
+</form>

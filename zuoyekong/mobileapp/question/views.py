@@ -129,7 +129,42 @@ def create_question(request):
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
 
+def list_history_question(request):
+    try:
+        sessionID = request.POST['sessionID']
+        sessionKey = request.POST['sessionKey']
+        subject = None
+        if request.has_key('subject'):
+            subject = request.POST['subject']
+    except:
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+    s = Session()
+    userID = s.get_userID(sessionID,sessionKey)
+    if User:
+        q = Question()
+        history_list = q.get_history_list(userID=userID,subject = subject)
+        return HttpResponse(json.dumps({'result':'success','questionList':history_list}))
+    else:
+        return HttpResponse(json.dumps({'result': 'fail','errorType': 203, 'msg': 'no such session'}))
+def get_history_detail(request):
+    try:
+        sessionID = request.POST['sessionID']
+        sessionKey = request.POST['sessionKey']
+        questionID = request.POST['questionID']
+    except:
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+    if mobileapp.account.views.is_online(session_ID=sessionID, session_key=sessionKey):
 
+        if verify_access_2_question(sessionID,questionID):
+            q = Question
+            result = {'result':'success'}
+            question_detail = q.get_history_detail(questionID)
+            result = dict(result, **question_detail)
+            return HttpResponse(json.dumps(result))
+        else:
+            return HttpResponse(json.dumps({'result': 'fail','errorType': 301, 'msg': 'cannot access question or no question'}))
+    else:
+        return HttpResponse(json.dumps({'result': 'fail','errorType': 203, 'msg': 'no such session'}))
 def list_user_question(request):
     try:
         userID = request.POST['userID']
@@ -184,14 +219,13 @@ def update_question(request):
         userID = session.get_userID(session_ID,session_key)
         if not userID:
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 203, 'msg': 'no such session'}))
-        try:
-            user = User.objects.get(id = userID)
-        except Exception:
-            return HttpResponse(json.dumps({'result': 'fail', 'errorType': 102, 'msg': 'no such user'}))
+        if not verify_access_2_question(session_ID,questionID):
+            return HttpResponse(json.dumps({'result': 'fail', 'errorType': 301, 'msg': 'cannot access to question'}))
         try:
             question = Question.objects.get(id = questionID)
         except:
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 301, 'msg': 'question doesnt exist or has been deleted'}))
+        user=User.objects.get(id  = userID)
         question.authorID = user.id
         question.authorRealName=user.realname
         if request.POST.has_key('title'):
