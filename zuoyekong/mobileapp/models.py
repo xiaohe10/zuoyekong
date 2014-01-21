@@ -184,7 +184,7 @@ class Question(models.Model):
             question['description'] = q.description
             question['grade'] = q.grade
             question['subject'] = q.subject
-            question['thumbnails']= 'media' + q.thumbnails
+            question['thumbnails']= 'media' + q.thumbnails.__str__()
             question['updateTime'] = q.updateTime.__str__()
             dialog = Dialog.objects.get(questionId = q.id,state = 4)
             dialogDetail = {}
@@ -192,8 +192,8 @@ class Question(models.Model):
             dialogDetail['teacherID'] = dialog.teacherId
             teacher = User.objects.get(id = dialog.teacherId)
             dialogDetail['teacherName'] = teacher.realname
-            dialogDetail['teacherHeadImage'] = teacher.headImage
-            dialogDetail['createdTime'] = dialog.created_time
+            dialogDetail['teacherHeadImage'] = teacher.headImage.__str__()
+            dialogDetail['createdTime'] = dialog.created_time.__str__()
             question['dialogDetail'] = dialogDetail
             return question
         except:
@@ -218,7 +218,7 @@ class Question(models.Model):
                 dialogDetail['dialogID'] = dialog.id
                 dialogDetail['teacherID'] = dialog.teacherId
                 dialogDetail['teacherName'] = User.objects.get(id = dialog.teacherId).realname
-                dialogDetail['createdTime'] = dialog.created_time
+                dialogDetail['createdTime'] = dialog.created_time.__str__()
                 question['dialogDetail'] = dialogDetail
                 historyQuestions.append(question)
             return historyQuestions
@@ -226,14 +226,12 @@ class Question(models.Model):
             return []
     def get_question_list(self,sessionId,user_id,update_time=None,state=None,subject = None,offset = 0,limit=20):
         if verify_access_2_draft(sessionId,user_id):
-            question_list = Question.objects.filter(authorID = user_id).order_by('-updateTime')
+            question_list = Question.objects.filter(authorID = user_id).exclude(state = 3).order_by('-updateTime')
         else:
-            question_list = Question.objects.filter(authorID = user_id).exclude(state = 0).order_by('-updateTime')
+            question_list = Question.objects.filter(authorID = user_id).exclude(state = 3).exclude(state = 0).order_by('-updateTime')
         if update_time:
             t = datetime.datetime.strptime(update_time,'%Y-%m-%d %H:%M:%S')
             question_list = question_list.filter(updateTime__gte = t)
-        if state:
-            question_list = question_list.filter(state = state)
         if subject:
             question_list = question_list.filter(subject = subject)
         try:
@@ -360,13 +358,14 @@ class Dialog(models.Model):
     charging_time  = models.BigIntegerField() # duration that charge
 
     def generate_dialog_session(self):
-        self.dialogSession = uuid.uuid4().int
+        self.dialogSession = uuid.uuid4().int>>100
 class  CloopenAccount(models.Model):
     cloudAccount = models.CharField(max_length=64)
     cloudSecret = models.CharField(max_length=64)
     voIPAccount = models.CharField(max_length=64)
     voIPSecret = models.CharField(max_length=64)
     state = models.IntegerField(choices=CLOOPEN_ACCOUNT_STATE)
+    dialogID = models.BigIntegerField(20)
 
 class Follow(models.Model):
     followerId = models.BigIntegerField(20)

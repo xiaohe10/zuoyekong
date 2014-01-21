@@ -72,6 +72,8 @@ def login_do(request):
                     s.delete()
                     #todo push alert to client
                 session = Session()
+                user.activeState = 1
+                user.save()
                 token = session.generate_session_token(user.id,push_token = push_token)
                 if (token):
                     try:
@@ -107,9 +109,15 @@ def register_do(request):
         code = request.POST['registerValidCode']
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
-    type = request.POST['type']
-    school = request.POST['school']
-    grade = request.POST['grade']
+    userType = 1
+    school = ''
+    grade = 1
+    if request.POST.has_key('type'):
+        userType = request.POST['type']
+    if request.POST.has_key('school'):
+        school = request.POST['school']
+    if request.POST.has_key('grade'):
+        grade = request.POST['grade']
     validcode = ValidCode()
     print code
     if(validcode.is_code_valid(userName = userName,codeType=1,code=code)):
@@ -120,7 +128,7 @@ def register_do(request):
             newUser = User()
             newUser.userName = userName
             newUser.password = psw
-            newUser.userType = type
+            newUser.userType = userType
             newUser.school = school
             newUser.grade = grade
             newUser.evaluation = 0

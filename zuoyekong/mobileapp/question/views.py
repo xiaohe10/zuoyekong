@@ -43,6 +43,7 @@ def question_test(request):
 
 def create_question(request):
     try:
+        print request
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         session = Session()
@@ -126,16 +127,19 @@ def create_question(request):
                     teachers.append(t)
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id,'teachers':teachers}))
     except Exception:
-        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+        return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
 
 
 def list_history_question(request):
     try:
+        print request
         sessionID = request.POST['sessionID']
+        print sessionID
         sessionKey = request.POST['sessionKey']
+        print sessionKey
         subject = None
-        if request.has_key('subject'):
-            subject = request.POST['subject']
+        if request.POST.has_key('subject'):
+           subject =  request.POST['subject']
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
     s = Session()
@@ -156,9 +160,11 @@ def get_history_detail(request):
     if mobileapp.account.views.is_online(session_ID=sessionID, session_key=sessionKey):
 
         if verify_access_2_question(sessionID,questionID):
-            q = Question
+            q = Question()
             result = {'result':'success'}
             question_detail = q.get_history_detail(questionID)
+            if not question_detail:
+                return HttpResponse(json.dumps({'result': 'fail','errorType': 301, 'msg': 'question state wrong'}))
             result = dict(result, **question_detail)
             return HttpResponse(json.dumps(result))
         else:
@@ -172,15 +178,15 @@ def list_user_question(request):
         session_key = request.POST['sessionKey']
         updateTime = None
         questionState = None
-        limit = 20
+        limit = 1000
         offset = 0
         subject = None
         if request.POST.has_key('updateTime'):
             updateTime = None if (request.POST['updateTime'] == '') else request.POST['updateTime']
-        if request.POST.has_key('questionState'):
-            questionState = None if (request.POST['questionState'] == '') else request.POST['questionState']
+        if request.POST.has_key('state'):
+            questionState = None if (request.POST['state'] == '') else request.POST['state']
         if request.POST.has_key('limit'):
-            limit = 20 if (request.POST['limit'] == '') else request.POST['limit']
+            limit = 1000 if (request.POST['limit'] == '') else request.POST['limit']
         if request.POST.has_key('offset'):
             offset = 0 if (request.POST['offset'] == '') else request.POST['offset']
         if request.POST.has_key('subject'):
@@ -329,23 +335,22 @@ def delete_question(request):
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 def add_image(request):
      try:
+        print request
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         question_ID = request.POST['questionID']
-
-        if mobileapp.account.views.is_online(session_ID=session_ID, session_key=session_key):
-            if verify_access_2_add_picture(session_ID,question_ID):
-                image = QuestionImages(questionId = question_ID)
-                try:
-                    image.image = request.FILES['image']
-                except:
-                    return HttpResponse(json.dumps({'result': 'fail','errorType': 202, 'msg': 'store file error'}))
-                imageCount = image.objects.filter(questionId = question_ID).count() - 1
-                return HttpResponse(json.dumps({'result':'success','imageID':imageCount}))
-            else:
-                return HttpResponse(json.dumps({'result': 'fail','errorType': 202, 'msg': 'cannot operate on this question or question doesnt exist'}))
-        else:
-            return HttpResponse(json.dumps({'result': 'fail', 'errorType': 203,'msg': 'no such session'}))
+        print question_ID
+        image = QuestionImages(questionId = question_ID)
+        print image
+        print image.image
+        try:
+            image.image = request.FILES['image']
+            image.save()
+        except:
+            return HttpResponse(json.dumps({'result': 'fail','errorType': 202, 'msg': 'store file error'}))
+        imageCount = QuestionImages.objects.filter(questionId = question_ID).count() - 1
+        print imageCount
+        return HttpResponse(json.dumps({'result':'success','imageID':imageCount}))
      except Exception:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 def get_image(request,questionID,imageID):
@@ -364,21 +369,21 @@ def search_question(request):
     try:
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
-        limit = 5
+        limit = 10000
         offset = 0
         if request.POST.has_key('limit'):
             limit  = request.POST['limit']
             if not limit:
-                limit = 5
+                limit = 10000
         else:
-            limit = 5
+            limit = 10000 
         if request.POST.has_key('offset'):
             offset  = request.POST['offset']
             if not offset:
                 offset = 0
         else:
             offset = 0
-        all_questions = Question.objects.filter(state=1)
+        all_questions = Question.objects.filter(state=1).order_by('-updateTime')
         questions = []
         if request.POST.has_key('subject'):
             subjects = request.POST['subject']
