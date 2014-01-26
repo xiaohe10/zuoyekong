@@ -56,7 +56,10 @@ urlpatterns = patterns('',
     url(r'^dialog/commit',commit),
     url(r'^dialog/cancel',cancel_call),
     url(r'^dialog/reject',reject_call),
-
+    
+    url(r'^time',dialog_time),
+    url(r'^time/login_do',dialog_time_login_do),
+    url(r'^time/detail',dialog_time_detail),
 
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),

@@ -3,7 +3,7 @@
 import json
 
 from django.http import HttpResponse
-
+from django.shortcuts import redirect
 from mobileapp.models import *
 from django.core.cache import cache
 from django.shortcuts import render
@@ -12,6 +12,7 @@ from mobileapp.account.views import is_online
 from mobileapp.question.views import verify_access_2_question
 from mobileapp.APNSWrapper import *
 import binascii
+import hashlib
 import os.path
 from pyDes import *
 import base64
@@ -321,3 +322,20 @@ def get_recent_teacher(request):
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
+def dialog_time(request):
+    try:
+        username = request.POST['username']
+        password = request.POST['password']
+    except:
+        message = '参数不正确'
+        return redirect('/dialog/time')
+    try:
+        m = hashlib.md5()
+        m.update(password)
+        psw = m.hexdigest()
+        user = User.objects.get(username  = username, password = psw)
+        return render(request,'dialog/time.html',locals())
+    except:
+        message = '用户名或密码不正确'
+        return redirect('dialog/time')
+   
