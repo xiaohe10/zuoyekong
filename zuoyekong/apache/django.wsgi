@@ -1,10 +1,13 @@
-#-*-coding:utf-8-*-
+-*-coding:utf-8-*-
 import os
 import sys
-import django.core.handlers.wsgi
 
+app_path='/home/thucloud2/zuoyekong/zuoyekong'
+sys.path.append(app_path)
+os.chdir(app_path)
 os.environ['DJANGO_SETTINGS_MODULE']='zuoyekong.settings'
-app_apth='/home/thucloud2/zuoyekong/zuoyekong'
-sys.path.append(app_apth)
+os.environ.setdefault("DJANGO_SETTING_MODULE","zuoyekong.settings")
+
+import django.core.handlers.wsgi
 application=django.core.handlers.wsgi.WSGIHandler()
 
