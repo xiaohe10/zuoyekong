@@ -16,6 +16,8 @@ import hashlib
 import os.path
 from pyDes import *
 import base64
+import datetime
+from time import strftime, strptime
 
 def dialog_test(request):
     return render(request, 'dialog/test.html')
@@ -200,7 +202,7 @@ def commit(request):
             except:
                 return HttpResponse('change question state fail')
             return HttpResponse('yes')
-        return Httpresponse('invalid signature')
+        return HttpResponse('invalid signature')
 
     except:
         return HttpResponse('parament wrong')
@@ -327,15 +329,50 @@ def dialog_time(request):
         username = request.POST['username']
         password = request.POST['password']
     except:
-        message = '参数不正确'
-        return redirect('/dialog/time')
+        return render(request,'dialog/time.html',locals())
     try:
         m = hashlib.md5()
         m.update(password)
         psw = m.hexdigest()
-        user = User.objects.get(username  = username, password = psw)
-        return render(request,'dialog/time.html',locals())
+        user1 = User.objects.get(userName = username)
+        print user1.password
+        user = User.objects.get(userName  = username, password = psw)
+        return redirect('/time/detail?username='+username+'&key='+psw)
     except:
         message = '用户名或密码不正确'
-        return redirect('dialog/time')
-   
+        return render(request,'dialog/time.html',locals())
+input_format = "%Y-%m-%d %H:%M:%S+00:00" # or %d/%m...
+output_format = "%Y-%m-%d %H:%M:%S"
+
+def convert_time(logging_time):
+    return strftime(output_format, strptime(logging_time, input_format))
+def dialog_time_detail(request):
+    try:
+        username = request.GET['username']
+        password = request.GET['key']
+        user = User.objects.get(userName  = username, password = password)
+        currentTime = str(datetime.datetime.now())
+        try:
+            if user.userType == 1:
+                dialogs = Dialog.objects.filter(teacherId = user.id)
+                for dialog in dialogs:
+                    dialog.all_time = (dialog.all_time + 60)/60
+                    dialog.charging_time = (dialog.charging_time + 60)/60
+                    dialog.fee = float(dialog.charging_time) * 5/3
+                    dialog.created_time = convert_time( str(dialog.created_time))
+                    dialog.other = User.objects.get(id = dialog.studentId).realname
+
+            else:
+                dialogs = Dialog.objects.filter(studentId = user.id)
+                for dialog in dialogs:
+                    dialog.all_time = (dialog.all_time + 60)/60
+                    dialog.charging_time = (dialog.charging_time + 60)/60
+                    dialog.fee = dialog.charging_time * 2
+                    dialog.created_time = convert_time( str(dialog.created_time))
+                    dialog.other = User.objects.get(id = dialog.teacherId).realname
+        except:
+            print 'no dialogs'
+        return render(request,'dialog/detail.html',locals())
+    except:
+        return render(request,'dialog/time.html',locals())
+
