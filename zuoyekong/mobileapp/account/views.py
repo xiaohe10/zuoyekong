@@ -119,7 +119,7 @@ def register_do(request):
     if request.POST.has_key('grade'):
         grade = request.POST['grade']
     validcode = ValidCode()
-    print code
+    #print code
     if(validcode.is_code_valid(userName = userName,codeType=1,code=code)):
         try:
             user = User.objects.get(userName=userName)
@@ -244,8 +244,8 @@ def modify_profile(request):
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         session = Session()
-        print session_ID
-        print session_key
+        #print session_ID
+        #print session_key
         userID = session.get_userID(session_ID,session_key)
         if not userID:
             return HttpResponse(json.dumps({'result':'fail','errorType':203,'msg':'invalid session'}))
@@ -259,8 +259,9 @@ def modify_profile(request):
                 user.realname = request.POST['realname']
             if request.POST.has_key('description'):
                 user.description = request.POST['description']
-            if request.FILES.has_key('headurl'):
-                user.headurl = request.FILES['headurl']
+            if request.FILES.has_key('headurl'): 
+                print request.FILES['headurl']
+                user.headImage = request.FILES['headurl']
             user.save()
             return HttpResponse(json.dumps({'result':'success'}))
         except Exception:
@@ -272,7 +273,7 @@ def upload_file(request):
     try:
         #print request
         file = os.path.join(MEDIA_ROOT,'test/test2.png')
-        print request
+        #print request
         if request.POST.has_key('file'):
             binary_file = request.POST['file']
             print binary_file
