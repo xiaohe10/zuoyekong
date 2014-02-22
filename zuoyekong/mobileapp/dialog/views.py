@@ -341,10 +341,9 @@ def dialog_time(request):
     except:
         message = '用户名或密码不正确'
         return render(request,'dialog/time.html',locals())
-input_format = "%Y-%m-%d %H:%M:%S+00:00" # or %d/%m...
-output_format = "%Y-%m-%d %H:%M:%S"
-
 def convert_time(logging_time):
+    input_format = "%Y-%m-%d %H:%M:%S+00:00" # or %d/%m...
+    output_format = "%Y-%m-%d %H:%M:%S"
     return strftime(output_format, strptime(logging_time, input_format))
 def dialog_time_detail(request):
     try:
@@ -353,7 +352,7 @@ def dialog_time_detail(request):
         user = User.objects.get(userName  = username, password = password)
         currentTime = str(datetime.datetime.now())
         try:
-            if user.userType == 1:
+            if user.userType == 2:
                 dialogs = Dialog.objects.filter(teacherId = user.id)
                 for dialog in dialogs:
                     dialog.all_time = (dialog.all_time + 60)/60
