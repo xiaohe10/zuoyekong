@@ -94,6 +94,8 @@ def accept_dialog(request):
                     teacher.save()
                 except:
                     print "teacher active state change fail"
+                print cloopen_accounts[0].cloudAccount
+                print cloopen_accounts[1].cloudAccount    
                 return HttpResponse(json.dumps({'result':'success','cloopenAccount':cloopen_accounts[0].cloudAccount,'cloopenSecret':cloopen_accounts[0].cloudSecret,'voIPAccount':cloopen_accounts[0].voIPAccount,'voIPSecret':cloopen_accounts[0].voIPSecret,'voIPAccount2':cloopen_accounts[1].voIPAccount}))
             except:
                 return HttpResponse(json.dumps({'result': 'fail', 'msg': 'push acceptance to student fail','errorType':404}))
@@ -355,8 +357,8 @@ def dialog_time_detail(request):
             if user.userType == 2:
                 dialogs = Dialog.objects.filter(teacherId = user.id)
                 for dialog in dialogs:
-                    dialog.all_time = (dialog.all_time + 60)/60
-                    dialog.charging_time = (dialog.charging_time + 60)/60
+                    dialog.all_time = (dialog.all_time + 60)/60/1000
+                    dialog.charging_time = (dialog.charging_time + 60)/60/1000
                     dialog.fee = float(dialog.charging_time) * 5/3
                     dialog.created_time = convert_time( str(dialog.created_time))
                     dialog.other = User.objects.get(id = dialog.studentId).realname
@@ -364,8 +366,8 @@ def dialog_time_detail(request):
             else:
                 dialogs = Dialog.objects.filter(studentId = user.id)
                 for dialog in dialogs:
-                    dialog.all_time = (dialog.all_time + 60)/60
-                    dialog.charging_time = (dialog.charging_time + 60)/60
+                    dialog.all_time = (dialog.all_time + 60)/60/1000
+                    dialog.charging_time = (dialog.charging_time + 60)/60/1000
                     dialog.fee = dialog.charging_time * 2
                     dialog.created_time = convert_time( str(dialog.created_time))
                     dialog.other = User.objects.get(id = dialog.teacherId).realname

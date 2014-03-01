@@ -60,6 +60,7 @@ urlpatterns = patterns('',
     url(r'^time$',dialog_time),
     url(r'^time/detail$',dialog_time_detail),
 
+    url(r'^pullMessage',pull_message),
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),
     # url(r'^zuoyekong/', include('zuoyekong.foo.urls')),

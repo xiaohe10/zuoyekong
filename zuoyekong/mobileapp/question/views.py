@@ -43,7 +43,6 @@ def question_test(request):
 
 def create_question(request):
     try:
-        print request
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
         session = Session()
@@ -89,7 +88,8 @@ def create_question(request):
                         try:
                             originfile =  os.path.join(MEDIA_ROOT,questionImage.image.path)
                             image = Image.open(originfile)
-                            image.thumbnail((256,256),Image.ANTIALIAS)
+                            print Image.ANTIALIAS
+                            print image.thumbnail((256,256),Image.ANTIALIAS)
                             origin_dirname = os.path.dirname(originfile)
                             thumb_dirname = origin_dirname.replace('questionPictures','questionThumbnails')
                             thumb_path = os.path.join(thumb_dirname,question.id.__str__()+'_thumb'+ext)

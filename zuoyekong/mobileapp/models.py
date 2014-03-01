@@ -172,7 +172,7 @@ class Question(models.Model):
     state = models.IntegerField(max_length=2,choices=QUESTION_STATE_CHOICES)
     thumbnails = models.CharField(max_length=100)
     voice = models.FileField(upload_to='questionVoice/%Y/%m/%d')
-    updateTime = models.DateTimeField(auto_now=True)
+    updateTime = models.DateTimeField(auto_now_add=True)
     applicationNumber = models.IntegerField(default=0)
     unread_applicationNumber = models.IntegerField(default=0)
     def get_history_detail(self,questionID):
