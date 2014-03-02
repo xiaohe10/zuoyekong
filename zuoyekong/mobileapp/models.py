@@ -371,6 +371,32 @@ class Follow(models.Model):
     followerId = models.BigIntegerField(20)
     followeeID = models.BigIntegerField(20)
     createdTime = models.DateTimeField(auto_now_add=True)
+import json
+class PushMessage(models.Model):
+    userID = models.BigIntegerField(20)
+    pushType = models.IntegerField()
+    content = models.TextField()
+
+    def get_message_by_type(self,userID,pushType):
+        messages = PushMessage.objects.filter(userID = userID, pushType = pushType)
+        r = []
+        for m in messages:
+            message = {}
+            message['pushType'] = m.pushType
+            message['content'] = m.content
+            m.delete()
+            r.append(message)
+        return r
+    def get_message_by_user(self,userID):
+        messages = PushMessage.objects.filter(userID = userID)
+        r = []
+        for m in messages:
+            message = {}
+            message['pushType'] = m.pushType
+            message['content'] = m.content
+            m.delete()
+            r.append(message)
+        return r
 '''
 class Comment(models.Model):
     evaluatorID = models.BigIntegerField(20)

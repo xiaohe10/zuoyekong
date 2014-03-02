@@ -44,30 +44,23 @@ def create_application(request):
         question.applicationNumber += 1
         application.save()
         question.save()
-        print 'start to push'
         push_to_student_application(question_id)
         return HttpResponse(json.dumps({'result': 'success','applicationID':application.id}))
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 def push_to_student_application(questionID):
-    print questionID
     root = ROOT_PATH
-    print ROOT_PATH
     wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'),True,True,True)
     question = Question.objects.get(id = questionID)
-    print question
     student = User.objects.get(id = question.authorID)
-    print student
     session = Session.objects.get(userID = student.id)
-    print session
     token = session.push_token.replace(' ','')
-    print token
     token = token.replace('<','')
     token = token.replace('>','')
     deviceToken = binascii.unhexlify(token)
     message = APNSNotification()
     message.token(deviceToken)
-    message.alert(u'an application')
+    message.alert(u'a new application')
     message.setProperty("pushType",31)
     message.badge(1)
     message.sound()

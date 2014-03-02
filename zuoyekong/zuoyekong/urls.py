@@ -5,6 +5,7 @@ from mobileapp.application.views import *
 from mobileapp.dialog.views import *
 from mobileapp.follow.views import *
 from mobileapp.recommend.views import *
+from mobileapp.message.views import *
 from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin

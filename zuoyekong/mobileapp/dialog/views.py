@@ -223,7 +223,21 @@ def push_call_request_2_teacher(teacherID,question,dialog,userID):
     message.token(deviceToken)
     message.alert(u'a dialog request')
     message.setProperty("pushType",10)
-    message.setProperty("info",[dialog.id,dialog.dialogSession,question.id,question.title,question.authorRealName,'media'+question.thumbnails,question.description,question.subject])
+
+    p = PushMessage()
+    p.pushType = 10
+    messageContent = {}
+    messageContent['dialogID'] = dialog.id
+    messageContent['dialogSession']=dialog.dialogSession
+    messageContent['questionID']=question.id
+    messageContent['questionTitle']=question.title
+    messageContent['authorRealName']=question.authorRealName
+    messageContent['questionThumbnails']='media'+question.thumbnails
+    messageContent['questionDescription']=question.description
+    messageContent['questionSubject']=question.subject
+    p.content = messageContent
+    p.save()
+
     message.badge(1)
     message.sound()
 
@@ -246,6 +260,20 @@ def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     message.token(deviceToken)
     message.alert(u'a dialog response')
     message.setProperty("pushType",20)
+
+    p = PushMessage()
+    p.pushType = 20
+    messageContent = {}
+    messageContent['dialogID'] = dialog.id
+    messageContent['dialogSession']=dialog.dialogSession
+    messageContent['cloudAccount']=cloopen_account.cloudAccount
+    messageContent['cloudSecret']=cloopen_account.cloudSecret
+    messageContent['voIPAccount']=cloopen_account.voIPAccount
+    messageContent['voIPSecret']=cloopen_account.voIPSecret
+    messageContent['voIPAccount2']=voIPAccount2
+    p.content = messageContent
+    p.save()
+
     message.setProperty("info",[dialog.id,dialog.dialogSession,cloopen_account.cloudAccount,cloopen_account.cloudSecret,cloopen_account.voIPAccount,cloopen_account.voIPSecret,voIPAccount2])
     message.badge(1)
     message.sound()

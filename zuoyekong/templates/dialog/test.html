@@ -48,5 +48,14 @@ body{
 <input type="submit" value="提交"/>
 
 </form>
+
+<form method="post" action='/pullMessage' enctype="multipart/form-data" >
+<h2>获取推送的内容</h2>
+     <div >session id</div><input type="text" name='sessionID'/><br/>
+    <div >session key</div><input type="text" name='sessionKey'/><br/>
+    <div >pushType</div><input type="text" name='pushType'/><br/>
+<input type="submit" value="提交"/>
+</form>
+
 </body>
 </html>
