@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>作业控个人中心</title>
+
+   <!-- Bootstrap core CSS -->
+    <link href="/media/dist/css/bootstrap.css" rel="stylesheet">
+
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+  <nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">作业控</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/profile?username={{ user.userName }}&key={{ user.password }}">个人信息</a></li>
+        <li><a href="/timesheet?username={{ user.userName }}&key={{ user.password }}">教学记录</a></li>
+          </ul>
+        <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">{{ user.userName }}</a></li>
+            <li><a href="/">退出</a></li>
+            </ul>
+         </div>
+      </div>
+</nav>
+  <div class="container">
+    <div class="col-md-6">
+      <form class="form-horizontal" action="/updateProfile" method="post" role="form" enctype="multipart/form-data">
+          <h3>个人信息</h3>
+          <input type="hidden" value="{{ user.userName }}" name="userName"/>
+          <input type="hidden" value="{{ user.password }}" name="password"/>
+          <div class="form-group">
+                <label class="col-sm-2 control-label" >真实姓名</label><div class="col-sm-10"><input class="form-control" type="text" name="realname"  required="" value="{{ user.realname }}"/></div>
+          </div>
+          <div class="form-group">
+                <label class="col-sm-2 control-label" >学校</label><div class="col-sm-10"><input class="form-control" type="text" name="school"  required="" value="{{ user.school }}"/></div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-2 control-label" >年级</label><div class="col-sm-10">
+              <select class="form-control" name="grade">
+                  <option value="0"{% if user.grade == '' %}selected {% endif %}>--请选择年级--</option>
+                  <option value="1"{% if user.grade == 1 %} selected{% endif %}> 一年级 </option>
+                  <option value="2" {% if user.grade == 2 %}selected {% endif %}> 二年级 </option>
+                  <option value="3" {% if user.grade == 3 %}selected {% endif %}> 三年级 </option>
+                  <option value="4" {% if user.grade == 4 %}selected {% endif %}> 四年级 </option>
+                  <option value="5" {% if user.grade == 5 %}selected {% endif %}> 五年级 </option>
+                  <option value="6" {% if user.grade == 6 %}selected {% endif %}> 六年级 </option>
+                  <option value="7" {% if user.grade == 7 %}selected {% endif %}> 初一 </option>
+                  <option value="8" {% if user.grade == 8 %}selected {% endif %}> 初二 </option>
+                  <option value="9" {% if user.grade == 9 %}selected {% endif %}> 初三 </option>
+                  <option value="10" {% if user.grade == 10 %}selected {% endif %}> 高一 </option>
+                  <option value="11" {% if user.grade == 11 %}selected {% endif %}> 高二 </option>
+                  <option value="12" {% if user.grade == 12 %}selected {% endif %}> 高三 </option>
+                  <option value="13" {% if user.grade == 13 %}selected {% endif %}> 大一 </option>
+                  <option value="14" {% if user.grade == 14 %}selected {% endif %}> 大二 </option>
+                  <option value="15" {% if user.grade == 15 %}selected {% endif %}> 大三 </option>
+                  <option value="16"{% if user.grade == 16 %}selected {% endif %}> 大四 </option>
+              <option value="17"{% if user.grade == 17 %}selected {% endif %}> 研究生 </option>
+
+                </select>
+              </div>
+              </div>
+                 <div class="form-group">
+                <label class="col-sm-2 control-label" >描述</label><div class="col-sm-10"><input placeholder="写一写自己的传奇经历吧" class="form-control" type="text" name="description"  required="" value="{{ user.description }}"/></div>
+
+          </div>
+          <div class="form-group">
+               <label class="col-sm-2 control-label" >头像</label><div class="col-sm-10">
+              <input type='file' id="imgInp" class="form-control"/>
+            <img id="blah" src="{{ user.headImage }}" alt="your image" style="max-height:300px;max-width:300px"/>
+              </div>
+              </div>
+         <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-primary" type="submit" value="提交"/>
+              </div>
+         </div>
+      </form>
+        </div>
+      </div>
+<script src="/media/dist/js/jquery.js"></script>
+  <script src="/media/dist/js/bootstrap.min.js"></script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  <script type="application/javascript">
+       function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result);
+                $('#imgInp').attr('name','headImage')
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#imgInp").change(function(){
+        readURL(this);
+    });
+  </script>
+  </body>
+</html>

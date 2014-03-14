@@ -3,6 +3,7 @@
 import json
 
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from mobileapp.models import *
 from django.core.cache import cache
@@ -47,13 +48,13 @@ def create_dialog(request):
         teacher = User.objects.get(id = application.applicant)
         if teacher.activeState == 2:
             return HttpResponse(json.dumps({'result':'fail','msg':'teacher is busy','errorType':405}))
-                
+
         dialog = Dialog(studentId = userID,teacherId = application.applicant,questionId = question.id,state=1,all_time=0,charging_time=0)
 
         dialog.generate_dialog_session()
         dialog.save()
         try:
-            push_call_request_2_teacher(application.applicant,question,dialog,userID)
+            push_call_request_2_teacher(application.applicant,question,dialog)
         except:
             return HttpResponse(json.dumps({'result': 'fail', 'msg': 'push call to teacher fail','errorType':403}))
         return HttpResponse(json.dumps({'result':'success','dialogID':dialog.id,'dialogSession':dialog.dialogSession}))
@@ -210,7 +211,7 @@ def commit(request):
         return HttpResponse('parament wrong')
 
 
-def push_call_request_2_teacher(teacherID,question,dialog,userID):
+def push_call_request_2_teacher(teacherID,question,dialog):
     root = ROOT_PATH
     wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
     session = Session.objects.get(userID = teacherID)
@@ -235,16 +236,17 @@ def push_call_request_2_teacher(teacherID,question,dialog,userID):
     messageContent['questionThumbnails']='media'+question.thumbnails
     messageContent['questionDescription']=question.description
     messageContent['questionSubject']=question.subject
-    p.content = messageContent
+    p.content = json.dumps(messageContent)
+    p.userID = teacherID
     p.save()
 
     message.badge(1)
     message.sound()
 
     # add message to tuple and send it to APNS server
-    wrapper.append(message)
-    wrapper.connect()
-    wrapper.notify()
+    #wrapper.append(message)
+    #wrapper.connect()
+    #wrapper.notify()
 
 def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     print '######## push response'
@@ -271,7 +273,8 @@ def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     messageContent['voIPAccount']=cloopen_account.voIPAccount
     messageContent['voIPSecret']=cloopen_account.voIPSecret
     messageContent['voIPAccount2']=voIPAccount2
-    p.content = messageContent
+    p.content = json.dumps(messageContent)
+    p.userID = dialog.studentId
     p.save()
 
     message.setProperty("info",[dialog.id,dialog.dialogSession,cloopen_account.cloudAccount,cloopen_account.cloudSecret,cloopen_account.voIPAccount,cloopen_account.voIPSecret,voIPAccount2])
@@ -354,54 +357,100 @@ def get_recent_teacher(request):
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 
-def dialog_time(request):
+def web_login(request):
     try:
         username = request.POST['username']
         password = request.POST['password']
     except:
-        return render(request,'dialog/time.html',locals())
+        return render(request, 'account/login.html',locals())
     try:
         m = hashlib.md5()
         m.update(password)
         psw = m.hexdigest()
         user1 = User.objects.get(userName = username)
-        print user1.password
         user = User.objects.get(userName  = username, password = psw)
-        return redirect('/time/detail?username='+username+'&key='+psw)
+        return redirect('/profile?username='+username+'&key='+psw)
     except:
         message = '用户名或密码不正确'
-        return render(request,'dialog/time.html',locals())
+        return render(request, 'account/login.html',locals())
 def convert_time(logging_time):
     input_format = "%Y-%m-%d %H:%M:%S+00:00" # or %d/%m...
     output_format = "%Y-%m-%d %H:%M:%S"
     return strftime(output_format, strptime(logging_time, input_format))
-def dialog_time_detail(request):
+def profile(request):
     try:
         username = request.GET['username']
         password = request.GET['key']
         user = User.objects.get(userName  = username, password = password)
-        currentTime = str(datetime.datetime.now())
+        user.headImage = '/media/'+user.headImage.__str__()
+        return render(request, 'dialog/profile.html',locals())
+    except:
+        return render(request, 'account/login.html',locals())
+def updateProfile(request):
+    try:
+        username = request.POST['userName']
+        password = request.POST['password']
+        user = User.objects.get(userName  = username, password = password)
+        user.realname = request.POST['realname']
+        user.school = request.POST['school']
+        user.description = request.POST['description']
+        user.grade = request.POST['grade']
+        if request.FILES.has_key('headImage'):
+            user.headImage = request.FILES['headImage']
+        user.save()
+        return HttpResponseRedirect('/profile?username='+username+'&key='+password)
+    except:
+        return HttpResponseRedirect('/')
+def resetPass(request):
+    try:
+        username = request.POST['userName']
+        oldpassword = request.POST['oldpassword']
+        newpassword = request.POST['newpassword']
+    except:
+        return render(request, 'account/login.html',locals())
+    try:
+        m = hashlib.md5()
+        m.update(oldpassword)
+        psw = m.hexdigest()
+        user = User.objects.get(userName  = username, password = psw)
+        m.update(newpassword)
+        user.password = m.hexdigest()
+        user.save()
+        return render(request, 'dialog/profile.html',locals())
+    except:
+        return render(request, 'dialog/profile.html',locals())
+def timesheet(request):
+    try:
+        username = request.GET['username']
+        password = request.GET['key']
+        user = User.objects.get(userName  = username, password = password)
         try:
             if user.userType == 2:
                 dialogs = Dialog.objects.filter(teacherId = user.id)
                 for dialog in dialogs:
+                    q = Question.objects.get(id = dialog.questionId)
                     dialog.all_time = (dialog.all_time + 60)/60/1000
                     dialog.charging_time = (dialog.charging_time + 60)/60/1000
+                    dialog.subject = q.get_subject_display()
                     dialog.fee = float(dialog.charging_time) * 5/3
                     dialog.created_time = convert_time( str(dialog.created_time))
-                    dialog.other = User.objects.get(id = dialog.studentId).realname
+                    dialog.other = User.objects.get(id = dialog.studentId).userName
+                    dialog.otherName =  User.objects.get(id = dialog.studentId).realname
 
             else:
                 dialogs = Dialog.objects.filter(studentId = user.id)
                 for dialog in dialogs:
+                    q = Question.objects.get(id = dialog.questionId)
                     dialog.all_time = (dialog.all_time + 60)/60/1000
                     dialog.charging_time = (dialog.charging_time + 60)/60/1000
+                    dialog.subject = q.get_subject_display()
                     dialog.fee = dialog.charging_time * 2
                     dialog.created_time = convert_time( str(dialog.created_time))
-                    dialog.other = User.objects.get(id = dialog.teacherId).realname
+                    dialog.other = User.objects.get(id = dialog.teacherId).userName
+                    dialog.otherName =  User.objects.get(id = dialog.studentId).realname
         except:
             print 'no dialogs'
-        return render(request,'dialog/detail.html',locals())
+        return render(request, 'dialog/timesheet.html',locals())
     except:
-        return render(request,'dialog/time.html',locals())
+        return render(request, 'account/login.html',locals())
 

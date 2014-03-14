@@ -44,7 +44,7 @@ def create_application(request):
         question.applicationNumber += 1
         application.save()
         question.save()
-        push_to_student_application(question_id)
+        #push_to_student_application(question_id)
         return HttpResponse(json.dumps({'result': 'success','applicationID':application.id}))
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))

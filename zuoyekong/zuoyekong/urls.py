@@ -6,6 +6,7 @@ from mobileapp.dialog.views import *
 from mobileapp.follow.views import *
 from mobileapp.recommend.views import *
 from mobileapp.message.views import *
+from mobileapp.manage.views import *
 from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -58,10 +59,15 @@ urlpatterns = patterns('',
     url(r'^dialog/cancel',cancel_call),
     url(r'^dialog/reject',reject_call),
     
-    url(r'^time$',dialog_time),
-    url(r'^time/detail$',dialog_time_detail),
+    url(r'^$',web_login),
+    url(r'^profile$',profile),
+    url('^resetPass$',resetPass),
+    url(r'^updateProfile$',updateProfile),
+    url(r'^timesheet',timesheet),
 
-    url(r'^pullMessage',pull_message),
+    url(r'^pullMessage$',pull_message),
+    url(r'^manage$',manage),
+    url(r'^manage/adduser$',adduser),
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),
     # url(r'^zuoyekong/', include('zuoyekong.foo.urls')),
