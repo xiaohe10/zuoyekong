@@ -26,6 +26,8 @@ def manage(request):
         dialog.student = student.userName
         dialog.studentName = student.realname
         dialog.subject = q.get_subject_display()
+        dialog.all_time = float(dialog.all_time)/60000
+        dialog.charging_time = float(dialog.charging_time)/60000
     return render_to_response('manage/index.html',locals())
 def adduser(request):
     if request.POST.has_key('userName'):

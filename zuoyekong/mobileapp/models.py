@@ -5,24 +5,24 @@ import uuid
 import datetime
 
 GRADE_CHOICES=(
-    (1,'一年级'),
-    (2,'二年级'),
-    (3,'三年级'),
-    (4,'四年级'),
-    (5,'五年级'),
-    (6,'六年级'),
-    (7,'初一'),
-    (8,'初二'),
-    (9,'初三'),
-    (10,'高一'),
-    (11,'高二'),
-    (12,'高三'),
-    (13,'大一'),
-    (14,'大二'),
-    (15,'大三'),
-    (16,'大四'),
+    (0,'一年级'),
+    (1,'二年级'),
+    (2,'三年级'),
+    (3,'四年级'),
+    (4,'五年级'),
+    (5,'六年级'),
+    (6,'初一'),
+    (7,'初二'),
+    (8,'初三'),
+    (9,'高一'),
+    (10,'高二'),
+    (11,'高三'),
+    (12,'大一'),
+    (13,'大二'),
+    (14,'大三'),
+    (15,'大四'),
     (16,'研究生'),
-    (16,'老师'),
+    (17,'老师'),
 )
 USER_CHOICES=(
     (1,'学生'),
@@ -42,17 +42,17 @@ DIALOG_STATE_CHOICES=(
     (4,'FINISHED'),
 )
 SUBJECT_CHOICES=(
-    (1,'语文'),
-    (2,'数学'),
-    (3,'英语'),
-    (4,'物理'),
-    (5,'化学'),
-    (6,'生物'),
-    (7,'政治'),
-    (8,'历史'),
-    (9,'地理'),
-    (10,'音乐'),
-    (11,'美术'),
+    (0,'语文'),
+    (1,'数学'),
+    (2,'英语'),
+    (3,'物理'),
+    (4,'化学'),
+    (5,'生物'),
+    (6,'政治'),
+    (7,'历史'),
+    (8,'地理'),
+    (9,'音乐'),
+    (10,'美术'),
 )
 
 QUESTION_STATE_CHOICES=(
@@ -80,6 +80,8 @@ class User(models.Model):
     realname = models.CharField(max_length=20)
     userType = models.IntegerField(max_length=2,choices=USER_CHOICES)
     school = models.CharField(max_length=20)
+    hometown = models.CharField(max_length=20,blank = True)
+    good_at = models.CharField(max_length=30,blank = True)
     grade = models.IntegerField(max_length=5,choices=GRADE_CHOICES)
     description = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
@@ -254,6 +256,7 @@ class Question(models.Model):
             final_question['thumbnails'] = 'media'+question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
+            final_question['applicationNumber'] = question.applicationNumber
             final_question['unreadApplicationNumber'] = question.unread_applicationNumber
             final_question['updateTime'] = question.updateTime.__str__()
             final_question_list.append(final_question)
