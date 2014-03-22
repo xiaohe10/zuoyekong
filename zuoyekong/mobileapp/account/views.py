@@ -71,6 +71,13 @@ def login_do(request):
                         print 'cache error'
                     s.delete()
                     #todo push alert to client
+                sessions = Session.objects.filter(push_token = push_token)
+                for s in sessions:
+                    try:
+                        cache.delete(s.session_ID)
+                    except:
+                        print 'cache error'
+                    s.delete()
                 session = Session()
                 user.activeState = 1
                 user.save()
@@ -227,7 +234,10 @@ def get_profile(request):
                 profile['hometown'] = user.hometown
                 profile['highschool'] = user.highschool
                 profile['gender'] = user.gender
-                profile['good_at'] = user.good_at.split('|').__str__()
+                if user.good_at == None:
+                    profile['good_at'] = []
+                else:
+                    profile['good_at'] = user.good_at.split('|').__str__()
                 profile['birth'] = user.birth
                 if user.headImage:
                     profile['headurl'] = 'media/'+user.headImage.__str__()

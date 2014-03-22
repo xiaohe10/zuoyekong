@@ -132,10 +132,12 @@ def create_question(request):
 from mobileapp.APNSWrapper import *
 from zuoyekong.settings import ROOT_PATH
 import threading
+import binascii
+import hashlib
 def push_to_a_teacher(session):
     try:
         root = ROOT_PATH
-        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,False,True)
         token = session.push_token.replace(' ','')
         if token == '':
             return
