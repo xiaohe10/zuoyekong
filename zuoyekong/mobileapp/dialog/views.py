@@ -224,7 +224,8 @@ def push_call_request_2_teacher(teacherID,question,dialog):
     message.token(deviceToken)
     message.alert(u'a dialog request')
     message.setProperty("pushType",10)
-
+    message.setProperty("info",[dialog.id,dialog.dialogSession,question.id,question.title,question.authorRealName,'media'+question.thumbnails,question.description,question.subject])
+    '''
     p = PushMessage()
     p.pushType = 10
     messageContent = {}
@@ -239,7 +240,7 @@ def push_call_request_2_teacher(teacherID,question,dialog):
     p.content = json.dumps(messageContent)
     p.userID = teacherID
     p.save()
-
+    '''
     message.badge(1)
     message.sound()
 
@@ -262,7 +263,7 @@ def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     message.token(deviceToken)
     message.alert(u'a dialog response')
     message.setProperty("pushType",20)
-
+    '''
     p = PushMessage()
     p.pushType = 20
     messageContent = {}
@@ -276,7 +277,7 @@ def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     p.content = json.dumps(messageContent)
     p.userID = dialog.studentId
     p.save()
-
+    '''
     message.setProperty("info",[dialog.id,dialog.dialogSession,cloopen_account.cloudAccount,cloopen_account.cloudSecret,cloopen_account.voIPAccount,cloopen_account.voIPSecret,voIPAccount2])
     message.badge(1)
     message.sound()

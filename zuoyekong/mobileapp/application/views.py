@@ -50,7 +50,7 @@ def create_application(request):
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 def push_to_student_application(questionID):
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'),True,True,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'),True,False,True)
     question = Question.objects.get(id = questionID)
     student = User.objects.get(id = question.authorID)
     session = Session.objects.get(userID = student.id)
@@ -60,7 +60,7 @@ def push_to_student_application(questionID):
     deviceToken = binascii.unhexlify(token)
     message = APNSNotification()
     message.token(deviceToken)
-    message.alert(u'a new application')
+    message.alert(u'有老师应征回答问题')
     message.setProperty("pushType",31)
     message.badge(1)
     message.sound()
