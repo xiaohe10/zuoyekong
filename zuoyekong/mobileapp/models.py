@@ -80,9 +80,12 @@ class User(models.Model):
     realname = models.CharField(max_length=20)
     userType = models.IntegerField(max_length=2,choices=USER_CHOICES)
     school = models.CharField(max_length=20)
+    highschool = models.CharField(max_length=20)
     hometown = models.CharField(max_length=20,blank = True)
     good_at = models.CharField(max_length=30,blank = True)
     grade = models.IntegerField(max_length=5,choices=GRADE_CHOICES)
+    birth = models.CharField(max_length=10,blank=True)
+    gender = models.CharField(max_length=1,blank=True)
     description = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
@@ -283,6 +286,8 @@ class Question(models.Model):
             question_detail['description'] = question.description
             question_detail['authorID'] = question.authorID
             question_detail['authorRealName'] = question.authorRealName
+            author = User.objects.get(id = question.authorID)
+            question_detail['authorHeadImage'] = 'media/'+author.headImage.__str__()
             question_detail['state'] = question.state
             question_detail['thumbnails'] = 'media'+question.thumbnails
             question_detail['applicationNumber'] = question.applicationNumber

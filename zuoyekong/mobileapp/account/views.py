@@ -224,6 +224,11 @@ def get_profile(request):
                 profile['grade'] = user.grade
                 profile['realname'] = user.realname
                 profile['identify'] = user.identify
+                profile['hometown'] = user.hometown
+                profile['highschool'] = user.highschool
+                profile['gender'] = user.gender
+                profile['good_at'] = user.good_at.split('|').__str__()
+                profile['birth'] = user.birth
                 if user.headImage:
                     profile['headurl'] = 'media/'+user.headImage.__str__()
                 comments = [{'evaluatorID':1,'evaluatorName':'匿名学生','content':'给32个赞','mark':4,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
@@ -259,8 +264,17 @@ def modify_profile(request):
                 user.realname = request.POST['realname']
             if request.POST.has_key('description'):
                 user.description = request.POST['description']
-            if request.FILES.has_key('headurl'): 
-                print request.FILES['headurl']
+            if request.POST.has_key('highschool'):
+                user.description = request.POST['highschool']
+            if request.POST.has_key('hometown'):
+                user.description = request.POST['hometown']
+            if request.POST.has_key('good_at'):
+                user.description = request.POST['good_at']
+            if request.POST.has_key('gender'):
+                user.description = request.POST['gender']
+            if request.POST.has_key('birth'):
+                user.description = request.POST['birth']
+            if request.FILES.has_key('headurl'):
                 user.headImage = request.FILES['headurl']
             user.save()
             return HttpResponse(json.dumps({'result':'success'}))

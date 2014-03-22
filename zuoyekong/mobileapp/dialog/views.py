@@ -244,9 +244,9 @@ def push_call_request_2_teacher(teacherID,question,dialog):
     message.sound()
 
     # add message to tuple and send it to APNS server
-    #wrapper.append(message)
-    #wrapper.connect()
-    #wrapper.notify()
+    wrapper.append(message)
+    wrapper.connect()
+    wrapper.notify()
 
 def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     print '######## push response'
@@ -393,8 +393,13 @@ def updateProfile(request):
         user = User.objects.get(userName  = username, password = password)
         user.realname = request.POST['realname']
         user.school = request.POST['school']
+        user.highschool = request.POST['highschool']
         user.description = request.POST['description']
         user.grade = request.POST['grade']
+        user.gender = request.POST['gender']
+        user.good_at = request.POST['good_at']
+        user.hometown = request.POST['hometown']
+        user.birth = request.POST['birth']
         if request.FILES.has_key('headImage'):
             user.headImage = request.FILES['headImage']
         user.save()

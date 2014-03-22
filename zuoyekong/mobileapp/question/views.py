@@ -125,11 +125,44 @@ def create_question(request):
                         t['teacherID'] = teacherID
                         t['msg'] =  'no such teacher'
                     teachers.append(t)
+        push_new_question_to_teacher()
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id,'teachers':teachers}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
+from mobileapp.APNSWrapper import *
+from zuoyekong.settings import ROOT_PATH
+import threading
+def push_to_a_teacher(session):
+    try:
+        root = ROOT_PATH
+        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+        token = session.push_token.replace(' ','')
+        if token == '':
+            return
+        token = token.replace('<','')
+        token = token.replace('>','')
+        deviceToken = binascii.unhexlify(token)
+        # create message
+        message = APNSNotification()
+        message.token(deviceToken)
+        message.alert(u'a dialog request')
+        message.setProperty("pushType",32)
 
-
+        message.badge(1)
+        message.sound()
+        # add message to tuple and send it to APNS server
+        wrapper.append(message)
+        wrapper.connect()
+        wrapper.notify()
+    except:
+        print 'push to teacher' + str(session.userID) + 'fail'
+def push_new_question_to_teacher():
+    sessions = Session.objects.all()
+    lock = threading.Lock()
+    for session in sessions:
+        user = User.objects.get(id = session.userID)
+        if user.userType == 2:
+            threading.Thread(target=push_to_a_teacher,args=(session,)).start()
 def list_history_question(request):
     try:
         print request
