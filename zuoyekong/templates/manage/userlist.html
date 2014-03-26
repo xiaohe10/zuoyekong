@@ -37,41 +37,39 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/manage">教学记录</a></li>
+        <li><a href="/manage">教学记录</a></li>
         <li ><a href="/manage/adduser">添加用户</a></li>
-        <li ><a href="/manage/userlist">用户列表</a></li>
+         <li  class="active"><a href="/manage/userlist">用户列表</a></li>
+
           </ul>
          </div>
       </div>
 </nav>
 
        <div class="container">
-    <h3>作业控时间记录</h3>
+    <h3>用户列表</h3>
      <table class="table table-bordered">
       <thead>
         <tr>
-          <th>会话时间</th>
-          <th>学科</th>
-          <th>老师账号</th>
-          <th>老师姓名</th>
-          <th>学生账号</th>
-            <th>学生姓名</th>
-          <th>总时长(分钟)</th>
-          <th>计费时长（分钟）</th>
+          <th>用户名</th>
+          <th>真实姓名</th>
+            <th>类型</th>
+          <th>学校</th>
+            <th>相关学科</th>
+            <th>头像</th>
+
         </tr>
       </thead>
       <tbody>
-        {% if dialogs %}
-          {% for dialog in dialogs %}
+        {% if users %}
+          {% for u in users %}
               <tr>
-              <th>{{ dialog.created_time }}</th>
-              <th>{{ dialog.subject }}</th>
-              <th>{{ dialog.teacher }}</th>
-              <th>{{ dialog.teacherName }}</th>
-              <th>{{ dialog.student }}</th>
-              <th>{{ dialog.studentName }}</th>
-              <th>{{ dialog.all_time }}</th>
-              <th>{{ dialog.charging_time }}</th>
+              <th>{{ u.userName }}</th>
+              <th>{{ u.realname }}</th>
+              <th>{{ u.userType }}</th>
+              <th>{{ u.school }}</th>
+                  <th>{{ u.good_at }}</th>
+              <th><img src='{{ u.headImage }}' style="height:100px"/></th>
               </tr>
           {% endfor %}
       {% endif %}

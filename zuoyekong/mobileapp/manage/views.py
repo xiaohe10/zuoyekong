@@ -29,19 +29,47 @@ def manage(request):
         dialog.all_time = float(dialog.all_time)/60000
         dialog.charging_time = float(dialog.charging_time)/60000
     return render_to_response('manage/index.html',locals())
+import hashlib
 def adduser(request):
     if request.POST.has_key('userName'):
         try:
-            user = User()
-            user.userName = request.POST['userName']
-            user.userName = request.POST['password']
-            user.userName = request.POST['userType']
-            user.userName = request.POST['grade']
-            user.userName = request.POST['school']
-            user.userName = request.POST['description']
-            if request.FILES.has_key('headImage'):
-                user.userName = request.FILES['headImage']
+            userName = request.POST['userName']
+            try:
+                User.objects.get(userName = userName)
+                userExists = True
+                return render_to_response('manage/adduser.html',locals())
+            except:
+                user = User()
+                user.userName = userName
+                password = request.POST['password']
+                m = hashlib.md5()
+                m.update(password)
+                psw = m.hexdigest()
+                user.password = psw
+                user.userType = request.POST['userType']
+                user.grade = request.POST['grade']
+                user.school = request.POST['school']
+                user.description = request.POST['description']
+                user.realname = request.POST['realname']
+                user.hometown = request.POST['hometown']
+                user.highschool = request.POST['highschool']
+                user.gender = request.POST['gender']
+                user.good_at = request.POST['good_at']
+                user.birth = request.POST['birth']
+
+                if request.FILES.has_key('headImage'):
+                    user.headImage = request.FILES['headImage']
+                user.save()
+                addSuccess = True
+                return render_to_response('manage/adduser.html',locals())
         except:
             return render_to_response('manage/adduser.html',locals())
 
     return render_to_response('manage/adduser.html',locals())
+def userlist(request):
+    users = User.objects.all().order_by('userType')
+    for user in users:
+        user.headImage = '/media/'+user.headImage.__str__()
+        user.userType = '老师' if user.userType == 2 else '学生'
+        user.grade = user.get_grade_display()
+    return render_to_response('manage/userlist.html',locals())

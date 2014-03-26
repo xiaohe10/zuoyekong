@@ -39,37 +39,55 @@
       <ul class="nav navbar-nav">
         <li ><a href="/manage">教学记录</a></li>
         <li class="active"><a href="/manage/adduser">添加用户</a></li>
-
+        <li ><a href="/manage/userlist">用户列表</a></li>
           </ul>
          </div>
       </div>
 </nav>
+
   <div class="container">
-      <div class="col-md-6">
+      <div class="col-md-8">
+            {% if userExists  %}
+  <div class="alert alert-warning alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  该用户已经存在
+    </div>
+      {% endif %}
+            {% if addSuccess  %}
+  <div class="alert alert-success alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  添加用户成功
+  </div>
+      {% endif %}
       <form class="form-horizontal" action="/manage/adduser" method="post" role="form" enctype="multipart/form-data">
           <h3>个人信息</h3>
           <div class="form-group">
-                <label class="col-sm-2 control-label" >用户名</label><div class="col-sm-10"><input class="form-control" type="text" name="userName"  required="" /></div>
+                <label class="col-sm-3 control-label" >用户名</label><div class="col-sm-9"><input class="form-control" type="text" name="userName"  required=""  autocomplete="off"/></div>
           </div>
           <div class="form-group">
-                <label class="col-sm-2 control-label" >密码</label><div class="col-sm-10"><input class="form-control" type="password" name="password"  required="" /></div>
+                <label class="col-sm-3 control-label" >密码</label><div class="col-sm-9"><input class="form-control" type="password" name="password"  required=""  autocomplete="off"/></div>
           </div>
           <div class="form-group">
-                <label class="col-sm-2 control-label" >真实姓名</label><div class="col-sm-10"><input class="form-control" type="text" name="realname"  required="" /></div>
+              <label class="col-sm-3 control-label" >账户类型</label><div class="col-sm-9">
+              <select class="form-control" name="userType">
+                  <option value="2">老师</option>
+                  <option value="1" >学生 </option>
+                  </select>
+              </div>
           </div>
           <div class="form-group">
-                <label class="col-sm-2 control-label" >学校</label><div class="col-sm-10"><input class="form-control" type="text" name="school"  required="" "/></div>
+                <label class="col-sm-3 control-label" >真实姓名</label><div class="col-sm-9"><input class="form-control" type="text" name="realname"   /></div>
           </div>
           <div class="form-group">
-              <label class="col-sm-2 control-label" >年级</label><div class="col-sm-10">
+                <label class="col-sm-3 control-label" >性别</label><div class="col-sm-9"><input class="form-control" type="text" name="gender"  /></div>
+          </div>
+          <div class="form-group">
+                <label class="col-sm-3 control-label" >学校</label><div class="col-sm-9"><input class="form-control" type="text" name="school"  /></div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-3 control-label" >年级</label><div class="col-sm-9">
               <select class="form-control" name="grade">
                   <option value="0">--请选择年级--</option>
-                  <option value="1"> 一年级 </option>
-                  <option value="2"> 二年级 </option>
-                  <option value="3"> 三年级 </option>
-                  <option value="4" > 四年级 </option>
-                  <option value="5" > 五年级 </option>
-                  <option value="6" > 六年级 </option>
                   <option value="7" > 初一 </option>
                   <option value="8" > 初二 </option>
                   <option value="9" > 初三 </option>
@@ -85,18 +103,31 @@
                 </select>
               </div>
               </div>
+                <div class="form-group">
+                <label class="col-sm-3 control-label" >籍贯</label><div class="col-sm-9"><input class="form-control" type="text" name="hometown" /></div>
+          </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" >高中学校（老师填）</label><div class="col-sm-9"><input class="form-control" type="text" name="highschool" /></div>
+          </div>
+      <div class="form-group">
+                <label class="col-sm-3 control-label" >老师擅长学科/学生不擅长学科</label><div class="col-sm-9"><input class="form-control" type="text" name="good_at"   /></div>
+          </div>
+
+      <div class="form-group">
+                <label class="col-sm-3 control-label" >出生年份</label><div class="col-sm-9"><input class="form-control" type="text" name="birth"  /></div>
+          </div>
                  <div class="form-group">
-                <label class="col-sm-2 control-label" >描述</label><div class="col-sm-10"><input placeholder="写一写自己的传奇经历吧" class="form-control" type="text" name="description"  required="" /></div>
+                <label class="col-sm-3 control-label" >描述</label><div class="col-sm-9"><input placeholder="写一写自己的传奇经历吧" class="form-control" type="text" name="description" /></div>
 
           </div>
           <div class="form-group">
-               <label class="col-sm-2 control-label" >头像</label><div class="col-sm-10">
+               <label class="col-sm-3 control-label" >头像</label><div class="col-sm-9">
               <input type='file' id="imgInp" class="form-control"/>
             <img id="blah" src="" alt="头像" style="max-height:300px;max-width:300px"/>
               </div>
               </div>
          <div class="form-group">
-             <div class="col-sm-offset-2 col-sm-10">
+             <div class="col-sm-offset-2 col-sm-9">
                 <input class="btn btn-primary" type="submit" value="提交"/>
               </div>
          </div>

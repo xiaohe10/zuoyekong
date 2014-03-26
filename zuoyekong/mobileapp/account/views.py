@@ -242,11 +242,11 @@ def get_profile(request):
                 profile['birth'] = user.birth
                 if user.headImage:
                     profile['headurl'] = 'media/'+user.headImage.__str__()
-                comments = [{'evaluatorID':1,'evaluatorName':'匿名学生','content':'给32个赞','mark':4,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
-                            {'evaluatorID':2,'evaluatorName':'匿名学生','content':'给32个赞','mark':5,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
-                            {'evaluatorID':3,'evaluatorName':'匿名学生','content':'给32个赞','mark':4,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
-                            {'evaluatorID':4,'evaluatorName':'匿名学生','content':'给32个赞','mark':5,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'},
-                            {'evaluatorID':4,'evaluatorName':'匿名学生','content':'给32个赞','mark':5,'headurl':'media/questionThumbnails/2014/01/12/6_thumb.jpg'}]
+                comments = [{'evaluatorID':1,'evaluatorName':'学生','content':'给32个赞','mark':4,'headurl':'media/headImages/2014/03/27/152_1.png'},
+                            {'evaluatorID':2,'evaluatorName':'学生','content':'给32个赞','mark':5,'headurl':'media/headImages/2014/03/27/152_1.png'},
+                            {'evaluatorID':3,'evaluatorName':'学生','content':'给32个赞','mark':4,'headurl':'media/headImages/2014/03/27/152_1.png'},
+                            {'evaluatorID':4,'evaluatorName':'学生','content':'给32个赞','mark':5,'headurl':'media/headImages/2014/03/27/152_1.png'},
+                            {'evaluatorID':4,'evaluatorName':'学生','content':'给32个赞','mark':5,'headurl':'media/headImages/2014/03/27/152_1.png'}]
                 profile['comments'] = comments
                 return HttpResponse(json.dumps({'profile':profile,'result':'success'}))
             except Exception:
@@ -310,7 +310,7 @@ def modify_profile(request):
             if request.POST.has_key('gender'):
                 user.description = request.POST['gender']
             if request.POST.has_key('birth'):
-                user.description = request.POST['birth']
+                user.birth = request.POST['birth']
             if request.FILES.has_key('headurl'):
                 user.headImage = request.FILES['headurl']
             user.save()

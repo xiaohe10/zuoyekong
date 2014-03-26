@@ -68,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^pullMessage$',pull_message),
     url(r'^manage$',manage),
     url(r'^manage/adduser$',adduser),
+    url(r'^manage/userlist',userlist),
     url(r'^account/getDialogInfo',getDialogInfo),
     # Examples:
     # url(r'^$', 'zuoyekong.views.home', name='home'),
