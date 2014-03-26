@@ -156,7 +156,6 @@ def put_cloopen_account(request):
 
 def validate(request):
     try:
-        print request
         dialogID = request.POST['dialogId']
         dialogKey = request.POST['dialogKey']
         try:
@@ -435,8 +434,8 @@ def timesheet(request):
                 dialogs = Dialog.objects.filter(teacherId = user.id)
                 for dialog in dialogs:
                     q = Question.objects.get(id = dialog.questionId)
-                    dialog.all_time = (dialog.all_time + 60)/60/1000
-                    dialog.charging_time = (dialog.charging_time + 60)/60/1000
+                    dialog.all_time = (dialog.all_time + 60000)/60/1000
+                    dialog.charging_time = (dialog.charging_time + 60000)/60/1000
                     dialog.subject = q.get_subject_display()
                     dialog.fee = float(dialog.charging_time) * 5/3
                     dialog.created_time = convert_time( str(dialog.created_time))
@@ -447,8 +446,8 @@ def timesheet(request):
                 dialogs = Dialog.objects.filter(studentId = user.id)
                 for dialog in dialogs:
                     q = Question.objects.get(id = dialog.questionId)
-                    dialog.all_time = (dialog.all_time + 60)/60/1000
-                    dialog.charging_time = (dialog.charging_time + 60)/60/1000
+                    dialog.all_time = (dialog.all_time + 60000)/60/1000
+                    dialog.charging_time = (dialog.charging_time + 60000)/60/1000
                     dialog.subject = q.get_subject_display()
                     dialog.fee = dialog.charging_time * 2
                     dialog.created_time = convert_time( str(dialog.created_time))

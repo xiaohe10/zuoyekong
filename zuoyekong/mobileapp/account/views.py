@@ -234,10 +234,11 @@ def get_profile(request):
                 profile['hometown'] = user.hometown
                 profile['highschool'] = user.highschool
                 profile['gender'] = user.gender
-                if user.good_at == None:
-                    profile['good_at'] = []
-                else:
-                    profile['good_at'] = user.good_at.split('|').__str__()
+                #if user.good_at == None:
+                #    profile['good_at'] = []
+                #else:
+                #    profile['good_at'] = user.good_at.split('|').__str__()
+                profile['good_at'] = user.good_at
                 profile['birth'] = user.birth
                 if user.headImage:
                     profile['headurl'] = 'media/'+user.headImage.__str__()
@@ -254,6 +255,32 @@ def get_profile(request):
             return HttpResponse(json.dumps({'result':'fail','errorType':203,'msg':'no such session'}))
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
+def getDialogInfo(request):
+    try:
+        session_ID = request.POST['sessionID']
+        session_key = request.POST['sessionKey']
+    except:
+        return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
+    try:
+        session = Session.objects.get(session_ID=session_ID,session_key=session_key)
+        dialogs = Dialog.objects.filter(studentId = session.userID)
+        alltime = 0
+        chargingtime = 0
+        problemcounter = 0
+        for dialog in dialogs:
+            alltime += (dialog.all_time + 60000)/60/1000
+            chargingtime += (dialog.charging_time + 60000)/60/1000
+            problemcounter += 1
+        dialogs = Dialog.objects.filter(teacherId = session.userID)
+        for dialog in dialogs:
+            alltime += (dialog.all_time + 60000)/60/1000
+            chargingtime += (dialog.charging_time + 60000)/60/1000
+            problemcounter += 1
+        return HttpResponse(json.dumps({'result':'success','alltime':alltime,'chargingtime':chargingtime,'problemcounter':problemcounter}))
+    except:
+        return HttpResponse(json.dumps({'result':'fail','errorType':203,'msg':'no such session'}))
+
+
 def modify_profile(request):
     try :
         session_ID = request.POST['sessionID']
