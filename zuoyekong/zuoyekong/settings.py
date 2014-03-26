@@ -176,6 +176,6 @@ SITE_NAME='zuoyekong'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '166.111.81.141:11211',
+        'LOCATION': '115.28.161.192:11211',
     }
 }

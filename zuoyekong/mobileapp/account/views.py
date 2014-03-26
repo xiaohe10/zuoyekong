@@ -87,7 +87,7 @@ def login_do(request):
                         cache.set(token['session_ID'],token['session_key'],600)
                     except:
                         print 'cache error'
-                    return HttpResponse(json.dumps({'result':'success','userID':user.id,'sessionID':token['session_ID'],'sessionKey':token['session_key'],'type':user.userType}))
+                    return HttpResponse(json.dumps({'result':'success','headurl':'media/'+user.headImage.__str__(),'userID':user.id,'sessionID':token['session_ID'],'sessionKey':token['session_key'],'type':user.userType}))
                 else:
                     return HttpResponse(json.dumps({'result':'fail','errorType':501,'msg':'cannot generate token'}))
         except Exception:
