@@ -405,6 +405,12 @@ class PushMessage(models.Model):
             m.delete()
             r.append(message)
         return r
+class Chat(models.Model):
+    senderID = models.BigIntegerField(20)
+    receiverID = models.BigIntegerField(20)
+    message =  models.TextField()
+    time  = models.DateTimeField(auto_now_add= True)
+    state = models.CharField(max_length=1) # U: unread, R: readed
 '''
 class Comment(models.Model):
     evaluatorID = models.BigIntegerField(20)

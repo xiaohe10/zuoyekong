@@ -7,6 +7,7 @@ from mobileapp.follow.views import *
 from mobileapp.recommend.views import *
 from mobileapp.message.views import *
 from mobileapp.manage.views import *
+from mobileapp.chat.views import *
 from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -70,13 +71,11 @@ urlpatterns = patterns('',
     url(r'^manage/adduser$',adduser),
     url(r'^manage/userlist',userlist),
     url(r'^account/getDialogInfo',getDialogInfo),
-    # Examples:
-    # url(r'^$', 'zuoyekong.views.home', name='home'),
-    # url(r'^zuoyekong/', include('zuoyekong.foo.urls')),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^chat/test$',test),
+    url(r'^chat/get_contact_list$',get_contact_list),
+    url(r'^chat/get_unread_msgs',get_unread_msgs),
+    url(r'^chat/get_all_msgs',get_all_msgs),
+    url(r'^chat/send_msg',send_msg),
 
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
 )

@@ -147,7 +147,7 @@ def push_to_a_teacher(session):
         # create message
         message = APNSNotification()
         message.token(deviceToken)
-        message.alert(u'a dialog request')
+        message.alert(u'有新的问题发布了！')
         message.setProperty("pushType",32)
 
         message.badge(1)
