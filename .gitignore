@@ -1,6 +1,6 @@
 *.pyc
 settings.py
-/media/
+/zuoyekong/media/
 # C extensions
 *.so
 
