@@ -302,13 +302,13 @@ def modify_profile(request):
             if request.POST.has_key('description'):
                 user.description = request.POST['description']
             if request.POST.has_key('highschool'):
-                user.description = request.POST['highschool']
+                user.highschool = request.POST['highschool']
             if request.POST.has_key('hometown'):
-                user.description = request.POST['hometown']
+                user.hometown = request.POST['hometown']
             if request.POST.has_key('good_at'):
-                user.description = request.POST['good_at']
+                user.good_at = request.POST['good_at']
             if request.POST.has_key('gender'):
-                user.description = request.POST['gender']
+                user.gender = request.POST['gender']
             if request.POST.has_key('birth'):
                 user.birth = request.POST['birth']
             if request.FILES.has_key('headurl'):
