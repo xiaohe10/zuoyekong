@@ -13,9 +13,9 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/zuoyekong$test__1_.coverage" NAME="test (1) Coverage Results" MODIFIED="1389596075917" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mobileapp/dialog" />
-    <SUITE FILE_PATH="coverage/zuoyekong$test.coverage" NAME="test Coverage Results" MODIFIED="1387301970886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/zuoyekong$views.coverage" NAME="views Coverage Results" MODIFIED="1389528420117" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mobileapp/dialog" />
     <SUITE FILE_PATH="coverage/zuoyekong$test__2_.coverage" NAME="test (2) Coverage Results" MODIFIED="1389599703983" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Downloads/APNSWrapper-master" />
+    <SUITE FILE_PATH="coverage/zuoyekong$test.coverage" NAME="test Coverage Results" MODIFIED="1387301970886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -28,7 +28,7 @@
     <favorites_list name="zuoyekong" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.7979094">
+    <splitter split-orientation="horizontal" split-proportion="0.4067046">
       <split-first>
         <leaf>
           <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
@@ -40,11 +40,13 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/mobileapp/dialog/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="329" column="20" selection-start="13108" selection-end="13117" vertical-scroll-proportion="0.0" vertical-offset="4935" max-vertical-offset="7005">
-                  <folding />
+                <state line="405" column="47" selection-start="16450" selection-end="16450" vertical-scroll-proportion="0.7070707" vertical-offset="5725" max-vertical-offset="7005">
+                  <folding>
+                    <element signature="e#82#93#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -52,7 +54,7 @@
           <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/mobileapp/account/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="223" column="51" selection-start="8879" selection-end="8885" vertical-scroll-proportion="-10.06" vertical-offset="2677" max-vertical-offset="5055">
+                <state line="41" column="25" selection-start="1192" selection-end="1192" vertical-scroll-proportion="-12.857142" vertical-offset="0" max-vertical-offset="5055">
                   <folding />
                 </state>
               </provider>
@@ -70,16 +72,7 @@
           <file leaf-file-name="test.html" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/templates/chat/test.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="40" column="46" selection-start="1195" selection-end="1195" vertical-scroll-proportion="-18.916666" vertical-offset="146" max-vertical-offset="810">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/zuoyekong/settings.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="167" column="27" selection-start="5871" selection-end="5871" vertical-scroll-proportion="3.4257143" vertical-offset="107" max-vertical-offset="2805">
+                <state line="40" column="46" selection-start="1195" selection-end="1195" vertical-scroll-proportion="0.0" vertical-offset="600" max-vertical-offset="810">
                   <folding />
                 </state>
               </provider>
@@ -88,16 +81,7 @@
           <file leaf-file-name="test.html" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/templates/application/test.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="4" column="11" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="720">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="base.py" pinned="false" current="false" current-in-tab="false">
-            <entry file="file:///usr/local/lib/python2.7/dist-packages/Django-1.5.4-py2.7.egg/django/core/handlers/base.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="114" column="0" selection-start="4779" selection-end="4779" vertical-scroll-proportion="0.0" vertical-offset="1302" max-vertical-offset="4020">
+                <state line="29" column="7" selection-start="797" selection-end="797" vertical-scroll-proportion="-12.166667" vertical-offset="143" max-vertical-offset="720">
                   <folding />
                 </state>
               </provider>
@@ -107,37 +91,124 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/mobileapp/models.py">
+          <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/zuoyekong/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="409" column="27" selection-start="16140" selection-end="16140" vertical-scroll-proportion="0.0" vertical-offset="5686" max-vertical-offset="6315">
+                <state line="86" column="26" selection-start="3365" selection-end="3371" vertical-scroll-proportion="-10.514286" vertical-offset="742" max-vertical-offset="1290">
                   <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="team.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/web/team.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="210">
+                  <folding>
+                    <marker date="1398255323320" expanded="true" signature="21:80" placeholder="..." />
+                    <marker date="1398255323320" expanded="true" signature="28:56" placeholder="..." />
+                    <marker date="1398255323320" expanded="true" signature="63:72" placeholder="..." />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
           <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/mobileapp/question/views.py">
+            <entry file="file://$PROJECT_DIR$/web/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="133" column="16" selection-start="5790" selection-end="5799" vertical-scroll-proportion="0.0" vertical-offset="175" max-vertical-offset="7110">
+                <state line="89" column="12" selection-start="3735" selection-end="3743" vertical-scroll-proportion="-9.342857" vertical-offset="1008" max-vertical-offset="1755">
+                  <folding>
+                    <element signature="e#82#117#0" expanded="true" />
+                    <marker date="1398330976823" expanded="true" signature="3753:4063" placeholder="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="homepage.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/web/homepage.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="57" column="45" selection-start="2489" selection-end="2489" vertical-scroll-proportion="-11.708333" vertical-offset="574" max-vertical-offset="2805">
+                  <folding>
+                    <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#img#0;n#div#0;n#div#9;n#form#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#hr#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#p#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="record.html" pinned="false" current="true" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/templates/web/record.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="126" column="60" selection-start="5420" selection-end="5420" vertical-scroll-proportion="0.6146245" vertical-offset="1579" max-vertical-offset="3195">
+                  <folding>
+                    <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#hr#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#p#0;n#footer#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#footer#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="home.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/web/home.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="57" column="54" selection-start="2495" selection-end="2495" vertical-scroll-proportion="-5.8644066" vertical-offset="509" max-vertical-offset="3210">
+                  <folding>
+                    <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#5;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#p#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#p#1;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <marker date="1398331245703" expanded="true" signature="1912:2033" placeholder="{% if username ... %}" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="product.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/web/product.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="57" column="54" selection-start="2516" selection-end="2516" vertical-scroll-proportion="-15.875" vertical-offset="474" max-vertical-offset="3135">
+                  <folding>
+                    <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#p#0;n#footer#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/zuoyekong/settings.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="118" column="16" selection-start="4318" selection-end="4318" vertical-scroll-proportion="0.0" vertical-offset="874" max-vertical-offset="2805">
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/zuoyekong/urls.py">
+          <file leaf-file-name="login.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/account/login.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="75" column="51" selection-start="3038" selection-end="3054" vertical-scroll-proportion="0.0" vertical-offset="370" max-vertical-offset="1305">
+                <state line="30" column="23" selection-start="1000" selection-end="1007" vertical-scroll-proportion="-18.75" vertical-offset="0" max-vertical-offset="750">
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/mobileapp/chat/views.py">
+          <file leaf-file-name="profile.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/dialog/profile.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="98" column="20" selection-start="4094" selection-end="4094" vertical-scroll-proportion="2.097561" vertical-offset="0" max-vertical-offset="2460">
+                <state line="99" column="0" selection-start="5698" selection-end="5698" vertical-scroll-proportion="-1.0833334" vertical-offset="1459" max-vertical-offset="2280">
                   <folding />
                 </state>
               </provider>
@@ -155,27 +226,27 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="C:/Python27/Lib/site-packages/django/core/handlers/base.py" />
-        <option value="$PROJECT_DIR$/templates/dialog/profile.html" />
-        <option value="$PROJECT_DIR$/mobileapp/application/views.py" />
-        <option value="$PROJECT_DIR$/templates/account/test.html" />
-        <option value="$PROJECT_DIR$/mobileapp/dialog/views.py" />
-        <option value="$PROJECT_DIR$/mobileapp/account/views.py" />
-        <option value="$PROJECT_DIR$/templates/manage/adduser.html" />
-        <option value="$PROJECT_DIR$/templates/manage/index.html" />
-        <option value="$PROJECT_DIR$/mobileapp/manage/views.py" />
-        <option value="$PROJECT_DIR$/templates/manage/userlist.html" />
-        <option value="$PROJECT_DIR$/mobileapp/models.py" />
         <option value="$PROJECT_DIR$/mobileapp/question/views.py" />
-        <option value="$PROJECT_DIR$/zuoyekong/urls.py" />
-        <option value="$PROJECT_DIR$/zuoyekong/settings.py" />
         <option value="$PROJECT_DIR$/templates/chat/test.html" />
         <option value="$PROJECT_DIR$/mobileapp/chat/views.py" />
+        <option value="$PROJECT_DIR$/templates/dialog/profile.html" />
+        <option value="$PROJECT_DIR$/templates/dialog/timesheet.html" />
+        <option value="$PROJECT_DIR$/templates/web/team.html" />
+        <option value="$PROJECT_DIR$/templates/web/contact.html" />
+        <option value="$PROJECT_DIR$/zuoyekong/settings.py" />
+        <option value="$PROJECT_DIR$/templates/account/login.html" />
+        <option value="$PROJECT_DIR$/zuoyekong/urls.py" />
+        <option value="$PROJECT_DIR$/web/views.py" />
+        <option value="$PROJECT_DIR$/mobileapp/dialog/views.py" />
+        <option value="$PROJECT_DIR$/templates/web/home.html" />
+        <option value="$PROJECT_DIR$/templates/web/product.html" />
+        <option value="$PROJECT_DIR$/templates/web/homepage.html" />
+        <option value="$PROJECT_DIR$/templates/web/record.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
+    <option name="x" value="1431" />
     <option name="y" value="24" />
     <option name="width" value="1855" />
     <option name="height" value="1056" />
@@ -268,7 +339,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
+              <option name="myItemId" value="web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -282,23 +353,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
+              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="headImages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="2014" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="04" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="18" />
+              <option name="myItemId" value="web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -312,23 +371,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="headImages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="2014" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="04" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="03" />
+              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -342,19 +385,93 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
+              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="headImages" />
+              <option name="myItemId" value="dialog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="2014" />
+              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="03" />
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="account" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobileapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="zuoyekong" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobileapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="account" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -363,17 +480,17 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.main.proportions" value="0.29666665" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/debug/evaluationSystem" />
+    <property name="options.lastSelected" value="preferences.keymap" />
     <property name="restartRequiresConfirmation" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../zuoyekongweb" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -389,11 +506,11 @@
       <recent name="$PROJECT_DIR$/mobileapp/common" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/web" />
       <recent name="C:\Users\xiaohe\Desktop\GitHub\zuoyekong\zuoyekong\mobileapp\manage" />
       <recent name="C:\Users\xiaohe\Desktop\GitHub\zuoyekong\zuoyekong\templates\account" />
       <recent name="F:\GitHub\zuoyekong\zuoyekong\mobileapp" />
       <recent name="$PROJECT_DIR$/mobileapp" />
-      <recent name="$PROJECT_DIR$/mobileapp/account" />
     </key>
   </component>
   <component name="RunManager" selected="Django server.zuoyekong">
@@ -561,7 +678,27 @@
       <option name="PARAMETERS" value="" />
       <method />
     </configuration>
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+    <configuration default="true" type="Python.DjangoServer" factoryName="Django server">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="zuoyekong" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Unittests">
@@ -587,27 +724,7 @@
       <option name="USE_PARAM" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="Python.DjangoServer" factoryName="Django server">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="zuoyekong" />
-      <option name="launchJavascriptDebuger" value="false" />
-      <option name="port" value="8000" />
-      <option name="host" value="" />
-      <option name="additionalOptions" value="" />
-      <option name="browserUrl" value="" />
-      <option name="runTestServer" value="false" />
-      <option name="runNoReload" value="false" />
-      <option name="useCustomRunCommand" value="false" />
-      <option name="customRunCommand" value="" />
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Doctests">
@@ -747,19 +864,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="1431" y="24" width="1855" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33895448" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32715008" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18652292" sideWeight="0.7572917" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24270834" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.124099724" sideWeight="0.64094317" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3590568" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.46217105" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3125" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34619507" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -785,9 +902,9 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20378788" sideWeight="0.81335616" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15753424" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -821,119 +938,152 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="158" />
+      <option name="time" value="165" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/zuoyekong/urls.py">
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/Django-1.6.3-py2.7.egg/django/db/backends/mysql/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="0" selection-start="2617" selection-end="2617" vertical-scroll-proportion="0.0" vertical-offset="975" max-vertical-offset="1065">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/dialog/test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="36" selection-start="173" selection-end="173" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="480">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobileapp/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="0" selection-start="1862" selection-end="1871" vertical-scroll-proportion="0.0" vertical-offset="1350" max-vertical-offset="4170">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/account/test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="7" selection-start="3269" selection-end="3269" vertical-scroll-proportion="-6.571429" vertical-offset="1640" max-vertical-offset="2090">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobileapp/dialog/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="329" column="20" selection-start="13108" selection-end="13117" vertical-scroll-proportion="0.0" vertical-offset="4330" max-vertical-offset="6735">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/dialog/test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="7" selection-start="1721" selection-end="1721" vertical-scroll-proportion="0.0" vertical-offset="96" max-vertical-offset="1005">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobileapp/application/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="8" selection-start="1982" selection-end="2082" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1710">
-          <folding />
-        </state>
+        <state line="29" column="29" selection-start="987" selection-end="987" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="8085" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/application/test.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="11" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="720">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobileapp/question/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="16" selection-start="5790" selection-end="5799" vertical-scroll-proportion="0.0" vertical-offset="175" max-vertical-offset="7110">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/zuoyekong/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="51" selection-start="3038" selection-end="3054" vertical-scroll-proportion="0.0" vertical-offset="370" max-vertical-offset="1305">
+        <state line="29" column="7" selection-start="797" selection-end="797" vertical-scroll-proportion="-12.166667" vertical-offset="143" max-vertical-offset="720">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobileapp/account/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="223" column="51" selection-start="8879" selection-end="8885" vertical-scroll-proportion="-10.06" vertical-offset="2677" max-vertical-offset="5055">
+        <state line="41" column="25" selection-start="1192" selection-end="1192" vertical-scroll-proportion="-12.857142" vertical-offset="0" max-vertical-offset="5055">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/lib/python2.7/dist-packages/Django-1.5.4-py2.7.egg/django/core/handlers/base.py">
+    <entry file="file://$PROJECT_DIR$/templates/web/contact.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="114" column="0" selection-start="4779" selection-end="4779" vertical-scroll-proportion="0.0" vertical-offset="1302" max-vertical-offset="4020">
+        <state line="95" column="0" selection-start="3384" selection-end="3384" vertical-scroll-proportion="1.9946524" vertical-offset="306" max-vertical-offset="2190">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobileapp/models.py">
+    <entry file="file://$PROJECT_DIR$/templates/web/team.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="409" column="27" selection-start="16140" selection-end="16140" vertical-scroll-proportion="0.0" vertical-offset="5686" max-vertical-offset="6315">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="210">
+          <folding>
+            <marker date="1398255323320" expanded="true" signature="21:80" placeholder="..." />
+            <marker date="1398255323320" expanded="true" signature="28:56" placeholder="..." />
+            <marker date="1398255323320" expanded="true" signature="63:72" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/dialog/timesheet.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="30" selection-start="1926" selection-end="1926" vertical-scroll-proportion="1.0080645" vertical-offset="0" max-vertical-offset="1440">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/chat/test.html">
+    <entry file="file://$PROJECT_DIR$/zuoyekong/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="46" selection-start="1195" selection-end="1195" vertical-scroll-proportion="-18.916666" vertical-offset="146" max-vertical-offset="810">
+        <state line="86" column="26" selection-start="3365" selection-end="3371" vertical-scroll-proportion="-10.514286" vertical-offset="742" max-vertical-offset="1290">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobileapp/chat/views.py">
+    <entry file="file://$PROJECT_DIR$/web/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="20" selection-start="4094" selection-end="4094" vertical-scroll-proportion="2.097561" vertical-offset="0" max-vertical-offset="2460">
-          <folding />
+        <state line="89" column="12" selection-start="3735" selection-end="3743" vertical-scroll-proportion="-9.342857" vertical-offset="1008" max-vertical-offset="1755">
+          <folding>
+            <element signature="e#82#117#0" expanded="true" />
+            <marker date="1398330976823" expanded="true" signature="3753:4063" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/zuoyekong/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="167" column="27" selection-start="5871" selection-end="5871" vertical-scroll-proportion="3.4257143" vertical-offset="107" max-vertical-offset="2805">
+        <state line="118" column="16" selection-start="4318" selection-end="4318" vertical-scroll-proportion="0.0" vertical-offset="874" max-vertical-offset="2805">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobileapp/dialog/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="405" column="47" selection-start="16450" selection-end="16450" vertical-scroll-proportion="0.7070707" vertical-offset="5725" max-vertical-offset="7005">
+          <folding>
+            <element signature="e#82#93#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/account/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="23" selection-start="1000" selection-end="1007" vertical-scroll-proportion="-18.75" vertical-offset="0" max-vertical-offset="750">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/dialog/profile.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="99" column="0" selection-start="5698" selection-end="5698" vertical-scroll-proportion="-1.0833334" vertical-offset="1459" max-vertical-offset="2280">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/web/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="54" selection-start="2495" selection-end="2495" vertical-scroll-proportion="-5.8644066" vertical-offset="509" max-vertical-offset="3210">
+          <folding>
+            <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#5;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#1;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1398331245703" expanded="true" signature="1912:2033" placeholder="{% if username ... %}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/web/product.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="54" selection-start="2516" selection-end="2516" vertical-scroll-proportion="-15.875" vertical-offset="474" max-vertical-offset="3135">
+          <folding>
+            <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#footer#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/web/homepage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="45" selection-start="2489" selection-end="2489" vertical-scroll-proportion="-11.708333" vertical-offset="574" max-vertical-offset="2805">
+          <folding>
+            <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#9;n#form#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#hr#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/web/record.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="126" column="60" selection-start="5420" selection-end="5420" vertical-scroll-proportion="0.6146245" vertical-offset="1579" max-vertical-offset="3195">
+          <folding>
+            <element signature="n#style#0;n#ul#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#hr#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#footer#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#footer#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

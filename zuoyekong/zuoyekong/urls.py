@@ -8,6 +8,8 @@ from mobileapp.recommend.views import *
 from mobileapp.message.views import *
 from mobileapp.manage.views import *
 from mobileapp.chat.views import *
+
+from web.views import *
 from zuoyekong import settings
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -60,7 +62,7 @@ urlpatterns = patterns('',
     url(r'^dialog/cancel',cancel_call),
     url(r'^dialog/reject',reject_call),
     
-    url(r'^$',web_login),
+    #url(r'^$',web_login),
     url(r'^profile$',profile),
     url('^resetPass$',resetPass),
     url(r'^updateProfile$',updateProfile),
@@ -78,4 +80,13 @@ urlpatterns = patterns('',
     url(r'^chat/get_all_msgs',get_all_msgs),
     url(r'^chat/send_msg',send_msg),
 
+    url(r'^$',home),
+    url(r'^web/logindo$',logindo),
+    url(r'^web/login$',web_login),
+    url(r'^web/logout$',web_logout),
+    url(r'^record$',record),
+    url(r'^homepage$',homepage),
+    url(r'^product$',product),
+    url(r'^team$',team),
+    url(r'^contact$',contact),
 )

@@ -403,7 +403,7 @@ def updateProfile(request):
         if request.FILES.has_key('headImage'):
             user.headImage = request.FILES['headImage']
         user.save()
-        return HttpResponseRedirect('/profile?username='+username+'&key='+password)
+        return HttpResponseRedirect('/homepage')
     except:
         return HttpResponseRedirect('/')
 def resetPass(request):
