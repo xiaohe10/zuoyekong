@@ -89,4 +89,7 @@ urlpatterns = patterns('',
     url(r'^product$',product),
     url(r'^team$',team),
     url(r'^contact$',contact),
+
+    url(r'^pay$',pay),
+    url(r'^pay_callback$',pay_callback),
 )

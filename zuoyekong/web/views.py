@@ -36,7 +36,7 @@ def convert_time(logging_time):
     input_format = "%Y-%m-%d %H:%M:%S+00:00" # or %d/%m...
     output_format = "%Y-%m-%d %H:%M:%S"
     return strftime(output_format, strptime(logging_time, input_format))
-
+from web.alipay import *
 @cache_page(60*15)
 def record(request):
     if 'username' in request.session:
@@ -83,10 +83,71 @@ def record(request):
                     all_fee += dialog.fee
                 except:
                     pass
-
         return render_to_response('web/record.html',locals())
     else:
         return HttpResponseRedirect('/')
+
+def pay(request):
+    try:
+        userID = request.POST['userID']
+        user = User.objects.get(id = int(userID))
+        total_fee = request.POST['total_fee']
+        pay = Pay(out_trade_no = uuid.uuid1().hex,userID=userID,total_fee = total_fee,status = 'U')
+        pay.save()
+        params = {
+            'out_trade_no':pay.out_trade_no,
+            'subject':'作业控时间',
+            'body':'作业控时间详情',
+            'total_fee':str(total_fee)}
+        alipay = Alipay()
+        params.update(alipay.conf)
+        sign = alipay.buildSign(params)
+        return render_to_response('web/pay.html',locals())
+    except:
+        return HttpResponse('生成帐单错误')
+def pay_callback(request):
+    params = request.POST.dict()
+    alipay = Alipay()
+    sign=None
+    if params.has_key('sign'):
+        sign=params['sign']
+    locSign=alipay.buildSign(params)
+
+    if sign==None or locSign!=sign:
+        print "sign error."
+        return HttpResponse("fail")
+
+    if params['trade_status']!='TRADE_FINISHED' and  params['trade_status']!='TRADE_SUCCESS':
+        return HttpResponse("fail")
+
+    else:
+        print "Verify the request is call by alipay.com...."
+        url = verfyURL['http'] + "&partner=%s&notify_id=%s"%(alipay.conf['partner'],params['notify_id'])
+        response=urllib2.urlopen(url)
+        html=response.read()
+
+        print "aliypay.com return: %s" % html
+        if html=='true':
+            try:
+                out_trade_no = params['out_trade_no']
+                trade_no = params['trade_no']
+                buyer_id = params['buyer_id']
+                buyer_email = params['buyer_email']
+                total_fee = params['total_fee']
+                pay = Pay.objects.get(out_trade_no = out_trade_no)
+                pay.trade_no = trade_no
+                pay.buyer_id = buyer_id
+                pay.buyer_email = buyer_email
+                pay.total_fee = total_fee
+                pay.save()
+                user = User.objects.get(id = pay.userID)
+                user.money += float(total_fee)
+                user.save()
+            except:
+                pass
+            return HttpResponse("success")
+
+        return HttpResponse("fail")
 def homepage(request):
     if 'username' in request.session:
         username = request.session['username']

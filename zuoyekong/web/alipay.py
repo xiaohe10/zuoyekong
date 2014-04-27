@@ -13,14 +13,14 @@ verfyURL={
     }
 gateway="https://www.alipay.com/cooperate/gateway.do"
 
-class alipay:
+class Alipay:
     def __init__(self,
-                 partner="您的淘宝身份",
-                 key="您的淘宝Key",
-                 sellermail="卖家邮箱",
-                 notifyurl="异步通知回调URL",
-                 returnurl="跳转回调URL",
-                 showurl="产品页面"):
+                 partner="2088311329596377",
+                 key="9m850sjgg0lybt0rlap4madj4hq8fluz",
+                 sellermail="zuoyekong@163.com",
+                 notifyurl="http://zuoyekong.com/pay_callback",
+                 returnurl="http://zuoyekong.com/record",
+                 showurl="http://zuoyekong.com/record"):
             
             self.key=key;
             self.conf={
@@ -52,7 +52,10 @@ class alipay:
         
 
     def buildSign(self,params):
-        sign=hashlib.md5(self.populateURLStr(params)+self.key).hexdigest()
+        for_md5 = self.populateURLStr(params)+self.key
+        if not isinstance(for_md5, str):
+            for_md5 = for_md5.encode('utf-8')
+        sign=hashlib.md5(for_md5).hexdigest()
         print "md5 sign is %s" % sign;
         return sign
     

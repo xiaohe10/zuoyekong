@@ -88,7 +88,7 @@
 
     <div class="container" style="margin-top: 140px">
         <p>您的账户余额为：</p>
-        <span style="font-size:30px;margin:20px">1000元</span>
+        <span style="font-size:30px;margin:20px">{{ user.money }} </span> 元
         <!-- Button trigger modal -->
         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#rechargeModal">
           充值
@@ -103,17 +103,21 @@
         <div class="modal fade" id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
+                <form method="POST" action="/pay" target="_blank">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">账户充值</h4>
               </div>
               <div class="modal-body">
-                请输入要充值的金额：<input type="text"/> 元
+                  <input type="hidden" name="userID" value="{{ user.id }}">
+                请输入要充值的金额：<input name = "total_fee" type="text"/> 元
               </div>
+
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">确定</button>
+                <button type="submit" class="btn btn-primary">确定</button>
               </div>
+                    </form>
             </div>
           </div>
         </div>
@@ -130,6 +134,7 @@
                   <p> 您的账户余额为1000元</p>
                 请输入要提现的金额：<input type="text"/> 元
               </div>
+
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary">确定</button>

@@ -92,6 +92,7 @@ class User(models.Model):
     identify = models.CharField(max_length=10,blank = True,)
     evaluation = models.IntegerField(max_length=3,default=0)
     activeState = models.IntegerField(max_length=3,default=3,choices=ACTIVE_CHOICES)
+    money = models.FloatField(default=0)
     def safe_get(self,userName):
         try:
             user = User.objects.get(userName = userName)
@@ -416,3 +417,13 @@ class Comment(models.Model):
     evaluatorID = models.BigIntegerField(20)
     evaluateeID = models.BigIntegerField(20)
 '''
+class Pay(models.Model):
+    out_trade_no = models.CharField(max_length=64)
+    userID = models.BigIntegerField(20)
+    time = models.DateTimeField(auto_now_add=True)
+    total_fee = models.FloatField()
+    buyer_email = models.CharField(max_length=32,null=True)
+    buyer_id = models.BigIntegerField(20,null=True)
+    trade_no = models.BigIntegerField(20,null=True)
+    status = models.CharField(max_length=1) # 'U'unpaid,'F':fail,'S':success
+
