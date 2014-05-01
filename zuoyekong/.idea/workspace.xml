@@ -47,19 +47,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pay.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="pay.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/web/pay.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="133" selection-start="1641" selection-end="1641" vertical-scroll-proportion="0.0" vertical-offset="383" max-vertical-offset="1065">
+            <state line="50" column="86" selection-start="2683" selection-end="2683" vertical-scroll-proportion="0.6937618" vertical-offset="383" max-vertical-offset="1065">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="32" selection-start="660" selection-end="660" vertical-scroll-proportion="0.30508474" vertical-offset="93" max-vertical-offset="2640">
+            <state line="19" column="32" selection-start="660" selection-end="660" vertical-scroll-proportion="-0.7714286" vertical-offset="228" max-vertical-offset="2640">
               <folding />
             </state>
           </provider>
@@ -124,9 +124,9 @@
         <option value="$PROJECT_DIR$/zuoyekong/urls.py" />
         <option value="$PROJECT_DIR$/mobileapp/models.py" />
         <option value="$PROJECT_DIR$/web/views.py" />
-        <option value="$PROJECT_DIR$/templates/web/pay.html" />
         <option value="$PROJECT_DIR$/templates/web/record.html" />
         <option value="$PROJECT_DIR$/web/alipay.py" />
+        <option value="$PROJECT_DIR$/templates/web/pay.html" />
       </list>
     </option>
   </component>
@@ -895,13 +895,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/web/pay.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="133" selection-start="1641" selection-end="1641" vertical-scroll-proportion="0.0" vertical-offset="383" max-vertical-offset="1065">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/web/record.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="173" column="43" selection-start="7008" selection-end="7008" vertical-scroll-proportion="-48.75" vertical-offset="1425" max-vertical-offset="3270">
@@ -918,7 +911,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="32" selection-start="660" selection-end="660" vertical-scroll-proportion="0.30508474" vertical-offset="93" max-vertical-offset="2640">
+        <state line="19" column="32" selection-start="660" selection-end="660" vertical-scroll-proportion="-0.7714286" vertical-offset="228" max-vertical-offset="2640">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/web/pay.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="86" selection-start="2683" selection-end="2683" vertical-scroll-proportion="0.6937618" vertical-offset="383" max-vertical-offset="1065">
           <folding />
         </state>
       </provider>
