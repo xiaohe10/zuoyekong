@@ -47,7 +47,6 @@ class Alipay:
                 or k=="sign" or k=="sign_type" or k=="key":
                 continue
             rlt=rlt+"&%s=%s"%(k,params[k])
-        print "URL:"+rlt[1:]
         return rlt[1:]
         
 
@@ -56,7 +55,6 @@ class Alipay:
         if not isinstance(for_md5, str):
             for_md5 = for_md5.encode('utf-8')
         sign=hashlib.md5(for_md5).hexdigest()
-        print "md5 sign is %s" % sign;
         return sign
     
     

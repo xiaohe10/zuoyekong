@@ -37,7 +37,6 @@ def convert_time(logging_time):
     output_format = "%Y-%m-%d %H:%M:%S"
     return strftime(output_format, strptime(logging_time, input_format))
 from web.alipay import *
-@cache_page(60*15)
 def record(request):
     if 'username' in request.session:
         username = request.session['username']
@@ -135,6 +134,9 @@ def pay_callback(request):
                 buyer_email = params['buyer_email']
                 total_fee = params['total_fee']
                 pay = Pay.objects.get(out_trade_no = out_trade_no)
+                if pay.status == 'S':
+                    return HttpResponse("success")
+                pay.status = 'S' 
                 pay.trade_no = trade_no
                 pay.buyer_id = buyer_id
                 pay.buyer_email = buyer_email
