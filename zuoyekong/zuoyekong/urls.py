@@ -8,6 +8,7 @@ from mobileapp.recommend.views import *
 from mobileapp.message.views import *
 from mobileapp.manage.views import *
 from mobileapp.chat.views import *
+from mobileapp.pay.views import *
 
 from web.views import *
 from zuoyekong import settings
@@ -92,4 +93,9 @@ urlpatterns = patterns('',
 
     url(r'^pay$',pay),
     url(r'^pay_callback$',pay_callback),
+
+    url(r'^app_pay/pay_number$',app_pay_number),
+    url(r'^app_pay/pay_order$',app_pay_order),
+    url(r'^app_pay/pay_callback$',app_pay_callback),
+    url(r'^app_pay/pay_show$',app_pay_show),
 )

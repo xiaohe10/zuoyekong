@@ -28,7 +28,7 @@ def logindo(request):
             return response
         except:
             message = "用户名或密码错误"
-            return render_to_response('account/login.html',locals())
+            return render_to_response('app/account/login.html',locals())
     except:
         return HttpResponse('非法的请求')
 from time import strftime, strptime

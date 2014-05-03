@@ -21,7 +21,7 @@ import datetime
 from time import strftime, strptime
 
 def dialog_test(request):
-    return render(request, 'dialog/test.html')
+    return render(request, 'app/dialog/test.html')
 
 def create_dialog(request):
     try:
@@ -362,7 +362,7 @@ def web_login(request):
         username = request.POST['username']
         password = request.POST['password']
     except:
-        return render(request, 'account/login.html',locals())
+        return render(request, 'app/account/login.html',locals())
     try:
         m = hashlib.md5()
         m.update(password)
@@ -372,7 +372,7 @@ def web_login(request):
         return redirect('/profile?username='+username+'&key='+psw)
     except:
         message = '用户名或密码不正确'
-        return render(request, 'account/login.html',locals())
+        return render(request, 'app/account/login.html',locals())
 def convert_time(logging_time):
     input_format = "%Y-%m-%d %H:%M:%S+00:00" # or %d/%m...
     output_format = "%Y-%m-%d %H:%M:%S"
@@ -383,9 +383,9 @@ def profile(request):
         password = request.GET['key']
         user = User.objects.get(userName  = username, password = password)
         user.headImage = '/media/'+user.headImage.__str__()
-        return render(request, 'dialog/profile.html',locals())
+        return render(request, 'app/dialog/profile.html',locals())
     except:
-        return render(request, 'account/login.html',locals())
+        return render(request, 'app/account/login.html',locals())
 def updateProfile(request):
     try:
         username = request.POST['userName']
@@ -412,7 +412,7 @@ def resetPass(request):
         oldpassword = request.POST['oldpassword']
         newpassword = request.POST['newpassword']
     except:
-        return render(request, 'account/login.html',locals())
+        return render(request, 'app/account/login.html',locals())
     try:
         m = hashlib.md5()
         m.update(oldpassword)
@@ -421,9 +421,9 @@ def resetPass(request):
         m.update(newpassword)
         user.password = m.hexdigest()
         user.save()
-        return render(request, 'dialog/profile.html',locals())
+        return render(request, 'app/dialog/profile.html',locals())
     except:
-        return render(request, 'dialog/profile.html',locals())
+        return render(request, 'app/dialog/profile.html',locals())
 def timesheet(request):
     try:
         username = request.GET['username']
@@ -455,7 +455,7 @@ def timesheet(request):
                     dialog.otherName =  User.objects.get(id = dialog.studentId).realname
         except:
             print 'no dialogs'
-        return render(request, 'dialog/timesheet.html',locals())
+        return render(request, 'app/dialog/timesheet.html',locals())
     except:
-        return render(request, 'account/login.html',locals())
+        return render(request, 'app/account/login.html',locals())
 

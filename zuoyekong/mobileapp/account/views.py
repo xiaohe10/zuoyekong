@@ -31,7 +31,7 @@ def is_online(session_ID,session_key):
         return False
 
 def account_test(request):
-   return render(request,'account/test.html',locals())
+   return render(request, 'app/account/test.html',locals())
 
 def send_register_valid_code(request):
     try:

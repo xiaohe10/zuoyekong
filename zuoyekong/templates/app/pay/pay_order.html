@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+        <style>
+        body{
+            margin:20px;
+        }
+        div{
+            margin:10px;
+        }
+        table
+          {
+          border-collapse:collapse;
+          }
+
+        table,th, td
+          {
+          border: 1px solid black;
+          }
+    </style>
+</head>
+<body>
+<div>
+            <h3>作业控充值订单</h3>
+        <table >
+          <tbody>
+            <tr><td>用户帐号</td><td>{{ user.userName }}</td></tr>
+            <tr><td>用户姓名</td><td>{{ user.realname }}</td></tr>
+            <tr><td>帐单号</td><td>{{ params.out_trade_no }}</td></tr>
+            <tr><td>充值金额</td><td>{{ total_fee }}</td></tr>
+          <tr><td></td><td>
+                    <form name='alipaysubmit' action='https://www.alipay.com/cooperate/gateway.do?_input_charset=UTF-8' method='POST'>
+                    <input type='hidden' name='body' value='{{ params.body }}' />
+                    <input type='hidden' name='seller_email' value='zuoyekong@163.com' />
+                    <input type='hidden' name='service' value='create_direct_pay_by_user' />
+                    <input type='hidden' name='show_url' value='{{ alipay.conf.show_url }}' />
+                    <input type='hidden' name='sign' value='{{ sign }}' />
+                    <input type='hidden' name='out_trade_no' value='{{ params.out_trade_no }}' />
+                    <input type='hidden' name='payment_type' value='1' />
+                    <input type='hidden' name='total_fee' value='{{ total_fee }}' />
+                    <input type='hidden' name='sign_type' value='MD5' />
+                    <input type='hidden' name='notify_url' value='{{ alipay.conf.notify_url }}' />
+                    <input type='hidden' name='partner' value='2088311329596377' />
+                    <input type='hidden' name='return_url' value='{{ alipay.conf.return_url }}' />
+                    <input type='hidden' name='subject' value='{{ params.subject }}' />
+                    <button type="submit" class="btn-primary">确认，支付宝付款</button>
+                </form>
+          </td></tr>
+          </tbody>
+        </table>
+        </div>
+</body>
+</html>

@@ -15,7 +15,7 @@ from mobileapp.APNSWrapper import *
 from django.db.models import Q
 
 def test(request):
-    return render_to_response('chat/test.html',locals())
+    return render_to_response('app/chat/test.html',locals())
 def get_contact_list(request):
     try:
         sessionID = request.POST['sessionID']
