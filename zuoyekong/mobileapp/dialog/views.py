@@ -39,6 +39,8 @@ def create_dialog(request):
     try:
         application = Application.objects.get(id = applicationID)
         question = Question.objects.get(id = application.questionId,authorID = userID)
+        question.state = 2
+        question.save()
         old_dialogs = Dialog.objects.filter(questionId = question.id, studentId = userID)
         for d in old_dialogs:
             d.delete()
