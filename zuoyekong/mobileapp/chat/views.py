@@ -34,9 +34,9 @@ def get_contact_list(request):
     contact_last_time = {}
     for chat in chats:
         if chat.receiverID != userID:
-            anotherID = chat.senderID
-        else:
             anotherID = chat.receiverID
+        else:
+            anotherID = chat.senderID
         if anotherID not in contact_list:
             contact_list.append(anotherID)
             contact_unread_msg_counter[anotherID] = 0
@@ -95,7 +95,8 @@ def get_all_msgs(request):
         user = User.objects.get(id = userID)
     except:
         return HttpResponse(json.dumps({'result':'fail','errorType':203,'msg':'no such session'}))
-    chats = Chat.objects.filter(senderID = senderID).order_by('-id')
+    query = Q(senderID = senderID, receiverID = userID) | Q(receiverID = senderID,senderID = userID)
+    chats = Chat.objects.filter(query).order_by('-id')
     if chats.count() > 50:
         chats = chats[0,50]
     chats = chats.reverse()
@@ -142,6 +143,7 @@ def push_msg(nickname,receiverID,msgContent):
     try:
         session = Session.objects.get(userID = receiverID)
     except:
+        print 'no such session for '+ nickname
         return
     try:
         root = ROOT_PATH
@@ -155,7 +157,7 @@ def push_msg(nickname,receiverID,msgContent):
         # create message
         message = APNSNotification()
         message.token(deviceToken)
-        message.alert(unicode(nickname+'给你发了一条消息'+msgContent))
+        message.alert(u'您有一条新消息')
         message.setProperty("pushType",40)
 
         message.badge(1)
@@ -168,4 +170,5 @@ def push_msg(nickname,receiverID,msgContent):
         print 'push message fail'
 import threading
 def push_msg_thread(nickname,receiverID,msgContent):
+    lock = threading.Lock()
     threading.Thread(target=push_msg,args=(nickname,receiverID,msgContent)).start()

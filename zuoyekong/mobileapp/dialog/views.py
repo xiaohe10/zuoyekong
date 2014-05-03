@@ -452,7 +452,7 @@ def timesheet(request):
                     dialog.fee = dialog.charging_time * 2
                     dialog.created_time = convert_time( str(dialog.created_time))
                     dialog.other = User.objects.get(id = dialog.teacherId).userName
-                    dialog.otherName =  User.objects.get(id = dialog.studentId).realname
+                    dialog.otherName =  User.objects.get(id = dialog.teacherId).realname
         except:
             print 'no dialogs'
         return render(request, 'dialog/timesheet.html',locals())
