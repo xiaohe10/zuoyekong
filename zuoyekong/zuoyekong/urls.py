@@ -6,7 +6,7 @@ from mobileapp.dialog.views import *
 from mobileapp.follow.views import *
 from mobileapp.recommend.views import *
 from mobileapp.message.views import *
-from mobileapp.manage.views import *
+from web.manage_views import *
 from mobileapp.chat.views import *
 from mobileapp.pay.views import *
 
@@ -70,9 +70,6 @@ urlpatterns = patterns('',
     url(r'^timesheet',timesheet),
 
     url(r'^pullMessage$',pull_message),
-    url(r'^manage$',manage),
-    url(r'^manage/adduser$',adduser),
-    url(r'^manage/userlist',userlist),
     url(r'^account/getDialogInfo',getDialogInfo),
 
     url(r'^chat/test$',test),
@@ -94,6 +91,9 @@ urlpatterns = patterns('',
     url(r'^pay$',pay),
     url(r'^pay_callback$',pay_callback),
 
+    url(r'^manage$',manage),
+    url(r'^manage/adduser$',adduser),
+    url(r'^manage/userlist',userlist),
     url(r'^app_pay/pay_number$',app_pay_number),
     url(r'^app_pay/pay_order$',app_pay_order),
     url(r'^app_pay/pay_callback$',app_pay_callback),

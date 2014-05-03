@@ -1,51 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>作业控后台管理</title>
+{% extends "web/manage/__manage_base__.html" %}
+{% block css %}
 
-   <!-- Bootstrap core CSS -->
-    <link href="/static/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
-
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-  <nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">作业控</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/manage">教学记录</a></li>
-        <li ><a href="/manage/adduser">添加用户</a></li>
-        <li ><a href="/manage/userlist">用户列表</a></li>
-          </ul>
-         </div>
-      </div>
-</nav>
-
+{% endblock %}
+{% block content %}
        <div class="container">
+       <div class="container">
+           <form class="navbar-form navbar-left" role="search" action="/manage" method="post">
+              <div class="form-group">
+                <input type="hidden" name="state" value="finished">
+                  从
+                <input type="text" name="start_time" class="form-control"  value="{{ start_time }}" id="datetimepicker1" data-date-format="yyyy-mm-dd hh:ii">
+                  到
+
+                <input type="text" name="end_time" class="form-control" value="{{ end_time }}" id="datetimepicker2" data-date-format="yyyy-mm-dd hh:ii">
+                  最短计费时间
+                <select class="form-control" name="mintime">
+                    <option value="0" {% if mintime == 0 %}selected {% endif %}>0分钟</option>
+                    <option value="5" {% if mintime == 5 %}selected {% endif %}>5分钟</option>
+                    <option value="10" {% if mintime == 10 %}selected {% endif %}>10分钟</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">查询</button>
+            </form>
+           <form class="navbar-form navbar-left" role="search" action="/manage" method="post">
+               <input type="hidden" name="state" value="isgoing">
+               <button type="submit" class="btn btn-default">查看正在进行</button>
+               </form>
+       </div>
+
+
     <h3>作业控时间记录</h3>
      <table class="table table-bordered">
       <thead>
@@ -80,9 +65,12 @@
 
     </div> <!-- /container -->
 
+{% endblock %}
+{% block js %}
+    <script src="/static/dist/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker2').datetimepicker();
+    </script>
+{% endblock %}
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-  </body>
-</html>

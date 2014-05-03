@@ -16,15 +16,18 @@ def home(request):
 
 def logindo(request):
     try:
-        username = request.GET['username']
-        password = request.GET['password']
+        username = request.POST['username']
+        password = request.POST['password']
         m = hashlib.md5()
         m.update(password)
         psw = m.hexdigest()
         try:
             user = User.objects.get(userName=username,password = psw)
             request.session['username'] = user.userName
+
             response = HttpResponseRedirect('/homepage')
+            if user.userName == 'admin':
+                response = HttpResponseRedirect('/manage')
             return response
         except:
             message = "用户名或密码错误"
