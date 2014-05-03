@@ -14,7 +14,7 @@ import binascii
 from mobileapp.APNSWrapper import *
 
 def application_test(request):
-    return render(request, 'application/test.html')
+    return render(request, 'app/application/test.html')
 
 def create_application(request):
     try:

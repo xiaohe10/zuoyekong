@@ -38,7 +38,7 @@ def verify_access_2_add_picture(sessionID,questionid):
             return False
 
 def question_test(request):
-    return render(request, 'question/test.html', locals())
+    return render(request, 'app/question/test.html', locals())
 
 
 def create_question(request):
