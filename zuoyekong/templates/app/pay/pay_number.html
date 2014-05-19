@@ -14,7 +14,7 @@
 <body>
  <form method="POST" action="/app_pay/pay_order">
               <div>当前余额： {{ user.money }} 元</div>
-              <div><input type="text" name="userID" value="{{ user.id }}"/></div>
+              <div><input type="hidden" name="userID" value="{{ user.id }}"/></div>
               <div>充值金额：<input name = "total_fee" type="text"/> 元</div>
               <div><button type="submit" >确定</button></div>
  </form>

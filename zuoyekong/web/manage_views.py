@@ -21,6 +21,7 @@ def convert_time(logging_time):
     output_format = "%Y-%m-%d %H:%M:%S"
     return strftime(output_format, strptime(logging_time, input_format))
 import time
+import math
 cache_page(15*60)
 def manage(request):
     if 'username' in request.session:
@@ -53,8 +54,8 @@ def manage(request):
                 dialog.student = student.userName
                 dialog.studentName = student.realname
                 dialog.subject = q.get_subject_display()
-                dialog.all_time = float(dialog.all_time)/60000
-                dialog.charging_time = float(dialog.charging_time)/60000
+                dialog.all_time = math.ceil(float(dialog.all_time)/60000)
+                dialog.charging_time = math.ceil(float(dialog.charging_time)/60000)
             except:
                 dialogs.remove(dialog)
     return render_to_response('web/manage/index.html',locals())
