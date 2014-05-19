@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="中时通（北京）科技有限公司专注于为中小学教育提供移动互联解决方案，作业控是一款让中小学生可以与清华北大学生在线实时交互讲题的产品">
+    <meta name="author" content="xiaoh16@gmail.com">
+    <link rel="shortcut icon" href="/static/dist/favicon.ico">
+
+    <title>作业控</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/dist/css/justified-nav.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="text-muted">作业控</h3>
+        <ul class="nav nav-justified">
+            <li {%if pagename == 'home' %} class="active" {% endif %}><a href="/">首页</a></li>
+            <li {%if pagename == 'product' %} class="active" {% endif %}><a href="/product">产品</a></li>
+            <li {%if pagename == 'activity' %} class="active" {% endif %}><a href="/activity">活动</a></li>
+         </ul>
+      </div>
+         {% block content%}
+         {% endblock %}
+
+           <!-- FOOTER -->
+      <footer style="margin-top:40px">
+        <p style="text-align: center"><span class="glyphicon glyphicon-envelope"></span> zuoyekong@sina.com <span class="glyphicon glyphicon-phone"></span> 010-57341801 </p>
+        <p style="text-align: center">©2014 中时通（北京）科技有限公司 <a target="_blank" href="http://www.miitbeian.gov.cn/">京ICP备14013204号</a></p>
+      </footer>
+
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <script src="/static/dist/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/holder/2.0/holder.min.js"></script>
+  {% block js %}
+  {% endblock %}
+
+  </body>
+</html>

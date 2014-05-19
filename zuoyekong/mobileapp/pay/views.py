@@ -9,7 +9,7 @@ from web.alipay import *
 from django.core.cache import cache
 from django.shortcuts import render
 from zuoyekong.settings import SITE_URL
-import Image
+from PIL import Image
 import os
 from zuoyekong.settings import MEDIA_ROOT
 from django.db.models.fields.files import FileField
