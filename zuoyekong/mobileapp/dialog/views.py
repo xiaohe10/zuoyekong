@@ -41,9 +41,10 @@ def create_dialog(request):
         question = Question.objects.get(id = application.questionId,authorID = userID)
         question.state = 2
         question.save()
-        old_dialogs = Dialog.objects.filter(questionId = question.id, studentId = userID)
-        for d in old_dialogs:
-            d.delete()
+        #不要删除旧会话
+        #old_dialogs = Dialog.objects.filter(questionId = question.id, studentId = userID)
+        #for d in old_dialogs:
+        #    d.delete()
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such application','errorType':304}))
     try:
@@ -58,7 +59,7 @@ def create_dialog(request):
         try:
             push_call_request_2_teacher(application.applicant,question,dialog)
         except:
-            return HttpResponse(json.dumps({'result': 'fail', 'msg': 'push call to teacher fail','errorType':403}))
+            return HttpResponse(json.dumps({'result': 'fail', 'msg': 'teacher is not online','errorType':403}))
         return HttpResponse(json.dumps({'result':'success','dialogID':dialog.id,'dialogSession':dialog.dialogSession}))
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'msg': 'unkown error','errorType':501}))
@@ -177,6 +178,7 @@ def commit(request):
         endTime = request.POST['endTime']
         allTime = request.POST['allTime']
         feeTime = request.POST['feeTime']
+        dialogStatus = int(request.POST['dialogStatus'])
         signature = request.POST['signature']
         signature = signature.encode('utf-8')
         signature = base64.decodestring(signature)
@@ -201,7 +203,8 @@ def commit(request):
                 return HttpResponse('yes')
             try:
                 question = Question.objects.get(id = dialog.questionId)
-                question.state = 3
+                if dialogStatus == 0:
+                    question.state = 3
                 question.save()
             except:
                 return HttpResponse('change question state fail')
