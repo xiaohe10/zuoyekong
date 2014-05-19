@@ -27,7 +27,7 @@ def manage(request):
     if 'username' in request.session:
         username = request.session['username']
         if username != 'admin':
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/homepage')
     else:
         return HttpResponseRedirect('/web/login')
     type = 'index'
@@ -81,7 +81,7 @@ def adduser(request):
     if 'username' in request.session:
         username = request.session['username']
         if username != 'admin':
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/homepage')
     else:
         return HttpResponseRedirect('/web/login')
     if request.POST.has_key('userName'):
@@ -124,7 +124,7 @@ def userlist(request):
     if 'username' in request.session:
         username = request.session['username']
         if username != 'admin':
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/homepage')
     else:
         return HttpResponseRedirect('/web/login')
     users = User.objects.all().order_by('userType')

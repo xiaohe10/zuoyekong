@@ -85,6 +85,7 @@ urlpatterns = patterns('',
     url(r'^record$',record),
     url(r'^homepage$',homepage),
     url(r'^product$',product),
+    url(r'^activity$',activity),
     url(r'^team$',team),
     url(r'^contact$',contact),
 

@@ -10,8 +10,7 @@ from django.http import HttpResponse
 from  django.views.decorators.cache import cache_page
 cache_page(120*60)
 def home(request):
-    if 'username' in request.session:
-        username = request.session['username']
+    pagename = 'home'
     return render_to_response('web/home.html',locals())
 
 def logindo(request):
@@ -87,7 +86,7 @@ def record(request):
                     pass
         return render_to_response('web/record.html',locals())
     else:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/web/login')
 
 def pay(request):
     try:
@@ -160,7 +159,7 @@ def homepage(request):
         user.headImage = '/media/'+user.headImage.__str__()
         return render(request, 'web/homepage.html',locals())
     else:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/web/login')
 def web_logout(request):
     try:
         del request.session['username']
@@ -169,9 +168,11 @@ def web_logout(request):
     return HttpResponseRedirect('/')
 cache_page(120*60)
 def product(request):
-    if 'username' in request.session:
-        username = request.session['username']
+    pagename = 'product'
     return render_to_response('web/product.html',locals())
+def activity(request):
+    pagename = 'activity'
+    return render_to_response('web/activity.html',locals())
 def team(request):
     return render_to_response('web/team.html',locals())
 def contact(request):

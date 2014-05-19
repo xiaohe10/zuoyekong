@@ -44,8 +44,10 @@
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                  {% if username %}<li ><a href="/homepage">个人中心</a></li>
-                  <li class="active"><a href="/record">使用记录</a></li>{% endif %}
+                <li ><a href="/">首页</a></li>
+                <li class="active"><a href="/product">产品</a></li>
+                                    {% if username %}<li ><a href="/homepage">个人中心</a></li>
+                  <li ><a href="/record">使用记录</a></li>{% endif %}
               </ul>
                <ul class="nav navbar-nav navbar-right" style="margin-right:15px">
                     {% if username %}
@@ -82,113 +84,104 @@
       </div>
     </div>
 
-
-
-    <div class="container" style="margin-top: 140px">
-        <p>您的账户余额为：</p>
-        <span style="font-size:30px;margin:20px">{{ user.money }} </span> 元
-        <!-- Button trigger modal -->
-        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#rechargeModal">
-          充值
-        </button>
-        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#withdrawalModal">
-            提现
-            </button>
+<!-- login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">登录</h4>
+      </div>
+        <form role="form" class="form-horizontal" action = "/web/logindo" method="GET">
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="exampleInputEmail1" class="col-sm-2 control-label">用户名</label>
+            <div class="col-sm-10"><input type="text" class="form-control" name="username" ></div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1" class="col-sm-2 control-label">密码</label>
+            <div class="col-sm-10"><input type="password" class="form-control" name="password"></div>
+          </div>
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary">登录</button>
+      </div>
+        </form>
     </div>
+  </div>
+</div>
+<!--End  login modal>
+<!-- register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">用户注册</h4>
+      </div>
+      <div class="modal-body">
+        为了控制用户质量，现暂不提供线上注册，请联系 15801000575（董先生）进行注册
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <!--<button type="button" class="btn btn-primary">确认</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+<!--End  register modal>
 
-
-    <!-- Modal -->
-        <div class="modal fade" id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="POST" action="/pay" target="_blank">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">账户充值</h4>
-              </div>
-              <div class="modal-body">
-                  <input type="hidden" name="userID" value="{{ user.id }}">
-                请输入要充值的金额：<input name = "total_fee" type="text"/> 元
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="submit" class="btn btn-primary">确定</button>
-              </div>
-                    </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="withdrawalModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">提现</h4>
-              </div>
-              <div class="modal-body">
-                  <p> 您的账户余额为{{ user.money }}元</p>
-                请输入要提现的金额：<input type="text"/> 元
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">确定</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
 
     <!-- Marketing messaging and featurettes
     ================================================== -->
     <!-- Wrap the rest of the page in another container to center all the content. -->
 
+    <div class="container marketing" style="margin-top: 140px;width:1000px">
 
-       <div class="container" style="margin-top: 20px">
-    <h3>作业控使用记录</h3>
-     <table class="table table-bordered">
-      <thead>
 
-        <tr>
-          <th>会话时间</th>
-          <th>{% if user.userType == 1 %}老师账号{% else %}学生账号{% endif %}</th>
-          <th>{% if user.userType == 1 %}老师姓名{% else %}学生姓名{% endif %}</th>
-          <th>学科</th>
-          <th>总时长(分钟)</th>
-          <th>计费时长（分钟）</th>
-          <th>费用（元）</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if dialogs %}
-          {% for dialog in dialogs %}
-              <tr>
-              <th>{{ dialog.created_time }}</th>
-              <th>{{ dialog.other }}</th>
-              <th>{{ dialog.otherName }}</th>
-              <th>{{ dialog.subject }}</th>
-              <th>{{ dialog.all_time }}</th>
-              <th>{{ dialog.charging_time }}</th>
-              <th>{{ dialog.fee }}</th>
-              </tr>
-          {% endfor %}
-      {% endif %}
-       <tr>
-              <th>总计</th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th>{{ all_all_time }}</th>
-              <th>{{ all_charging_time }}</th>
-              <th>{{ all_fee }}</th>
-              </tr>
-      </tbody>
-    </table>
 
-    <hr style="margin-top:40px"/>
+      <!-- START THE FEATURETTES -->
+
+
+      <div class="row featurette">
+        <div class="col-md-6">
+          <h2 class="featurette-heading">学生客户端 <span class="text-muted">发布问题</span></h2>
+          <p class="lead">中小学生在遇到不会的作业题或者学习方法的疑惑，可以随手通过拍照的方式在“作业控”上发布一个问题</p>
+        </div>
+        <div class="col-md-6">
+		<img src="../../static/images/product/student.jpg" style="width:100%"/>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-6">
+          <img src="../../static/images/product/teacher.jpg" style="width:100%"/>
+        </div>
+        <div class="col-md-6">
+          <h2 class="featurette-heading">教师客户端 <span class="text-muted">应征问题</span></h2>
+          <p class="lead">大学生教师可以选择自己擅长的题目应征解答，解答的报酬按照时间计费</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-6">
+          <h2 class="featurette-heading">交互画板与视频聊天</h2>
+          <p class="lead">老师应征回答题目，学生选择感兴趣的老师，就可以开始解答了。作业控通过“画板+音频”的方式努力达到面对面交流的体验，也可以使用视频进行交流哦！</p>
+        </div>
+        <div class="col-md-6">
+          <img src="../../static/images/product/interact.jpg" style="width:100%"/>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
 
 
       <!-- FOOTER -->
