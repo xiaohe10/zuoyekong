@@ -204,6 +204,8 @@ def commit(request):
             try:
                 question = Question.objects.get(id = dialog.questionId)
                 if dialogStatus == 0:
+                    question.state = 1
+                if dialogStatus == 1:
                     question.state = 3
                 question.save()
             except:

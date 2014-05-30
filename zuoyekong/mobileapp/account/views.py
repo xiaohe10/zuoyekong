@@ -113,7 +113,7 @@ def register_do(request):
         m = hashlib.md5()
         m.update(password)
         psw = m.hexdigest()
-        code = request.POST['registerValidCode']
+        #code = request.POST['registerValidCode']
     except Exception:
         return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong request params'}))
     userType = 1
@@ -127,22 +127,22 @@ def register_do(request):
         grade = request.POST['grade']
     validcode = ValidCode()
     #print code
-    if(validcode.is_code_valid(userName = userName,codeType=1,code=code)):
-        try:
-            user = User.objects.get(userName=userName)
-            return HttpResponse(json.dumps({'result':'fail','errorType':101,'msg':'userName has registered'}))
-        except Exception:
-            newUser = User()
-            newUser.userName = userName
-            newUser.password = psw
-            newUser.userType = userType
-            newUser.school = school
-            newUser.grade = grade
-            newUser.evaluation = 0
-            newUser.save()
-            return HttpResponse(json.dumps({'result':'success'}))
-    else:
-        return HttpResponse(json.dumps({'result':'fail','errorType':103,'msg':'wrong valid code'}))
+#if(validcode.is_code_valid(userName = userName,codeType=1,code=code)):
+    try:
+        user = User.objects.get(userName=userName)
+        return HttpResponse(json.dumps({'result':'fail','errorType':101,'msg':'userName has registered'}))
+    except Exception:
+        newUser = User()
+        newUser.userName = userName
+        newUser.password = psw
+        newUser.userType = userType
+        newUser.school = school
+        newUser.grade = grade
+        newUser.evaluation = 0
+        newUser.save()
+        return HttpResponse(json.dumps({'result':'success'}))
+#else:
+#        return HttpResponse(json.dumps({'result':'fail','errorType':103,'msg':'wrong valid code'}))
 
 def logout(request):
     try:
