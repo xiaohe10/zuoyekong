@@ -38,9 +38,6 @@ def create_dialog(request):
 
     try:
         application = Application.objects.get(id = applicationID)
-        question = Question.objects.get(id = application.questionId,authorID = userID)
-        question.state = 2
-        question.save()
         #不要删除旧会话
         #old_dialogs = Dialog.objects.filter(questionId = question.id, studentId = userID)
         #for d in old_dialogs:
@@ -98,8 +95,14 @@ def accept_dialog(request):
                     teacher.save()
                 except:
                     print "teacher active state change fail"
-                print cloopen_accounts[0].cloudAccount
-                print cloopen_accounts[1].cloudAccount    
+                #print cloopen_accounts[0].cloudAccount
+                #print cloopen_accounts[1].cloudAccount    
+                try:
+                    question = Question.objects.get(id = dialog.questionId)
+                    question.state = 2
+                    question.save()
+                except:
+                    return HttpResponse(json.dumps({'result':'fail','errorType':307,'msg':'question is deleted'}))
                 return HttpResponse(json.dumps({'result':'success','cloopenAccount':cloopen_accounts[0].cloudAccount,'cloopenSecret':cloopen_accounts[0].cloudSecret,'voIPAccount':cloopen_accounts[0].voIPAccount,'voIPSecret':cloopen_accounts[0].voIPSecret,'voIPAccount2':cloopen_accounts[1].voIPAccount}))
             except:
                 return HttpResponse(json.dumps({'result': 'fail', 'msg': 'push acceptance to student fail','errorType':404}))

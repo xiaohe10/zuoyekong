@@ -21,6 +21,9 @@
                     <option value="5" {% if mintime == 5 %}selected {% endif %}>5分钟</option>
                     <option value="10" {% if mintime == 10 %}selected {% endif %}>10分钟</option>
                 </select>
+
+               教师姓名 <input type="text" name="teachername" class="form-control" value="{{teachername}}" />
+               学生姓名 <input type="text" name="studentname" class="form-control" value="{{studentname}}" />
               </div>
               <button type="submit" class="btn btn-primary">查询</button>
             </form>

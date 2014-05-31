@@ -31,12 +31,16 @@ def create_application(request):
                 return HttpResponse(json.dumps({'result': 'fail', 'msg': 'question has been answered','errorType':302}))
         except:
             return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such question','errorType':301}))
-        old_applications = Application.objects.filter(questionId = question_id).filter(applicant = userID)
-        for a in old_applications:
-            a.delete()
-            question.applicationNumber -= 1
-            if question.applicationNumber <= 0:
-                question.applicationNumber = 0
+        try:
+            old_application = Application.objects.filter(questionId = question_id).get(applicant = userID)
+            return HttpResponse(json.dumps({'result': 'success','applicationID':old_application.id}))
+        except:
+            pass
+        #for a in old_applications:
+        #    a.delete()
+        #    question.applicationNumber -= 1
+        #    if question.applicationNumber <= 0:
+        #        question.applicationNumber = 0
         application = Application()
         application.applicant = userID
         application.applicationState = 1
