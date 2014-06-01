@@ -77,7 +77,14 @@ def login_do(request):
                         cache.delete(s.session_ID)
                     except:
                         print 'cache error'
-                    s.delete()
+                    try:
+                        old_user = User.objects.get(id = s.userID)
+                        old_user.activeState = 3
+                        old_user.save()
+                        s.delete()
+                    except:
+                        print 'change sate error'
+                        pass
                 session = Session()
                 user.activeState = 1
                 user.save()

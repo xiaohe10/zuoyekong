@@ -38,6 +38,7 @@ def create_dialog(request):
 
     try:
         application = Application.objects.get(id = applicationID)
+        question = Question.objects.get(id = application.questionId)
         #不要删除旧会话
         #old_dialogs = Dialog.objects.filter(questionId = question.id, studentId = userID)
         #for d in old_dialogs:
@@ -50,7 +51,6 @@ def create_dialog(request):
             return HttpResponse(json.dumps({'result':'fail','msg':'teacher is busy','errorType':405}))
 
         dialog = Dialog(studentId = userID,teacherId = application.applicant,questionId = question.id,state=1,all_time=0,charging_time=0)
-
         dialog.generate_dialog_session()
         dialog.save()
         try:
