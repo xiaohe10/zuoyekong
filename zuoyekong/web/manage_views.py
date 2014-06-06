@@ -38,23 +38,8 @@ def manage(request):
         if state == 'finished':
             start_time = request.POST['start_time']
             end_time = request.POST['end_time']
-            mintime = int(request.POST['mintime']) 
-            teachername = request.POST['teachername']
-            studentname = request.POST['studentname']
+            mintime = int(request.POST['mintime'])
             dialogs = Dialog.objects.filter(created_time__gte = start_time,created_time__lte = end_time,charging_time__gte = mintime*60*1000,state = 4)
-            if teachername != '':
-                try:
-                    teacher = User.objects.get(realname = teachername)
-                    dialogs = dialogs.filter(teacherId = teacher.id)
-                except:
-                    pass
-            if studentname != '':
-                try:
-                    student = User.objects.get(realname = studentname)
-                    dialogs = dialogs.filter(studentId = student.id)
-                except:
-                    pass
-
         else:
             dialogs = Dialog.objects.filter(state = 1)
         dialogs = list(dialogs)
