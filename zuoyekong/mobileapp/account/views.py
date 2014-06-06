@@ -254,6 +254,7 @@ def get_profile(request):
                             {'evaluatorID':3,'evaluatorName':'学生','content':'给32个赞','mark':4,'headurl':'media/headImages/2014/03/27/152_1.png'},
                             {'evaluatorID':4,'evaluatorName':'学生','content':'给32个赞','mark':5,'headurl':'media/headImages/2014/03/27/152_1.png'},
                             {'evaluatorID':4,'evaluatorName':'学生','content':'给32个赞','mark':5,'headurl':'media/headImages/2014/03/27/152_1.png'}]
+                comments = []
                 profile['comments'] = comments
                 return HttpResponse(json.dumps({'profile':profile,'result':'success'}))
             except Exception:

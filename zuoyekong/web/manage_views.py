@@ -31,34 +31,42 @@ def manage(request):
     else:
         return HttpResponseRedirect('/web/login')
     type = 'index'
-    start_time = time.strftime( "%Y-%m-%d %H:%M", time.localtime() )
-    end_time = time.strftime(  "%Y-%m-%d %H:%M", time.localtime() )
+    start_time = time.strftime( "%Y-%m-%d", time.localtime() )
+    end_time = time.strftime(  "%Y-%m-%d", time.localtime() )
     if request.POST.has_key('state'):
         state = request.POST['state']
         if state == 'finished':
             start_time = request.POST['start_time']
             end_time = request.POST['end_time']
             mintime = int(request.POST['mintime'])
-            dialogs = Dialog.objects.filter(created_time__gte = start_time,created_time__lte = end_time,charging_time__gte = mintime*60*1000,state = 4)
+
+            dialogs = Dialog.objects.filter(created_time__gte = start_time,created_time__lte = end_time,all_time__gte = mintime*60*1000,state = 4,).exclude(studentId = 4).exclude(teacherId = 5)
+            if request.POST.has_key('ordertype'):
+                ordertype = request.POST['ordertype']
+                dialogs = dialogs.order_by(ordertype)
 
         else:
             dialogs = Dialog.objects.filter(state = 1)
         dialogs = list(dialogs)
         for dialog in dialogs:
             try:
+                print dialog.id
+                dialog.all_time = math.ceil(float(dialog.all_time)/60000)
+                dialog.charging_time = math.ceil(float(dialog.charging_time)/60000)
                 teacher = User.objects.get(id = dialog.teacherId)
                 student = User.objects.get(id = dialog.studentId)
                 dialog.teacher = teacher.userName
                 dialog.teacherName = teacher.realname
                 dialog.student = student.userName
                 dialog.studentName = student.realname
-                dialog.all_time = math.ceil(float(dialog.all_time)/60000)
-                dialog.charging_time = math.ceil(float(dialog.charging_time)/60000)                
                 dialog.created_time = str(dialog.created_time)
-                q = Question.objects.get(id = dialog.questionId)
-                dialog.subject = q.get_subject_display()
+                try:
+                    q = Question.objects.get(id = dialog.questionId)
+                    dialog.subject = q.get_subject_display()
+                except:
+                    dialog.subject = '被删除'
             except:
-                dialogs.remove(dialog)
+                pass
     return render_to_response('web/manage/index.html',locals())
 '''
 def manage(request):

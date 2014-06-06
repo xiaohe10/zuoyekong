@@ -1,21 +1,27 @@
 {% extends "web/manage/__manage_base__.html" %}
 {% block css %}
 
-    <link href="/static/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="/static/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
+    <link href="/static/dist/timepicker/jquery.timepicker.css" rel="stylesheet">
+    <link href="/static/dist/timepicker/bootstrap-datepicker.css" rel="stylesheet">
 
 {% endblock %}
 {% block content %}
        <div class="container">
        <div class="container">
-           <form class="navbar-form navbar-left" role="search" action="/manage" method="post">
+           <form class="form-inline" role="search" action="/manage" method="post">
               <div class="form-group">
+              <span id="datapicker">
                 <input type="hidden" name="state" value="finished">
                   从
-                <input type="text" name="start_time" class="form-control"  value="{{ start_time }}" id="datetimepicker1" data-date-format="yyyy-mm-dd hh:ii">
+                <input type="text" name="start_time" class="date start form-control"  value="{{ start_time }}" id="datetimepicker1" data-date-format="yyyy-mm-dd hh:ii">
                   到
 
-                <input type="text" name="end_time" class="form-control" value="{{ end_time }}" id="datetimepicker2" data-date-format="yyyy-mm-dd hh:ii">
-                  最短计费时间
+                <input type="text" name="end_time" class="date end form-control" value="{{ end_time }}" id="datetimepicker2" data-date-format="yyyy-mm-dd hh:ii">
+              </span>
+              </div>
+           <div class="form-group">
+               最短会话时间
                 <select class="form-control" name="mintime">
 
                     <option value="0" {% if mintime == 0 %}selected {% endif %}>0分钟</option>
@@ -23,15 +29,26 @@
                     <option value="5" {% if mintime == 5 %}selected {% endif %}>5分钟</option>
                     <option value="10" {% if mintime == 10 %}selected {% endif %}>10分钟</option>
                 </select>
-
-
-              </div>
+           </div>
+           <div class="radio">
+               <label>
+                   <input type="radio" name="ordertype" {% if ordertype == 'id' %}checked="checked" {% endif %} value="id"> 按时间排序
+               </label>
+            <label>
+              <input type="radio" name="ordertype" {% if ordertype == 'teacherId' %}checked="checked" {% endif %}value="teacherId">   按老师排序
+            </label>
+               <label>
+              <input type="radio"  name="ordertype" {% if ordertype == 'studentId' %}checked="checked" {% endif %}value="studentId">   按学生排序
+            </label>
+          </div>
+           <div class="form-group">
               <button type="submit" class="btn btn-primary">查询</button>
+               </div>
             </form>
            <form class="navbar-form navbar-left" role="search" action="/manage" method="post">
                <input type="hidden" name="state" value="isgoing">
-               <button type="submit" class="btn btn-default">查看正在进行</button>
-               </form>
+               <button type="submit" class="btn btn-danger">查看正在进行</button>
+            </form>
        </div>
 
 
@@ -71,10 +88,21 @@
 
 {% endblock %}
 {% block js %}
+    <!--
     <script src="/static/dist/js/bootstrap-datetimepicker.min.js"></script>
     <script>
     $('#datetimepicker1').datetimepicker();
     $('#datetimepicker2').datetimepicker();
-    </script>
+    </script>-->
+    <script src="/static/dist/timepicker/bootstrap-datepicker.js"></script>
+    <script src="/static/dist/timepicker/jquery.timepicker.min.js"></script>
+                <script>
+
+                $('#datapicker .date').datepicker({
+                    'format': 'yyyy-m-d',
+                    'autoclose': true
+                });
+            </script>
+
 {% endblock %}
 
