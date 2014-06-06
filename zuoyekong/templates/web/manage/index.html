@@ -17,7 +17,9 @@
                 <input type="text" name="end_time" class="form-control" value="{{ end_time }}" id="datetimepicker2" data-date-format="yyyy-mm-dd hh:ii">
                   最短计费时间
                 <select class="form-control" name="mintime">
+
                     <option value="0" {% if mintime == 0 %}selected {% endif %}>0分钟</option>
+                    <option value="1" {% if mintime == 1 %}selected {% endif %}>1分钟</option>
                     <option value="5" {% if mintime == 5 %}selected {% endif %}>5分钟</option>
                     <option value="10" {% if mintime == 10 %}selected {% endif %}>10分钟</option>
                 </select>
