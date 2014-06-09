@@ -125,7 +125,8 @@ def create_question(request):
                         t['teacherID'] = teacherID
                         t['msg'] =  'no such teacher'
                     teachers.append(t)
-        push_new_question_to_teacher()
+        if '测试' not in user.realname:
+            push_new_question_to_teacher()
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id,'teachers':teachers}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
