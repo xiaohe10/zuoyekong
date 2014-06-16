@@ -35,6 +35,9 @@ def create_dialog(request):
     userID  = s.get_userID(session_ID=session_ID,session_key=session_key)
     if not userID:
         return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such session','errorType':203}))
+    student = User.objects.get(id = userID)
+    if student.money <=0: 
+        return HttpResponse(json.dumps({'result':'fail','msg':'no money left','errorType':'208'}))
 
     try:
         application = Application.objects.get(id = applicationID)
@@ -57,7 +60,7 @@ def create_dialog(request):
             push_call_request_2_teacher(application.applicant,question,dialog)
         except:
             return HttpResponse(json.dumps({'result': 'fail', 'msg': 'teacher is not online','errorType':403}))
-        return HttpResponse(json.dumps({'result':'success','dialogID':dialog.id,'dialogSession':dialog.dialogSession}))
+        return HttpResponse(json.dumps({'result':'success','dialogID':dialog.id,'dialogSession':dialog.dialogSession,'money':int(student.money)}))
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'msg': 'unkown error','errorType':501}))
 

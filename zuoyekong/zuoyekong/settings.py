@@ -180,3 +180,4 @@ CACHES = {
         'LOCATION': '115.28.161.192:11211',
     }
 }
+SEND_BOX = True
