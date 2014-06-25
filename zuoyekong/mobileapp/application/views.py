@@ -54,7 +54,7 @@ def create_application(request):
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 def push_to_student_application(questionID):
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'),True,False,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'),False,False,True)
     question = Question.objects.get(id = questionID)
     student = User.objects.get(id = question.authorID)
     session = Session.objects.get(userID = student.id)

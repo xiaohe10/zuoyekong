@@ -125,8 +125,10 @@ def create_question(request):
                         t['teacherID'] = teacherID
                         t['msg'] =  'no such teacher'
                     teachers.append(t)
-        if '测试' not in user.realname:
-            push_new_question_to_teacher()
+#print title_str
+#       if '测试' in title_str:
+#           print 'ceshi'
+        push_new_question_to_teacher()
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id,'teachers':teachers}))
     except Exception:
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id}))
@@ -138,7 +140,7 @@ import hashlib
 def push_to_a_teacher(session):
     try:
         root = ROOT_PATH
-        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,False,True)
+        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
         token = session.push_token.replace(' ','')
         if token == '':
             return

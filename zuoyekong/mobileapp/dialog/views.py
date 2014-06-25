@@ -88,7 +88,9 @@ def accept_dialog(request):
                 c.save()
             try:
                 try:
+                    print 'ok1'
                     push_call_response_2_student(dialog,cloopen_accounts[1],cloopen_accounts[0].voIPAccount)
+                    print 'ok2'
                     teacherID = Session.objects.get(session_ID = session_ID,session_key = session_key).userID
                     teacher  = User.objects.get(id = teacherID)
                     teacher.activeState = 2
@@ -222,7 +224,7 @@ def commit(request):
 
 def push_call_request_2_teacher(teacherID,question,dialog):
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
     session = Session.objects.get(userID = teacherID)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
@@ -261,7 +263,7 @@ def push_call_request_2_teacher(teacherID,question,dialog):
 def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     print '######## push response'
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
     session = Session.objects.get(userID = dialog.studentId)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
@@ -299,7 +301,7 @@ def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
 def push_call_reject_2_student(dialog):
     print '######## push response'
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
     session = Session.objects.get(userID = dialog.studentId)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
