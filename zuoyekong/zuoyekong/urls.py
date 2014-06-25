@@ -17,6 +17,7 @@ from zuoyekong import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+	url(r'^version$',version),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
     
     url(r'^uploadFile',upload_file),

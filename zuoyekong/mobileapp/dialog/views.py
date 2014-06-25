@@ -174,7 +174,7 @@ def validate(request):
             return HttpResponse('no')
     except:
         return HttpResponse('wrong')
-
+import math
 def commit(request):
     try:
         print request
@@ -202,9 +202,14 @@ def commit(request):
                 for ca in cloopenAccounts:
                     ca.state =0
                     ca.save()
+                minite = math.ceil(float(feeTime)/60000)
                 teacher = User.objects.get(id = dialog.teacherId)
+                teacher.money += minite*1.6;
                 teacher.activeState = 1
                 teacher.save()
+                student = User.objects.get(id = dialog.studentId)
+                student.money -= minite*2;
+                student.save()
             except: 
                 return HttpResponse('yes')
             try:
@@ -225,7 +230,7 @@ def commit(request):
 
 def push_call_request_2_teacher(teacherID,question,dialog):
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'))
     session = Session.objects.get(userID = teacherID)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
@@ -264,7 +269,7 @@ def push_call_request_2_teacher(teacherID,question,dialog):
 def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     print '######## push response'
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'))
     session = Session.objects.get(userID = dialog.studentId)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
@@ -302,7 +307,7 @@ def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
 def push_call_reject_2_student(dialog):
     print '######## push response'
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'))
     session = Session.objects.get(userID = dialog.studentId)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')

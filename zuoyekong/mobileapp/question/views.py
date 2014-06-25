@@ -142,7 +142,7 @@ import hashlib
 def push_to_a_teacher(session):
     try:
         root = ROOT_PATH
-        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'), True,True,True)
+        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck.pem'))
         token = session.push_token.replace(' ','')
         if token == '':
             return
