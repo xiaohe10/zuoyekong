@@ -124,28 +124,36 @@ class APNSAlert(object):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
-
+from zuoyekong.settings import SANDBOX,DEBUG_SSL 
+import os
+from zuoyekong.settings import ROOT_PATH
 class APNSNotificationWrapper(object):
     """
     This object wrap a list of APNS tuples. You should use
     .append method to add notifications to the list. By usint
     method .notify() all notification will send to the APNS server.
     """
-    sandbox = True
+    sandbox = SANDBOX
     apnsHost = 'gateway.push.apple.com'
     apnsSandboxHost = 'gateway.sandbox.push.apple.com'
     apnsPort = 2195
     payloads = None
     connection = None
-    debug_ssl = False
-
-    def __init__(self, certificate=None, sandbox=True, debug_ssl=False,
-                 force_ssl_command=False):
-        self.debug_ssl = debug_ssl
+    debug_ssl = DEBUG_SSL
+    
+#def __init__(self, certificate=None, sandbox=True, debug_ssl=False,
+#                 force_ssl_command=False):
+    def __init__(self,force_ssl_command=True):
+#self.debug_ssl = debug_ssl
+        if SANDBOX:
+           certificate =  os.path.join(ROOT_PATH,'mobileapp','ck.pem')
+        else:
+           certificate =  os.path.join(ROOT_PATH,'mobileapp','ck0.pem')
+        print certificate 
         self.connection = APNSConnection(certificate=certificate,
                                          force_ssl_command=force_ssl_command,
                                          debug=self.debug_ssl)
-        self.sandbox = sandbox
+#self.sandbox = sandbox
         self.payloads = []
 
     def append(self, payload=None):

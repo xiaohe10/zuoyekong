@@ -35,6 +35,9 @@ def create_dialog(request):
     userID  = s.get_userID(session_ID=session_ID,session_key=session_key)
     if not userID:
         return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such session','errorType':203}))
+    student = User.objects.get(id = userID)
+    if student.money <=0: 
+        return HttpResponse(json.dumps({'result':'fail','msg':'no money left','errorType':'208'}))
 
     try:
         application = Application.objects.get(id = applicationID)
@@ -57,7 +60,7 @@ def create_dialog(request):
             push_call_request_2_teacher(application.applicant,question,dialog)
         except:
             return HttpResponse(json.dumps({'result': 'fail', 'msg': 'teacher is not online','errorType':403}))
-        return HttpResponse(json.dumps({'result':'success','dialogID':dialog.id,'dialogSession':dialog.dialogSession}))
+        return HttpResponse(json.dumps({'result':'success','dialogID':dialog.id,'dialogSession':dialog.dialogSession,'money':int(student.money)}))
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'msg': 'unkown error','errorType':501}))
 
@@ -173,7 +176,7 @@ def validate(request):
             return HttpResponse('no')
     except:
         return HttpResponse('wrong')
-
+import math
 def commit(request):
     try:
         print request
@@ -201,9 +204,14 @@ def commit(request):
                 for ca in cloopenAccounts:
                     ca.state =0
                     ca.save()
+                minite = math.ceil(float(feeTime)/60000)
                 teacher = User.objects.get(id = dialog.teacherId)
+                teacher.money += minite*1.6;
                 teacher.activeState = 1
                 teacher.save()
+                student = User.objects.get(id = dialog.studentId)
+                student.money -= minite*2;
+                student.save()
             except: 
                 return HttpResponse('yes')
             try:
@@ -224,7 +232,7 @@ def commit(request):
 
 def push_call_request_2_teacher(teacherID,question,dialog):
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
+    wrapper = APNSNotificationWrapper()
     session = Session.objects.get(userID = teacherID)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
@@ -263,7 +271,7 @@ def push_call_request_2_teacher(teacherID,question,dialog):
 def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     print '######## push response'
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
+    wrapper = APNSNotificationWrapper()
     session = Session.objects.get(userID = dialog.studentId)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')
@@ -301,7 +309,7 @@ def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
 def push_call_reject_2_student(dialog):
     print '######## push response'
     root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
+    wrapper = APNSNotificationWrapper()
     session = Session.objects.get(userID = dialog.studentId)
     token = session.push_token.replace(' ','')
     token = token.replace('<','')

@@ -1,4 +1,4 @@
-# Django settings for zuoyekong project.
+#Django settings for zuoyekong project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -180,3 +180,5 @@ CACHES = {
         'LOCATION': '115.28.161.192:11211',
     }
 }
+SANDBOX = False
+DEBUG_SSL = True

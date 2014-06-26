@@ -51,6 +51,8 @@ def create_question(request):
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 203, 'msg': 'no such session'}))
         try:
             user = User.objects.get(id = userID)
+            if user.money <= 0:
+                return HttpResponse(json.dumps({'result':'fail','errorType':208,'msg':'no money left','money':int(user.moeny)}))
         except Exception:
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 102, 'msg': 'no such user'}))
         question = Question()
@@ -140,7 +142,7 @@ import hashlib
 def push_to_a_teacher(session):
     try:
         root = ROOT_PATH
-        wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'), False,True,True)
+        wrapper = APNSNotificationWrapper()
         token = session.push_token.replace(' ','')
         if token == '':
             return

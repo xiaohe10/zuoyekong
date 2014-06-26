@@ -349,3 +349,9 @@ def upload_file(request):
         return HttpResponse('upload success')
     except:
         return HttpResponse('upload fail')
+def version(request):
+    v = request.POST['version'].__str__()
+    if v == '1.1':
+        return HttpResponse(json.dumps({'result':'success'}))
+    else:
+        return HttpResponse(json.dumps({'result':'fail'}))

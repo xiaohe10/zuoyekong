@@ -33,7 +33,9 @@ def create_application(request):
             return HttpResponse(json.dumps({'result': 'fail', 'msg': 'no such question','errorType':301}))
         try:
             old_application = Application.objects.filter(questionId = question_id).get(applicant = userID)
-            return HttpResponse(json.dumps({'result': 'success','applicationID':old_application.id}))
+            if old_application:
+                print 'no push'
+                #return HttpResponse(json.dumps({'result': 'success','applicationID':old_application.id}))
         except:
             pass
         #for a in old_applications:
@@ -53,8 +55,9 @@ def create_application(request):
     except:
         return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
 def push_to_student_application(questionID):
-    root = ROOT_PATH
-    wrapper = APNSNotificationWrapper(os.path.join(root,'mobileapp','ck0.pem'),False,False,True)
+    print 'start to push'
+    wrapper = APNSNotificationWrapper()
+    print 'wrapper already'
     question = Question.objects.get(id = questionID)
     student = User.objects.get(id = question.authorID)
     session = Session.objects.get(userID = student.id)
