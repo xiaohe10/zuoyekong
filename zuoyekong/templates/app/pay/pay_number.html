@@ -6,13 +6,16 @@
         body{
             margin:20px;
         }
-        div{
-            margin:10px;
+        .pay-form{
+top:25%:;
+            margin:0 auto;
+            width:50%;
+height:50%;
         }
     </style>
 </head>
 <body>
- <form method="POST" action="/app_pay/pay_order">
+ <form method="POST" action="/app_pay/pay_order" class="pay-form">
               <div>当前余额： {{ user.money }} 元</div>
               <div><input type="hidden" name="userID" value="{{ user.id }}"/></div>
               <div>充值金额：<input name = "total_fee" type="text"/> 元</div>

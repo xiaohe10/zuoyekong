@@ -184,10 +184,15 @@ class APNSNotificationWrapper(object):
             1) prepare all internal variables to APNS Payout JSON
             2) send notification
         """
+        for o in self.payloads:
+            print 'start ***'
+            print o.payload()
+            print 'end ***'
         payloads = [o.payload() for o in self.payloads]
         if not payloads:
+            print 'no payloads'
             return False
-
+        print 'message ok'
         messages = []
         for p in payloads:
             messages.append(struct.pack('%ds' % len(p), p))

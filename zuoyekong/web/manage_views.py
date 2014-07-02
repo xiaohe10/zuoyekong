@@ -39,8 +39,8 @@ def manage(request):
             start_time = request.POST['start_time']
             end_time = request.POST['end_time']
             mintime = int(request.POST['mintime'])
-
             dialogs = Dialog.objects.filter(created_time__gte = start_time,created_time__lte = end_time,all_time__gte = mintime*60*1000,state = 4,).exclude(studentId = 4).exclude(teacherId = 5)
+            print dialogs
             if request.POST.has_key('ordertype'):
                 ordertype = request.POST['ordertype']
                 dialogs = dialogs.order_by(ordertype)

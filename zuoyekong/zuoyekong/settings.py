@@ -181,4 +181,4 @@ CACHES = {
     }
 }
 SANDBOX = False
-DEBUG_SSL = True
+DEBUG_SSL = False

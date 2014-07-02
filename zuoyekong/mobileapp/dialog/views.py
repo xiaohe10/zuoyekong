@@ -91,9 +91,10 @@ def accept_dialog(request):
                 c.save()
             try:
                 try:
-                    print 'ok1'
                     push_call_response_2_student(dialog,cloopen_accounts[1],cloopen_accounts[0].voIPAccount)
-                    print 'ok2'
+                except:
+                     print 'push to student fail'
+                try:
                     teacherID = Session.objects.get(session_ID = session_ID,session_key = session_key).userID
                     teacher  = User.objects.get(id = teacherID)
                     teacher.activeState = 2
@@ -238,12 +239,16 @@ def push_call_request_2_teacher(teacherID,question,dialog):
     token = token.replace('<','')
     token = token.replace('>','')
     deviceToken = binascii.unhexlify(token)
+    print token
+    print deviceToken
     # create message
     message = APNSNotification()
     message.token(deviceToken)
-    message.alert(u'a dialog request')
+    message.alert(u'一个会话请求')
     message.setProperty("pushType",10)
-    message.setProperty("info",[dialog.id,dialog.dialogSession,question.id,question.title,question.authorRealName,'media'+question.thumbnails,question.description,question.subject])
+    #message.setProperty("info",[dialog.id,dialog.dialogSession,question.id,question.title,question.authorRealName,'media'+question.thumbnails,question.description,question.subject])
+    message.setProperty("info",[dialog.id,dialog.dialogSession,question.id,'',question.authorRealName,'media','',question.subject])
+    print message
     '''
     p = PushMessage()
     p.pushType = 10
@@ -266,7 +271,9 @@ def push_call_request_2_teacher(teacherID,question,dialog):
     # add message to tuple and send it to APNS server
     wrapper.append(message)
     wrapper.connect()
+    print 'connect ok'
     wrapper.notify()
+    print 'notify ok2'
 
 def push_call_response_2_student(dialog,cloopen_account,voIPAccount2):
     print '######## push response'

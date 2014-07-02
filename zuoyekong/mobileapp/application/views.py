@@ -35,7 +35,7 @@ def create_application(request):
             old_application = Application.objects.filter(questionId = question_id).get(applicant = userID)
             if old_application:
                 print 'no push'
-                #return HttpResponse(json.dumps({'result': 'success','applicationID':old_application.id}))
+                return HttpResponse(json.dumps({'result': 'success','applicationID':old_application.id}))
         except:
             pass
         #for a in old_applications:
