@@ -1,6 +1,7 @@
 *.pyc
 settings.py
 media/
+zuoyekong/nohup.out
 # C extensions
 *.so
 
