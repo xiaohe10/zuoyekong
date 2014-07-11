@@ -66,14 +66,21 @@ def create_question(request):
             question.subject = request.POST['subject']
         if request.POST.has_key('grade'):
             question.grade = request.POST['grade']
-        if request.FILES.has_key('voice'):
-            question.voice = request.FILES['voice']
-        else:
-            question.voice = ''
-        question.state = 1
-        if request.POST.has_key('state'):
-            question.state = request.POST['state']
+        question.questionState = '已发布'
+        if request.POST.has_key('questionState'):
+            question.questionState = request.POST['questionState']
         question.save()
+        if request.POST.has_key('voiceNumber'):
+            n = int(request.POST['voiceNumber'])
+            count =0
+            while(n > 0):
+                n = n - 1
+                count = count + 1
+                if request.FILES.has_key('questionVoice'+count.__str__()):
+                    questionVoice = QuestionVoices()
+                    questionVoice.quetionId = question.id
+                    questionVoice.voice = request.FILES['questionVoice'+count.__str__()]
+                    questionVoice.save()
         if request.POST.has_key('pictureNumber'):
             n = int(request.POST['pictureNumber'])
             count = 0
@@ -107,6 +114,7 @@ def create_question(request):
                         except Exception:
                             print Exception
         teachers = []
+        '''
         if request.POST.has_key('teacherNumber'):
             n = int(request.POST['teacherNumber'])
             count = 0
@@ -127,9 +135,7 @@ def create_question(request):
                         t['teacherID'] = teacherID
                         t['msg'] =  'no such teacher'
                     teachers.append(t)
-#print title_str
-#       if '测试' in title_str:
-#           print 'ceshi'
+        '''
         push_new_question_to_teacher()
         return HttpResponse(json.dumps({'result': 'success','questionID':question.id,'teachers':teachers}))
     except Exception:
@@ -409,42 +415,46 @@ def search_question(request):
     try:
         session_ID = request.POST['sessionID']
         session_key = request.POST['sessionKey']
-        limit = 10000
+        limit = 10
         offset = 0
+        condition = 'none'
         if request.POST.has_key('limit'):
             limit  = request.POST['limit']
-            if not limit:
-                limit = 10000
-        else:
-            limit = 10000 
         if request.POST.has_key('offset'):
             offset  = request.POST['offset']
-            if not offset:
-                offset = 0
+        if request.POST.has_key('condition'):
+            condition = request.POST['condition']
+        session = Session.objects.get(session_ID = session_ID)
+        user = User.objects.get(id = session.userID)
+        if condition == 'concern':
+            followees = Follow.objects.filter(followerId = user.id)
+            if followees.__len__() == 0:
+                all_questions = []
+            else:
+                query = None
+                for followee in followees:
+                    if query:
+                        query = query | Q(authorID = followee.followeeID)
+                    else:
+                        query = Q(authorID = followee.followeeID)
+                all_questions = Question.objects.filter(questionState='已发布').filter(query).order_by('-updateTime')
+        elif condition == 'interest':
+            try:
+
+                subject_list = user.good_at.split(',')
+                query = None
+                if subject_list != []:
+                    for subject in subject_list:
+                        if query:
+                            query  = query|Q(subject = subject)
+                        else:
+                            query = Q(subject = subject)
+                    all_questions = Question.objects.filter(questionState='已发布').filter(query).order_by('-updateTime')
+            except:
+                print '兴趣索引错误'
         else:
-            offset = 0
-        all_questions = Question.objects.filter(state=1).order_by('-updateTime')
-        questions = []
-        if request.POST.has_key('subject'):
-            subjects = request.POST['subject']
-            subject_list = subjects.split('|')
-            query = None
-            for s in subject_list:
-                if query:
-                    query  = query|Q(subject = s)
-                else:
-                    query = Q(subject = s)
-            all_questions = all_questions.filter(query)
-        if request.POST.has_key('grade'):
-            grades = request.POST['grade']
-            grade_list = grades.split('|')
-            query = None
-            for g in grade_list:
-                if query:
-                    query  = query|Q(grade = g)
-                else:
-                    query = Q(grade = g)
-            all_questions = all_questions.filter(query)
+            all_questions = Question.objects.filter(questionState='已发布').order_by('-updateTime')
+
         try:
                 questions = all_questions[int(offset):int(offset)+int(limit)]
         except:
@@ -455,18 +465,21 @@ def search_question(request):
         question_list = []
         for question in questions:
             final_question = {}
-            final_question['ID'] = question.id
+            final_question['questionID'] = question.id
             final_question['grade'] = question.grade
-            final_question['title'] = question.title
+            final_question['questionTitle'] = question.title
             final_question['subject'] = question.subject
             final_question['description'] = question.description
             final_question['state'] = question.state
-            final_question['thumbnails'] = 'media'+question.thumbnails
+            final_question['questionThumbnails'] = 'media'+question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
+            final_question['authorHeadImage'] = 'media/'+user.headImage.__str__()
             final_question['unreadApplicationNumber'] = question.unread_applicationNumber
             final_question['applicationNumber'] = question.applicationNumber
-            final_question['updateTime'] = question.updateTime.__str__()
+            final_question['viewNumber'] = 0
+            final_question['dialogNumber'] = 0
+            final_question['publishTime'] = question.updateTime.__str__()
             question_list.append(final_question)
         return HttpResponse(json.dumps({'result': 'success', 'questionList': question_list}))
     except:

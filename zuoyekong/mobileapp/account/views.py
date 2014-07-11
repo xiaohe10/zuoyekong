@@ -115,7 +115,7 @@ def userName_exist(request):
 
 def register_do(request):
     try:
-        return HttpResponse(json.dumps({'result':'fail','errorType':101,'msg':'userName has registered'}))
+        #return HttpResponse(json.dumps({'result':'fail','errorType':101,'msg':'userName has registered'}))
         userName = request.POST['userName']
         password = request.POST['password']
         m = hashlib.md5()

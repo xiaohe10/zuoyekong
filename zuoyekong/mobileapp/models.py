@@ -78,12 +78,12 @@ class User(models.Model):
     userName = models.CharField(max_length=30)
     password = models.CharField(max_length=100)
     realname = models.CharField(max_length=20)
-    userType = models.IntegerField(max_length=2,choices=USER_CHOICES)
+    userType = models.CharField(max_length=5)
     school = models.CharField(max_length=20)
     highschool = models.CharField(max_length=20)
     hometown = models.CharField(max_length=20,blank = True)
     good_at = models.CharField(max_length=30,blank = True)
-    grade = models.IntegerField(max_length=5,choices=GRADE_CHOICES)
+    grade = models.CharField(max_length=5)
     birth = models.CharField(max_length=10,blank=True)
     gender = models.CharField(max_length=1,blank=True)
     description = models.TextField()
@@ -91,7 +91,7 @@ class User(models.Model):
     headImage = models.FileField(upload_to='headImages/%Y/%m/%d')
     identify = models.CharField(max_length=10,blank = True,)
     evaluation = models.IntegerField(max_length=3,default=0)
-    activeState = models.IntegerField(max_length=3,default=3,choices=ACTIVE_CHOICES)
+    activeState = models.CharField(max_length=5,default='下线')
     money = models.FloatField(default=0)
     def safe_get(self,userName):
         try:
@@ -171,13 +171,12 @@ def verify_access_2_draft(session_ID,userID):
 class Question(models.Model):
     title = models.CharField(max_length=40)
     description = models.TextField()
-    subject = models.IntegerField(max_length=2,choices=SUBJECT_CHOICES)
-    grade = models.IntegerField(max_length=2,choices=GRADE_CHOICES)
+    subject = models.CharField(max_length=5)
+    grade = models.CharField(max_length=5)
     authorID = models.BigIntegerField(20)
     authorRealName = models.CharField(max_length=30)
-    state = models.IntegerField(max_length=2,choices=QUESTION_STATE_CHOICES)
+    questionState = models.CharField(max_length=5)
     thumbnails = models.CharField(max_length=100)
-    voice = models.FileField(upload_to='questionVoice/%Y/%m/%d')
     updateTime = models.DateTimeField(auto_now_add=True)
     applicationNumber = models.IntegerField(default=0)
     unread_applicationNumber = models.IntegerField(default=0)
@@ -293,13 +292,18 @@ class Question(models.Model):
             question_detail['thumbnails'] = 'media'+question.thumbnails
             question_detail['applicationNumber'] = question.applicationNumber
             question_detail['updateTime'] = question.updateTime.__str__()
-            if question.voice != '':
-                question_detail['voice'] = 'media/'+question.voice.__str__()
+
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
             for image in image_list:
                 final_image_list.append('media/'+image.image.__str__())
             question_detail['questionImages'] = final_image_list
+
+            voice_list = QuestionVoices.objects.filter(questionId = question.id)
+            final_voice_list = []
+            for voice in voice_list:
+                final_voice_list.append('media/'+voice.voice.__str__())
+            question_detail['questionVoices'] = final_voice_list
             applications = Application.objects.filter(questionId = question_id)
             application_list = []
             for a in applications:
@@ -325,12 +329,14 @@ class Question(models.Model):
 class QuestionImages(models.Model):
     questionId = models.BigIntegerField(20)
     image = models.FileField(upload_to='questionPictures/%Y/%m/%d')
-
+class QuestionVoices(models.Model):
+    quetionId = models.BigIntegerField(20)
+    voice = models.FileField(upload_to='questionVoices/%Y/%m/%d')
 class Application(models.Model):
     questionId = models.BigIntegerField(20)
     applicant =  models.BigIntegerField(20)
     created_time = models.DateTimeField(auto_now_add=True)
-    applicationState = models.IntegerField(max_length=2,default=0,choices= APPLICATION_CHOICES)
+    applicationState = models.CharField(max_length=5,default='未读')
 
     def list_applications_by_question(self,question_id):
         try:
@@ -360,7 +366,7 @@ class Dialog(models.Model):
     studentId =  models.BigIntegerField(20)
     teacherId = models.BigIntegerField(20)
     questionId =models.BigIntegerField(20)
-    state = models.IntegerField(max_length=2,choices=DIALOG_STATE_CHOICES)
+    dialogState = models.CharField(max_length=5)
     dialogSession = models.CharField(max_length=100)
     created_time = models.DateTimeField(auto_now_add=True)
     all_time = models.BigIntegerField() # all talk time in secondes
@@ -373,7 +379,7 @@ class  CloopenAccount(models.Model):
     cloudSecret = models.CharField(max_length=64)
     voIPAccount = models.CharField(max_length=64)
     voIPSecret = models.CharField(max_length=64)
-    state = models.IntegerField(choices=CLOOPEN_ACCOUNT_STATE)
+    state = models.CharField(max_length=5)
     dialogID = models.BigIntegerField(20)
 
 class Follow(models.Model):
@@ -411,7 +417,7 @@ class Chat(models.Model):
     receiverID = models.BigIntegerField(20)
     message =  models.TextField()
     time  = models.DateTimeField(auto_now_add= True)
-    state = models.CharField(max_length=1) # U: unread, R: readed
+    chatState = models.CharField(max_length=5) # U: unread, R: readed
 '''
 class Comment(models.Model):
     evaluatorID = models.BigIntegerField(20)
@@ -425,5 +431,5 @@ class Pay(models.Model):
     buyer_email = models.CharField(max_length=32,null=True)
     buyer_id = models.BigIntegerField(20,null=True)
     trade_no = models.BigIntegerField(20,null=True)
-    status = models.CharField(max_length=1) # 'U'unpaid,'F':fail,'S':success
+    status = models.CharField(max_length=5) # 'U'unpaid,'F':fail,'S':success
 

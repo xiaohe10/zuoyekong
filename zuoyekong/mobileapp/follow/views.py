@@ -3,6 +3,48 @@ from mobileapp.models import *
 from mobileapp.account.views import is_online
 from django.http import HttpResponse
 import json
+from django.shortcuts import render
+
+def follow_test(request):
+    return render(request, 'app/follow/test.html', locals())
+
+def create_follow(request):
+    try:
+        sessionID = request.POST['sessionID']
+        sessionKey = request.POST['sessionKey']
+        targetUserID = request.POST['targetUserID']
+    except:
+        return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong paraments'}))
+    try:
+        session = Session.objects.get(session_ID = sessionID,session_key = sessionKey)
+        try:
+            Follow.objects.get(followerId = session.userID,followeeID = targetUserID)
+            return HttpResponse(json.dumps({'result':'success'}))
+        except:
+            pass
+        follow = Follow(followerId = session.userID,followeeID = targetUserID)
+        follow.save()
+        return HttpResponse(json.dumps({'result':'success'}))
+    except:
+        return HttpResponse(json.dumps({'reuslt':'fail','msg':'no such session'}))
+
+def cancle_follow(request):
+    try:
+        sessionID = request.POST['sessionID']
+        sessionKey = request.POST['sessionKey']
+        targetUserID = request.POST['targetUserID']
+    except:
+        return HttpResponse(json.dumps({'result':'fail','errorType':201,'msg':'wrong paraments'}))
+    try:
+        session = Session.objects.get(session_ID = sessionID,session_key = sessionKey)
+    except:
+        return HttpResponse(json.dumps({'reuslt':'fail','msg':'no such session'}))
+    try:
+        follow = Follow.objects.get(followerId = session.userID,followeeID = targetUserID)
+        follow.delete()
+        return HttpResponse(json.dumps({'result':'success'}))
+    except:
+        return HttpResponse(json.dumps({'reuslt':'success'}))
 
 def get_followed_teacher(request):
     try:

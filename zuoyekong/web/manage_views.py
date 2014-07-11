@@ -140,5 +140,5 @@ def userlist(request):
     for user in users:
         user.headImage = '/media/'+user.headImage.__str__()
         user.userType = '老师' if user.userType == 2 else '学生'
-        user.grade = user.get_grade_display()
+        user.grade = user.grade
     return render_to_response('web/manage/userlist.html',locals())

@@ -100,4 +100,9 @@ urlpatterns = patterns('',
     url(r'^app_pay/pay_order$',app_pay_order),
     url(r'^app_pay/pay_callback$',app_pay_callback),
     url(r'^app_pay/pay_show$',app_pay_show),
+
+    url(r'^follow/test$',follow_test),
+    url(r'^follow/follow$',create_follow),
+    url(r'^follow/cancle$',cancle_follow),
+
 )
