@@ -112,8 +112,8 @@ body{
 
 <form method="post" action='/question/searchQuestions' enctype="multipart/form-data" >
 <h2>搜索尚未解决的题目</h2>
-<div >session id</div><input type="text" name='sessionID'/><br/>
-<div >session key</div><input type="text" name='sessionKey'/><br/>
+<div >session id</div><input type="text" name='sessionID' value='{{sessionID}}'/><br/>
+<div >session key</div><input type="text" name='sessionKey' value='{{sessionKey}}'/><br/>
 <div >limit</div><input type="text" name='limit'/><br/>
 <div >offset</div><input type="text" name='offset'/><br/>
 <div >condition</div><input type="text" name='condition'/><br/>

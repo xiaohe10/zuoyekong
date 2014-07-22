@@ -38,6 +38,11 @@ def verify_access_2_add_picture(sessionID,questionid):
             return False
 
 def question_test(request):
+    if request.GET.has_key('sessionID'):
+        sessionID = request.GET['sessionID']
+    if request.GET.has_key('sessionKey'):
+        sessionKey = request.GET['sessionKey']
+    
     return render(request, 'app/question/test.html', locals())
 
 
@@ -52,7 +57,7 @@ def create_question(request):
         try:
             user = User.objects.get(id = userID)
             if user.money <= 0:
-                return HttpResponse(json.dumps({'result':'fail','errorType':208,'msg':'no money left','money':int(user.moeny)}))
+                return HttpResponse(json.dumps({'result':'fail','errorType':303,'msg':'no money left','money':int(user.money)}))
         except Exception:
             return HttpResponse(json.dumps({'result': 'fail', 'errorType': 102, 'msg': 'no such user'}))
         question = Question()
@@ -418,14 +423,24 @@ def search_question(request):
         limit = 10
         offset = 0
         condition = 'none'
+        limit =20
         if request.POST.has_key('limit'):
             limit  = request.POST['limit']
+        offset=0
         if request.POST.has_key('offset'):
             offset  = request.POST['offset']
+        condition = 'student-self'
         if request.POST.has_key('condition'):
             condition = request.POST['condition']
+    except:
+        return HttpResponse(json.dumps({'result': 'fail', 'errorType': 201, 'msg': 'wrong request params'}))
+    try:
         session = Session.objects.get(session_ID = session_ID)
         user = User.objects.get(id = session.userID)
+        if condition == 'student-self':
+            run_question = Question()
+            question_list = run_question.get_question_list(sessionId = session_ID,user_id=user.id,update_time=None,state=None,subject=None,offset=offset,limit=limit)
+            return  HttpResponse(json.dumps({'result':'success','questionList':question_list}))
         if condition == 'concern':
             followees = Follow.objects.filter(followerId = user.id)
             if followees.__len__() == 0:
@@ -456,7 +471,7 @@ def search_question(request):
             all_questions = Question.objects.filter(questionState='已发布').order_by('-updateTime')
 
         try:
-                questions = all_questions[int(offset):int(offset)+int(limit)]
+            questions = all_questions[int(offset):int(offset)+int(limit)]
         except:
             try:
                 questions = all_questions[int(offset):]
@@ -470,7 +485,7 @@ def search_question(request):
             final_question['questionTitle'] = question.title
             final_question['subject'] = question.subject
             final_question['description'] = question.description
-            final_question['state'] = question.state
+            final_question['state'] = question.questionState
             final_question['questionThumbnails'] = 'media'+question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
@@ -480,6 +495,7 @@ def search_question(request):
             final_question['viewNumber'] = 0
             final_question['dialogNumber'] = 0
             final_question['publishTime'] = question.updateTime.__str__()
+            print final_question
             question_list.append(final_question)
         return HttpResponse(json.dumps({'result': 'success', 'questionList': question_list}))
     except:

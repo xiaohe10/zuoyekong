@@ -18,6 +18,9 @@ from zuoyekong import settings
 
 urlpatterns = patterns('',
 	url(r'^version$',version),
+
+    url(r'^redirect_test$',redirect_test),
+    url(r'^redirect_test_do$',redirect_test_do),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
     
     url(r'^uploadFile',upload_file),

@@ -12,7 +12,13 @@ import time
 from zuoyekong.settings import MEDIA_ROOT
 import os
 from django.shortcuts import render
-
+def redirect_test_do(request):
+    sessionID = request.POST['sessionID']
+    sessionKey = request.POST['sessionKey']
+    testPage = request.POST['testPage']
+    return HttpResponseRedirect('/'+testPage+'/test?sessionID='+sessionID+'&sessionKey='+sessionKey)
+def redirect_test(request):
+    return render(request,'app/account/test_login.html',locals())
 def is_online(session_ID,session_key):
     try:
         key = cache.get(session_ID)

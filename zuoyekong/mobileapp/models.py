@@ -211,13 +211,13 @@ class Question(models.Model):
             historyQuestions = []
             for q in history_questions:
                 question = {}
-                question['ID'] = q.id
-                question['title'] = q.title
+                question['questionID'] = q.id
+                question['questionTitle'] = q.title
                 question['description'] = q.description
                 question['grade'] = q.grade
                 question['subject'] = q.subject
-                question['thumbnails']= 'media' + q.thumbnails
-                question['updateTime'] = q.updateTime.__str__()
+                question['questionThumbnails']= 'media' + q.thumbnails
+                question['publishTime'] = q.updateTime.__str__()
                 dialog = Dialog.objects.get(questionId = q.id,state = 4)
                 dialogDetail = {}
                 dialogDetail['dialogID'] = dialog.id
@@ -230,10 +230,10 @@ class Question(models.Model):
         except:
             return []
     def get_question_list(self,sessionId,user_id,update_time=None,state=None,subject = None,offset = 0,limit=20):
-        if verify_access_2_draft(sessionId,user_id):
-            question_list = Question.objects.filter(authorID = user_id).exclude(state = 3).order_by('-updateTime')
-        else:
-            question_list = Question.objects.filter(authorID = user_id).exclude(state = 3).exclude(state = 0).order_by('-updateTime')
+#        if verify_access_2_draft(sessionId,user_id):
+        question_list = Question.objects.filter(authorID = user_id).filter(questionState = '已发布').order_by('-updateTime')
+#        else:
+#            question_list = Question.objects.filter(authorID = user_id).exclude(state = 3).exclude(state = 0).order_by('-updateTime')
         if update_time:
             t = datetime.datetime.strptime(update_time,'%Y-%m-%d %H:%M:%S')
             question_list = question_list.filter(updateTime__gte = t)
@@ -248,20 +248,23 @@ class Question(models.Model):
                 questionList = []
 
         final_question_list = []
+        print questionList
         for question in questionList:
             final_question = {}
-            final_question['ID'] = question.id
+            final_question['questionID'] = question.id
             final_question['grade'] = question.grade
-            final_question['title'] = question.title
+            final_question['questionTitle'] = question.title
             final_question['subject'] = question.subject
             final_question['description'] = question.description
-            final_question['state'] = question.state
-            final_question['thumbnails'] = 'media'+question.thumbnails
+            final_question['state'] = question.questionState
+            final_question['questionThumbnails'] = 'media'+question.thumbnails
             final_question['authorID'] = question.authorID
             final_question['authorRealName'] = question.authorRealName
             final_question['applicationNumber'] = question.applicationNumber
             final_question['unreadApplicationNumber'] = question.unread_applicationNumber
-            final_question['updateTime'] = question.updateTime.__str__()
+            final_question['publishTime'] = question.updateTime.__str__()
+            final_question['viewNumber']=0
+            final_question['dialogNumber']=0
             final_question_list.append(final_question)
         return final_question_list
     def update_application_number(self,questionID):
@@ -279,7 +282,7 @@ class Question(models.Model):
         try:
             question = Question.objects.get(id = question_id)
             question_detail = {}
-            question_detail['ID'] = question.id
+            question_detail['questionID'] = question.id
             question_detail['grade'] = question.grade
             question_detail['title'] = question.title
             question_detail['subject'] = question.subject
@@ -289,9 +292,11 @@ class Question(models.Model):
             author = User.objects.get(id = question.authorID)
             question_detail['authorHeadImage'] = 'media/'+author.headImage.__str__()
             question_detail['state'] = question.state
-            question_detail['thumbnails'] = 'media'+question.thumbnails
+            question_detail['questionThumbnails'] = 'media'+question.thumbnails
             question_detail['applicationNumber'] = question.applicationNumber
-            question_detail['updateTime'] = question.updateTime.__str__()
+            question_detail['publishTime'] = question.updateTime.__str__()
+            question_detail['viewNumber'] = 0
+            question_detail['dialogNumber'] =0
 
             image_list = QuestionImages.objects.filter(questionId = question.id)
             final_image_list=[]
@@ -366,6 +371,14 @@ class Dialog(models.Model):
     studentId =  models.BigIntegerField(20)
     teacherId = models.BigIntegerField(20)
     questionId =models.BigIntegerField(20)
+class Dialog(models.Model):
+    studentId =  models.BigIntegerField(20)
+    teacherId = models.BigIntegerField(20)
+    questionId =models.BigIntegerField(20)
+class Dialog(models.Model):
+    studentId =  models.BigIntegerField(20)
+    teacherId = models.BigIntegerField(20)
+    questionId =models.BigIntegerField(20)
     dialogState = models.CharField(max_length=5)
     dialogSession = models.CharField(max_length=100)
     created_time = models.DateTimeField(auto_now_add=True)
@@ -425,11 +438,3 @@ class Comment(models.Model):
 '''
 class Pay(models.Model):
     out_trade_no = models.CharField(max_length=64)
-    userID = models.BigIntegerField(20)
-    time = models.DateTimeField(auto_now_add=True)
-    total_fee = models.FloatField()
-    buyer_email = models.CharField(max_length=32,null=True)
-    buyer_id = models.BigIntegerField(20,null=True)
-    trade_no = models.BigIntegerField(20,null=True)
-    status = models.CharField(max_length=5) # 'U'unpaid,'F':fail,'S':success
-
